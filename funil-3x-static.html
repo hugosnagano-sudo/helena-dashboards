@@ -4,6 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Funil 3x — 1os Dentinhos</title>
+  <script>
+    (function () {
+      const expected = '#0707';
+      const key = 'helena.dashboard.auth.v1';
+      if (sessionStorage.getItem(key) === 'ok') return;
+      const typed = window.prompt('Senha para acessar os dashboards:');
+      if (typed === expected) {
+        sessionStorage.setItem(key, 'ok');
+        return;
+      }
+      document.open();
+      document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Acesso restrito</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#020617;color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,sans-serif}.box{max-width:420px;padding:28px;border:1px solid rgba(148,163,184,.25);border-radius:18px;background:#0f172a;text-align:center}button{margin-top:14px;border:0;border-radius:10px;padding:10px 14px;background:#2563eb;color:white;font-weight:800;cursor:pointer}</style></head><body><div class="box"><h1>Acesso restrito</h1><p>Senha incorreta ou acesso cancelado.</p><button onclick="location.reload()">Tentar novamente</button></div></body></html>');
+      document.close();
+      throw new Error('Acesso bloqueado');
+    })();
+  </script>
   <style>
     :root {
       color-scheme: dark;
@@ -134,7 +150,7 @@
   <section class="panel" id="staticNotice">
     <h2>Versão externa</h2>
     <p class="muted">Dashboard estático gerado a partir da planilha <a href="https://docs.google.com/spreadsheets/d/1cBdpSxguMbI5T6hWlFLM9p-HGUHo91FfhNC2uXUhZzU/edit" target="_blank" rel="noopener" style="color:#bae6fd">funil 3x 1os Dentinhos</a>.</p>
-    <p class="small muted">Atualizado em 2026-08-10T18:55:59Z. A importação pela Marketing API roda pela Helena/servidor local; este link é apenas visualização segura.</p>
+    <p class="small muted">Atualizado em 2026-08-10T19:00:36Z. A importação pela Marketing API roda pela Helena/servidor local; este link é apenas visualização segura.</p>
   </section>
 
   <section class="panel">
@@ -170,7 +186,7 @@
   </section>
 </main>
 
-<script id="embedded-sheet-data" type="application/json">{"generatedAt": "2026-08-10T18:55:59Z", "spreadsheetId": "1cBdpSxguMbI5T6hWlFLM9p-HGUHo91FfhNC2uXUhZzU", "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1cBdpSxguMbI5T6hWlFLM9p-HGUHo91FfhNC2uXUhZzU/edit", "values": [["Data", "Nome da campanha", "Nome do conjunto de anúncios", "Custo por visualização da página de destino", "Custo por finalização de compra iniciada", "Custo por compra", "Visualizações da página de destino", "Finalizações de compra iniciadas", "Compras", "Leads", "Visualizações do conteúdo", "Valor usado", "Frequência", "Orçamento", "Resultados", "Alcance", "Impressões", "CTR (taxa de cliques no link)", "Account ID", "Campaign ID", "Adset ID", "Importado em"]]}</script>
+<script id="embedded-sheet-data" type="application/json">{"generatedAt": "2026-08-10T19:00:36Z", "spreadsheetId": "1cBdpSxguMbI5T6hWlFLM9p-HGUHo91FfhNC2uXUhZzU", "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1cBdpSxguMbI5T6hWlFLM9p-HGUHo91FfhNC2uXUhZzU/edit", "values": [["Data", "Nome da campanha", "Nome do conjunto de anúncios", "Custo por visualização da página de destino", "Custo por finalização de compra iniciada", "Custo por compra", "Visualizações da página de destino", "Finalizações de compra iniciadas", "Compras", "Leads", "Visualizações do conteúdo", "Valor usado", "Frequência", "Orçamento", "Resultados", "Alcance", "Impressões", "CTR (taxa de cliques no link)", "Account ID", "Campaign ID", "Adset ID", "Importado em"]]}</script>
 <script>
 const FIELD_ALIASES = {
   date: ['data','date','dia'],
