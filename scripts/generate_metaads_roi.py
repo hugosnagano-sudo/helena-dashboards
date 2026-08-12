@@ -14,8 +14,41 @@ HTML = ROOT / "index.html"
 GOG = "/data/.openclaw/bin/gog"
 ACCOUNT = "agente.drahelen@gmail.com"
 SOURCES = {
-    "lt-dentistas": ("1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0", True),
-    "primeiros-dentinhos": ("1fDbt8wRKLoVWQg2514pOYTuryAVgZETd_sW3nkIke-s", False),
+    "laserterapia": {
+        "name": "Laserterapia",
+        "short": "Laser",
+        "color": "#2563eb",
+        "note": "Campanhas LT Dentistas identificadas com [Laser]",
+        "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
+        "has_header": True,
+        "category": "laser",
+    },
+    "terapeutica": {
+        "name": "Terapêutica",
+        "short": "Terap",
+        "color": "#8b5cf6",
+        "note": "Campanhas LT Dentistas identificadas com [Terap]",
+        "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
+        "has_header": True,
+        "category": "terap",
+    },
+    "planilha": {
+        "name": "Planilha",
+        "short": "Planilha",
+        "color": "#f59e0b",
+        "note": "Campanhas LT Dentistas identificadas com [Planilha]",
+        "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
+        "has_header": True,
+        "category": "planilha",
+    },
+    "primeiros-dentinhos": {
+        "name": "Primeiros Dentinhos",
+        "short": "1osDent",
+        "color": "#ec4899",
+        "note": "Conta act_1552127232446226; campanhas com [LT] + [1osDent]",
+        "sheet_id": "1fDbt8wRKLoVWQg2514pOYTuryAVgZETd_sW3nkIke-s",
+        "has_header": False,
+    },
 }
 FIELDS = ["date", "account", "account_id", "campaign_id", "campaign_name", "adset_id", "adset_name", "ad_id", "ad_name", "spend", "currency", "impressions", "clicks", "ctr", "cpc", "cpm", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"]
 
@@ -29,12 +62,14 @@ def number(value: str) -> float:
     return float(str(value or "0").replace(".", "").replace(",", "."))
 
 
-def daily(rows: list[list[str]], has_header: bool) -> dict[str, dict]:
+def daily(rows: list[list[str]], has_header: bool, category: str | None = None) -> dict[str, dict]:
     data = defaultdict(lambda: defaultdict(float))
     for row in rows[1 if has_header else 0:]:
         if not row or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(row[0])):
             continue
         record = dict(zip(FIELDS, row))
+        if category and f"[{category}]" not in record.get("campaign_name", "").lower():
+            continue
         day = data[record["date"]]
         day["date"] = record["date"]
         day["currency"] = record.get("currency") or "BRL"
@@ -56,20 +91,33 @@ def main() -> None:
     if not match:
         raise RuntimeError("Dados embutidos não encontrados")
     payload = json.loads(match.group(1))
-    projects = {project["key"]: project for project in payload["projects"]}
+    existing_projects = {project["key"]: project for project in payload["projects"]}
+    projects = []
     report = {}
-    for key, (sheet_id, has_header) in SOURCES.items():
-        fresh = daily(values(sheet_id), has_header)
-        project = projects[key]
-        existing = {row["date"]: row for row in project["rows"]}
+    sheets = {}
+    for key, source in SOURCES.items():
+        sheet_id = source["sheet_id"]
+        if sheet_id not in sheets:
+            sheets[sheet_id] = values(sheet_id)
+        fresh = daily(sheets[sheet_id], source["has_header"], source.get("category"))
+        previous = existing_projects.get(key, {})
+        existing = {row["date"]: row for row in previous.get("rows", [])}
         for date, row in fresh.items():
             # Métricas da Meta são atualizadas; Voomp é preservado até existir
             # uma fonte própria dessa plataforma.
             existing[date] = {**existing.get(date, {}), **row}
             existing[date].setdefault("purchases_voomp", 0)
             existing[date].setdefault("value_voomp", 0)
-        project["rows"] = [existing[d] for d in sorted(existing)]
+        projects.append({
+            "key": key,
+            "name": source["name"],
+            "short": source["short"],
+            "color": source["color"],
+            "note": source["note"],
+            "rows": [existing[d] for d in sorted(existing)],
+        })
         report[key] = {"days_updated": len(fresh), "last_date": max(fresh) if fresh else None}
+    payload["projects"] = projects
     payload["generatedAt"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     output = json.dumps(payload, ensure_ascii=False)
     HTML.write_text(text[:match.start(1)] + output + text[match.end(1):], encoding="utf-8")
