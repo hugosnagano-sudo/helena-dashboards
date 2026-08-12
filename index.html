@@ -184,8 +184,9 @@ function benchmarks(s) { return `
   ${benchmarkCard('Taxa de Compra OrderBump 3', 0, BENCHMARKS.orderBump3, false)}
   ${benchmarkCard('Taxa de Compra Upsell', 0, BENCHMARKS.upsell, false)}
   ${benchmarkCard('Taxa de Compra Downsell', 0, BENCHMARKS.downsell, false)}`; }
-function cards(s) { return `
+function cards(s, ticketValue, ticketHint) { return `
   ${card('Gasto total', brl(s.spend), 'Meta Ads')}
+  ${card('Ticket considerado', brl(ticketValue), ticketHint)}
   ${card('Cliques', n(s.clicks), `CTR ${pct(s.ctr)}`)}
   ${card('CPC médio', brl(s.cpc), 'custo por clique')}
   ${card('Compras Meta', n(s.purchases_meta), `ROAS Meta ${roas(s.roas_meta)}`)}
@@ -243,7 +244,10 @@ function table(project, days=14) {
 }
 function section(project, title=null) {
   const s = summarize(project.rows, project.productPrice);
-  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div><div class="charts"><div class="panel">${salesAndSpendChart(project)}</div><div class="panel">${salesAndSpendChart(project, true)}</div></div><h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
+  const consolidated = project.key === 'consolidado';
+  const ticketValue = consolidated && s.purchases_voomp ? s.purchase_ticket_total / s.purchases_voomp : (project.productPrice || 67);
+  const ticketHint = consolidated ? 'média ponderada pelas compras Voomp' : 'referência para os custos percentuais';
+  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s, ticketValue, ticketHint)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div><div class="charts"><div class="panel">${salesAndSpendChart(project)}</div><div class="panel">${salesAndSpendChart(project, true)}</div></div><h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
 }
 function render() {
   const filtered = DATA.projects.map(withFilteredRows);
