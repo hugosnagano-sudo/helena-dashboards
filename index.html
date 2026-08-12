@@ -99,6 +99,12 @@ const brl = v => money.format(Number(v || 0));
 const n = v => nf.format(Math.round(Number(v || 0)));
 const pct = v => `${Number(v || 0).toFixed(2).replace('.', ',')}%`;
 const roas = v => `${Number(v || 0).toFixed(2).replace('.', ',')}x`;
+const dateTime = value => {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? String(value || '—') : new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo'
+  }).format(date);
+};
 
 function allRows() { return DATA.projects.flatMap(p => p.rows); }
 function minDate() { return allRows().map(r => r.date).filter(Boolean).sort()[0] || ''; }
@@ -191,7 +197,7 @@ function render() {
   const filtered = DATA.projects.map(withFilteredRows);
   const selected = baseSelect.value;
   const rangeText = `${startDate.value || minDate() || 'início'} → ${endDate.value || maxDate() || 'fim'}`;
-  subtitle.textContent = `Visualize uma base isolada, os dados consolidados ou todas as bases simultaneamente. Período da análise: ${rangeText}. Gerado em ${DATA.generatedAt}. Fonte: ${dataSource}.`;
+  subtitle.textContent = `Selecione uma base, os dados consolidados ou todas as bases. Período analisado: ${rangeText}. Última atualização: ${dateTime(DATA.generatedAt)}. Origem dos dados: ${dataSource}.`;
   let html = '';
   if (selected === 'all') {
     const total = {key:'consolidado', name:'Dados consolidados', color:'#22c55e', note:'Soma de todas as bases', rows:aggregateProjects(filtered)};
