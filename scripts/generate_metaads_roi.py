@@ -22,6 +22,7 @@ SOURCES = {
         "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
         "has_header": True,
         "category": "laser",
+        "voomp_product": "Laserterapia na Odontopediatria",
     },
     "terapeutica": {
         "name": "Terapêutica",
@@ -31,6 +32,7 @@ SOURCES = {
         "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
         "has_header": True,
         "category": "terap",
+        "voomp_product": "Terapêutica Medicamentosa em Odontopediatria",
     },
     "planilha": {
         "name": "Planilha",
@@ -40,6 +42,7 @@ SOURCES = {
         "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
         "has_header": True,
         "category": "planilha",
+        "voomp_product": "Planilha de controle financeiro e cálculo de hora clínica",
     },
     "primeiros-dentinhos": {
         "name": "Primeiros Dentinhos",
@@ -48,18 +51,54 @@ SOURCES = {
         "note": "Conta act_1552127232446226; campanhas com [LT] + [1osDent]",
         "sheet_id": "1fDbt8wRKLoVWQg2514pOYTuryAVgZETd_sW3nkIke-s",
         "has_header": False,
+        "voomp_product": None,
     },
+}
+VOOMP_SHEETS = {
+    "lt": "1JQPLF1diqFFvDENstwsa6NUdVoJOC5phSSrbYe1qZiI",
+    "primeiros-dentinhos": "1pUaUDlMpkki6_ribAaif2f6h3QRBZNq9fbymMBalKu8",
 }
 FIELDS = ["date", "account", "account_id", "campaign_id", "campaign_name", "adset_id", "adset_name", "ad_id", "ad_name", "spend", "currency", "impressions", "clicks", "ctr", "cpc", "cpm", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"]
 
 
-def values(sheet_id: str) -> list[list[str]]:
-    out = subprocess.check_output([GOG, "-a", ACCOUNT, "sheets", "get", sheet_id, "MetaAds!A:X", "--json", "--results-only"], text=True)
+def values(sheet_id: str, range_name: str = "MetaAds!A:X") -> list[list[str]]:
+    out = subprocess.check_output([GOG, "-a", ACCOUNT, "sheets", "get", sheet_id, range_name, "--json", "--results-only"], text=True)
     return json.loads(out)
 
 
 def number(value: str) -> float:
     return float(str(value or "0").replace(".", "").replace(",", "."))
+
+
+def voomp_daily(rows: list[list[str]], product_name: str | None = None) -> dict[str, dict]:
+    """Agrupa vendas pagas por data de confirmação e saldo real ao vendedor."""
+    if not rows:
+        return {}
+    header = {name: index for index, name in enumerate(rows[0])}
+    required = ("sale.id", "sale.status", "sale.paid_at", "sale.seller_balance", "product.name")
+    missing = [name for name in required if name not in header]
+    if missing:
+        raise RuntimeError(f"Colunas Voomp ausentes: {', '.join(missing)}")
+    data = defaultdict(lambda: {"purchases_voomp": 0, "value_voomp": 0.0})
+    seen_sales = set()
+    for row in rows[1:]:
+        def value(name: str) -> str:
+            index = header[name]
+            return str(row[index]) if index < len(row) else ""
+        sale_id = value("sale.id")
+        if not sale_id or sale_id in seen_sales or value("sale.status").lower() != "paid":
+            continue
+        if product_name and value("product.name") != product_name:
+            continue
+        paid_at = value("sale.paid_at")
+        date = paid_at[:10]
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+            continue
+        seen_sales.add(sale_id)
+        data[date]["purchases_voomp"] += 1
+        data[date]["value_voomp"] += number(value("sale.seller_balance"))
+    return {date: {"purchases_voomp": values["purchases_voomp"], "value_voomp": round(values["value_voomp"], 2)}
+            for date, values in data.items()}
 
 
 def daily(rows: list[list[str]], has_header: bool, category: str | None = None) -> dict[str, dict]:
@@ -95,6 +134,11 @@ def main() -> None:
     projects = []
     report = {}
     sheets = {}
+    voomp_rows = {
+        "lt": values(VOOMP_SHEETS["lt"], "Vendas!A:CO"),
+        "primeiros-dentinhos": values(VOOMP_SHEETS["primeiros-dentinhos"], "Vendas!A:CO"),
+    }
+    voomp = {"primeiros-dentinhos": voomp_daily(voomp_rows["primeiros-dentinhos"])}
     for key, source in SOURCES.items():
         sheet_id = source["sheet_id"]
         if sheet_id not in sheets:
@@ -102,12 +146,13 @@ def main() -> None:
         fresh = daily(sheets[sheet_id], source["has_header"], source.get("category"))
         previous = existing_projects.get(key, {})
         existing = {row["date"]: row for row in previous.get("rows", [])}
-        for date, row in fresh.items():
-            # Métricas da Meta são atualizadas; Voomp é preservado até existir
-            # uma fonte própria dessa plataforma.
+        product_sales = (voomp["primeiros-dentinhos"] if key == "primeiros-dentinhos"
+                         else voomp_daily(voomp_rows["lt"], source.get("voomp_product")))
+        all_dates = sorted(set(existing) | set(fresh) | set(product_sales))
+        for date in all_dates:
+            row = fresh.get(date, existing.get(date, {"date": date, "currency": "BRL"}) )
             existing[date] = {**existing.get(date, {}), **row}
-            existing[date].setdefault("purchases_voomp", 0)
-            existing[date].setdefault("value_voomp", 0)
+            existing[date].update(product_sales.get(date, {"purchases_voomp": 0, "value_voomp": 0}))
         projects.append({
             "key": key,
             "name": source["name"],
@@ -116,7 +161,8 @@ def main() -> None:
             "note": source["note"],
             "rows": [existing[d] for d in sorted(existing)],
         })
-        report[key] = {"days_updated": len(fresh), "last_date": max(fresh) if fresh else None}
+        report[key] = {"days_updated": len(fresh), "last_date": max(fresh) if fresh else None,
+                       "voomp_sales": sum(day["purchases_voomp"] for day in product_sales.values())}
     payload["projects"] = projects
     payload["generatedAt"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     output = json.dumps(payload, ensure_ascii=False)
