@@ -79,9 +79,9 @@
 let DATA = JSON.parse(document.getElementById('dashboard-data').textContent);
 let dataSource = 'versão publicada';
 const BENCHMARKS = {
-  costLandingObjective: '4%',
-  costCheckoutObjective: '23%',
-  costResultObjective: '45%',
+  costLandingObjective: 4,
+  costCheckoutObjective: 23,
+  costResultObjective: 45,
   connectRate: 70,
   pageToCheckout: 23,
   checkoutPurchase: 20,
@@ -92,6 +92,7 @@ const BENCHMARKS = {
   upsell: 10,
   downsell: 5
 };
+const PRODUCT_PRICES = { laserterapia: 297, terapeutica: 67, planilha: 67, 'primeiros-dentinhos': 67 };
 const baseSelect = document.getElementById('baseSelect');
 const startDate = document.getElementById('startDate');
 const endDate = document.getElementById('endDate');
@@ -121,19 +122,27 @@ function inRange(row) {
   if (endDate.value && row.date > endDate.value) return false;
   return true;
 }
-function withFilteredRows(project) { return {...project, rows: project.rows.filter(inRange)}; }
+function withFilteredRows(project) { return {...project, productPrice: PRODUCT_PRICES[project.key] || 67, rows: project.rows.filter(inRange)}; }
 function aggregateProjects(projects) {
   const byDate = new Map();
   for (const p of projects) for (const r of p.rows) {
-    const acc = byDate.get(r.date) || {date:r.date,currency:'BRL',spend:0,impressions:0,clicks:0,leads_meta:0,purchases_meta:0,value_meta:0,landing_views:0,content_views:0,checkouts_meta:0,add_payment_info_meta:0,purchases_voomp:0,value_voomp:0};
+    const acc = byDate.get(r.date) || {date:r.date,currency:'BRL',spend:0,impressions:0,clicks:0,leads_meta:0,purchases_meta:0,value_meta:0,landing_views:0,content_views:0,checkouts_meta:0,add_payment_info_meta:0,purchases_voomp:0,value_voomp:0,landing_ticket_total:0,checkout_ticket_total:0,purchase_ticket_total:0};
     for (const k of ['spend','impressions','clicks','leads_meta','purchases_meta','value_meta','landing_views','content_views','checkouts_meta','add_payment_info_meta','purchases_voomp','value_voomp']) acc[k] += Number(r[k] || 0);
+    acc.landing_ticket_total += Number(r.landing_views || 0) * p.productPrice;
+    acc.checkout_ticket_total += Number(r.checkouts_meta || 0) * p.productPrice;
+    acc.purchase_ticket_total += Number(r.purchases_voomp || 0) * p.productPrice;
     byDate.set(r.date, acc);
   }
   return [...byDate.values()].sort((a,b) => a.date.localeCompare(b.date)).map(r => ({...r, ctr:r.impressions ? r.clicks/r.impressions*100 : 0, cpc:r.clicks ? r.spend/r.clicks : 0, cpm:r.impressions ? r.spend/r.impressions*1000 : 0}));
 }
-function summarize(rows) {
-  const s = {days:rows.length, first_date:rows[0]?.date || '—', last_date:rows.at(-1)?.date || '—', spend:0, impressions:0, clicks:0, leads_meta:0, purchases_meta:0, value_meta:0, landing_views:0, content_views:0, checkouts_meta:0, add_payment_info_meta:0, purchases_voomp:0, value_voomp:0};
+function summarize(rows, productPrice=67) {
+  const s = {days:rows.length, first_date:rows[0]?.date || '—', last_date:rows.at(-1)?.date || '—', spend:0, impressions:0, clicks:0, leads_meta:0, purchases_meta:0, value_meta:0, landing_views:0, content_views:0, checkouts_meta:0, add_payment_info_meta:0, purchases_voomp:0, value_voomp:0, landing_ticket_total:0, checkout_ticket_total:0, purchase_ticket_total:0};
   for (const r of rows) for (const k of ['spend','impressions','clicks','leads_meta','purchases_meta','value_meta','landing_views','content_views','checkouts_meta','add_payment_info_meta','purchases_voomp','value_voomp']) s[k] += Number(r[k] || 0);
+  for (const r of rows) {
+    s.landing_ticket_total += Number(r.landing_ticket_total ?? Number(r.landing_views || 0) * productPrice);
+    s.checkout_ticket_total += Number(r.checkout_ticket_total ?? Number(r.checkouts_meta || 0) * productPrice);
+    s.purchase_ticket_total += Number(r.purchase_ticket_total ?? Number(r.purchases_voomp || 0) * productPrice);
+  }
   s.ctr = s.impressions ? s.clicks/s.impressions*100 : 0;
   s.cpc = s.clicks ? s.spend/s.clicks : 0;
   s.roas_meta = s.spend ? s.value_meta/s.spend : 0;
@@ -146,6 +155,9 @@ function summarize(rows) {
   s.checkout_purchase_rate_voomp = s.checkouts_meta ? s.purchases_voomp/s.checkouts_meta*100 : 0;
   s.page_purchase_rate_meta = s.landing_views ? s.purchases_meta/s.landing_views*100 : 0;
   s.page_purchase_rate_voomp = s.landing_views ? s.purchases_voomp/s.landing_views*100 : 0;
+  s.cost_landing_pct = s.landing_ticket_total ? s.spend/s.landing_ticket_total*100 : 0;
+  s.cost_checkout_pct = s.checkout_ticket_total ? s.spend/s.checkout_ticket_total*100 : 0;
+  s.cost_result_pct = s.purchase_ticket_total ? s.spend/s.purchase_ticket_total*100 : 0;
   return s;
 }
 function card(label, value, hint='') { return `<div class="card"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div><div class="hint">${esc(hint)}</div></div>`; }
@@ -155,19 +167,23 @@ function benchmarkCard(label, current, ideal, available=true) {
   const idealText = ideal ? `Ideal: acima de ${pct(ideal)}` : 'Referência salva';
   return `<div class="benchmark-card ${tone}"><div class="label">${esc(label)}</div><div class="benchmark-row"><strong>${esc(currentText)}</strong><span>${esc(idealText)}</span></div></div>`;
 }
+function costBenchmarkCard(label, current, ideal, available=true) {
+  const tone = !available ? 'warn' : (Number(current || 0) <= Number(ideal || 0) ? 'good' : 'bad');
+  return `<div class="benchmark-card ${tone}"><div class="label">${esc(label)}</div><div class="benchmark-row"><strong>${esc(available ? pct(current) : 'N/D')}</strong><span>${esc(`Ideal: até ${pct(ideal)}`)}</span></div></div>`;
+}
 function benchmarks(s) { return `
+  ${costBenchmarkCard('Custo por View de Página de Destino', s.cost_landing_pct, BENCHMARKS.costLandingObjective, s.landing_views > 0)}
+  ${costBenchmarkCard('Custo por Finalização de Compra', s.cost_checkout_pct, BENCHMARKS.costCheckoutObjective, s.checkouts_meta > 0)}
+  ${costBenchmarkCard('Custo por Resultado (Voomp)', s.cost_result_pct, BENCHMARKS.costResultObjective, s.purchases_voomp > 0)}
   ${benchmarkCard('Connect Rate', s.connect_rate, BENCHMARKS.connectRate, s.clicks > 0)}
   ${benchmarkCard('Page → Checkout', s.page_to_checkout, BENCHMARKS.pageToCheckout, s.landing_views > 0)}
-  ${benchmarkCard('Checkout → Compra Meta', s.checkout_purchase_rate_meta, BENCHMARKS.checkoutPurchase, s.checkouts_meta > 0)}
-  ${benchmarkCard('PageView → Compra Meta', s.page_purchase_rate_meta, BENCHMARKS.pagePurchase, s.landing_views > 0)}
-  ${benchmarkCard('Checkout → Compra Voomp', s.checkout_purchase_rate_voomp, BENCHMARKS.checkoutPurchase, s.checkouts_meta > 0)}
-  ${benchmarkCard('PageView → Compra Voomp', s.page_purchase_rate_voomp, BENCHMARKS.pagePurchase, s.landing_views > 0)}
-  ${benchmarkCard('OrderBump 1', 0, BENCHMARKS.orderBump1, false)}
-  ${benchmarkCard('OrderBump 2', 0, BENCHMARKS.orderBump2, false)}
-  ${benchmarkCard('OrderBump 3', 0, BENCHMARKS.orderBump3, false)}
-  ${benchmarkCard('Upsell', 0, BENCHMARKS.upsell, false)}
-  ${benchmarkCard('Downsell', 0, BENCHMARKS.downsell, false)}
-  <div class="benchmark-card warn"><div class="label">Objetivos de custo</div><div class="hint">Página destino: ${esc(BENCHMARKS.costLandingObjective)} • Checkout: ${esc(BENCHMARKS.costCheckoutObjective)} • Resultado: ${esc(BENCHMARKS.costResultObjective)}</div><div class="hint">Custo por resultado calculado: Meta ${s.purchases_meta ? brl(s.cost_result_meta) : '—'} • Voomp ${s.purchases_voomp ? brl(s.cost_result_voomp) : '—'}</div></div>`; }
+  ${benchmarkCard('Taxa Checkout vs Compra', s.checkout_purchase_rate_voomp, BENCHMARKS.checkoutPurchase, s.checkouts_meta > 0)}
+  ${benchmarkCard('Taxa PageView vs Compra', s.page_purchase_rate_voomp, BENCHMARKS.pagePurchase, s.landing_views > 0)}
+  ${benchmarkCard('Taxa de Compra OrderBump 1', 0, BENCHMARKS.orderBump1, false)}
+  ${benchmarkCard('Taxa de Compra OrderBump 2', 0, BENCHMARKS.orderBump2, false)}
+  ${benchmarkCard('Taxa de Compra OrderBump 3', 0, BENCHMARKS.orderBump3, false)}
+  ${benchmarkCard('Taxa de Compra Upsell', 0, BENCHMARKS.upsell, false)}
+  ${benchmarkCard('Taxa de Compra Downsell', 0, BENCHMARKS.downsell, false)}`; }
 function cards(s) { return `
   ${card('Gasto total', brl(s.spend), 'Meta Ads')}
   ${card('Cliques', n(s.clicks), `CTR ${pct(s.ctr)}`)}
@@ -226,7 +242,7 @@ function table(project, days=14) {
   return `<table><thead><tr><th>Data</th><th>Gasto</th><th>Imp.</th><th>Cliques</th><th>LPV</th><th>Checkouts</th><th>Connect</th><th>Page→Checkout</th><th>Compras Meta</th><th>Valor Meta</th><th>Compras Voomp</th><th>Valor Voomp</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.date)}</td><td>${brl(r.spend)}</td><td>${n(r.impressions)}</td><td>${n(r.clicks)}</td><td>${n(r.landing_views)}</td><td>${n(r.checkouts_meta)}</td><td>${pct(r.clicks ? r.landing_views/r.clicks*100 : 0)}</td><td>${pct(r.landing_views ? r.checkouts_meta/r.landing_views*100 : 0)}</td><td>${n(r.purchases_meta)}</td><td>${brl(r.value_meta)}</td><td>${n(r.purchases_voomp)}</td><td>${brl(r.value_voomp)}</td></tr>`).join('')}</tbody></table>`;
 }
 function section(project, title=null) {
-  const s = summarize(project.rows);
+  const s = summarize(project.rows, project.productPrice);
   return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div><div class="charts"><div class="panel">${salesAndSpendChart(project)}</div><div class="panel">${salesAndSpendChart(project, true)}</div></div><h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
 }
 function render() {
@@ -235,7 +251,7 @@ function render() {
   lastUpdated.textContent = `data da última atualização: ${dateTime(DATA.generatedAt)}.`;
   let html = '';
   if (selected === 'consolidado') {
-    const total = {key:'consolidado', name:'Dados consolidados', color:'#22c55e', note:'Soma diária de todas as bases', rows:aggregateProjects(filtered)};
+    const total = {key:'consolidado', name:'Dados consolidados', color:'#22c55e', note:'Soma diária de todas as bases; custos ponderados pelo ticket de cada produto', rows:aggregateProjects(filtered)};
     html += section(total, 'Dados consolidados');
   } else {
     const p = filtered.find(p => p.key === selected);
