@@ -28,7 +28,8 @@
     h1 { font-size:34px; margin:0 0 8px; } h2 { margin:0 0 6px; border-left:5px solid var(--accent,#22c55e); padding-left:10px; } h3 { margin-top:28px; }
     .muted,.hint { color:var(--muted); } .hint { font-size:12px; margin-top:4px; }
     .topbar { display:flex; justify-content:flex-start; align-items:center; gap:12px; margin-bottom:14px; position:sticky; top:0; z-index:5; padding:8px 0; backdrop-filter:blur(10px); flex-wrap:wrap; }
-    .control-row { display:flex; align-items:center; gap:10px; background:rgba(15,23,42,.92); border:1px solid rgba(148,163,184,.25); border-radius:14px; padding:10px 12px; box-shadow:0 10px 30px rgba(0,0,0,.22); flex-wrap:wrap; }
+    .control-row { display:flex; flex-direction:column; align-items:stretch; gap:10px; background:rgba(15,23,42,.92); border:1px solid rgba(148,163,184,.25); border-radius:14px; padding:10px 12px; box-shadow:0 10px 30px rgba(0,0,0,.22); }
+    .date-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
     .field { display:flex; align-items:center; gap:8px; }
     .field label { color:#cbd5e1; font-size:13px; font-weight:700; }
     select,input[type=date] { background:#0b1220; color:var(--text); border:1px solid rgba(148,163,184,.35); border-radius:10px; padding:8px 10px; font-weight:700; }
@@ -57,10 +58,12 @@
   <div class="topbar">
     <div class="control-row">
       <div class="field"><label for="baseSelect">Base</label><select id="baseSelect"></select></div>
+      <div class="date-row">
       <div class="field"><label for="startDate">Data inicial</label><input id="startDate" type="date" /></div>
       <div class="field"><label for="endDate">Data final</label><input id="endDate" type="date" /></div>
       <div class="field"><label for="periodSelect">Período</label><select id="periodSelect"><option value="2">Últimos 2 dias</option><option value="7">Últimos 7 dias</option><option value="14">Últimos 14 dias</option><option value="28" selected>Últimos 28 dias</option><option value="max">Máximo</option></select></div>
       <button id="clearDates" class="secondary" type="button">Limpar datas</button>
+      </div>
     </div>
   </div>
   <div class="hero"><div class="panel"><h1>Dashboard MetaAds ROI</h1><p class="muted" id="subtitle"></p></div></div>
