@@ -177,16 +177,16 @@ function cards(s) { return `
   ${card('Landing page views', n(s.landing_views), `Connect ${pct(s.connect_rate)}`)}
   ${card('Checkouts Meta', n(s.checkouts_meta), `Page→Checkout ${pct(s.page_to_checkout)}`)}
   ${card('Add Payment Info', n(s.add_payment_info_meta), 'evento Meta')}`; }
-function chart(projects, field, title) {
-  const dates = [...new Set(projects.flatMap(p => p.rows.map(r => r.date)))].sort().slice(-45);
+function salesAndSpendChart(project) {
+  const dates = project.rows.map(r => r.date).filter(Boolean).sort().slice(-45);
   if (!dates.length) return `<p class="muted">Sem dados para gráfico.</p>`;
-  const series = projects.map(p => [p, dates.map(d => Number((p.rows.find(r => r.date === d) || {})[field] || 0))]);
-  const max = Math.max(1, ...series.flatMap(([,vals]) => vals));
-  const line = vals => vals.map((v,i) => `${(i/Math.max(1, vals.length-1)*760).toFixed(1)},${(220-(v/max)*(220-20)-10).toFixed(1)}`).join(' ');
-  const lines = series.map(([p,vals]) => `<polyline fill="none" stroke="${p.color}" stroke-width="3" points="${line(vals)}" />`).join('');
-  const legend = series.map(([p]) => `<span><b style="color:${p.color}">●</b> ${esc(p.name)}</span>`).join(' ');
-  const maxLabel = field === 'spend' || field.startsWith('value') ? brl(max) : n(max);
-  return `<div class="chart-title">${esc(title)}</div><svg viewBox="0 0 760 220"><line x1="0" y1="210" x2="760" y2="210" stroke="#334155" stroke-width="1" />${lines}</svg><div class="legend">${legend}</div><div class="hint">Últimos ${dates.length} dias com dados. Máximo do gráfico: ${esc(maxLabel)}</div>`;
+  const byDate = new Map(project.rows.map(r => [r.date, r]));
+  const spend = dates.map(date => Number(byDate.get(date)?.spend || 0));
+  const sales = dates.map(date => Number(byDate.get(date)?.purchases_voomp || 0));
+  const maxSpend = Math.max(1, ...spend);
+  const maxSales = Math.max(1, ...sales);
+  const line = (values, max) => values.map((value, i) => `${(i / Math.max(1, values.length - 1) * 720 + 20).toFixed(1)},${(210 - (value / max) * 180).toFixed(1)}`).join(' ');
+  return `<div class="chart-title">Gastos e vendas por dia</div><svg viewBox="0 0 760 220" aria-label="Gastos e vendas por dia"><line x1="20" y1="210" x2="740" y2="210" stroke="#334155" stroke-width="1" /><polyline fill="none" stroke="#ef4444" stroke-width="3" points="${line(spend, maxSpend)}" /><polyline fill="none" stroke="#22c55e" stroke-width="3" points="${line(sales, maxSales)}" /></svg><div class="legend"><span><b style="color:#ef4444">●</b> Gastos</span> <span><b style="color:#22c55e">●</b> Vendas Voomp</span></div><div class="hint">Últimos ${dates.length} dias com dados. Gastos: até ${esc(brl(maxSpend))} • Vendas: até ${esc(n(maxSales))}. As linhas usam escalas próprias.</div>`;
 }
 function table(project, days=14) {
   const rows = [...project.rows].slice(-days).reverse();
@@ -195,7 +195,7 @@ function table(project, days=14) {
 }
 function section(project, title=null) {
   const s = summarize(project.rows);
-  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div><div class="charts"><div class="panel">${chart([project], 'spend', 'Gasto diário')}</div><div class="panel">${chart([project], 'purchases_voomp', 'Compras Voomp por dia')}</div></div><h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
+  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div><div class="charts"><div class="panel">${salesAndSpendChart(project)}</div></div><h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
 }
 function render() {
   const filtered = DATA.projects.map(withFilteredRows);
