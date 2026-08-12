@@ -59,7 +59,7 @@
       <div class="field"><label for="baseSelect">Base</label><select id="baseSelect"></select></div>
       <div class="field"><label for="startDate">Data inicial</label><input id="startDate" type="date" /></div>
       <div class="field"><label for="endDate">Data final</label><input id="endDate" type="date" /></div>
-      <button id="last30" type="button">Últimos 30 dias</button>
+      <div class="field"><label for="periodSelect">Período</label><select id="periodSelect"><option value="2">Últimos 2 dias</option><option value="7">Últimos 7 dias</option><option value="14">Últimos 14 dias</option><option value="28" selected>Últimos 28 dias</option><option value="max">Máximo</option></select></div>
       <button id="clearDates" class="secondary" type="button">Limpar datas</button>
     </div>
   </div>
@@ -89,6 +89,7 @@ const BENCHMARKS = {
 const baseSelect = document.getElementById('baseSelect');
 const startDate = document.getElementById('startDate');
 const endDate = document.getElementById('endDate');
+const periodSelect = document.getElementById('periodSelect');
 const app = document.getElementById('app');
 const subtitle = document.getElementById('subtitle');
 
@@ -207,7 +208,7 @@ function render() {
     html += p ? section(p) : `<p class="muted">Base não encontrada.</p>`;
   }
   app.innerHTML = html;
-  try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:selected,start:startDate.value,end:endDate.value})); } catch(e) {}
+  try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:selected,period:periodSelect.value,start:startDate.value,end:endDate.value})); } catch(e) {}
 }
 function setup() {
   const opts = [['consolidado','Dados consolidados'], ...DATA.projects.map(p => [p.key,p.name])];
@@ -215,17 +216,18 @@ function setup() {
   try {
     const saved = JSON.parse(localStorage.getItem('metaads-dashboard-state') || '{}');
     if (saved.base && opts.some(([v]) => v === saved.base)) baseSelect.value = saved.base;
-    if (saved.start) startDate.value = saved.start;
-    if (saved.end) endDate.value = saved.end;
+    if (saved.period && [...periodSelect.options].some(option => option.value === saved.period)) periodSelect.value = saved.period;
   } catch(e) {}
+  const applyPeriod = () => {
+    const max = maxDate(); if (!max) return;
+    if (periodSelect.value === 'max') { startDate.value = ''; endDate.value = ''; render(); return; }
+    const d = new Date(max + 'T00:00:00'); d.setDate(d.getDate() - (Number(periodSelect.value) - 1));
+    startDate.value = d.toISOString().slice(0,10); endDate.value = max; render();
+  };
   for (const el of [baseSelect, startDate, endDate]) el.addEventListener('change', render);
   document.getElementById('clearDates').addEventListener('click', () => { startDate.value=''; endDate.value=''; render(); });
-  document.getElementById('last30').addEventListener('click', () => {
-    const max = maxDate(); if (!max) return;
-    const d = new Date(max + 'T00:00:00'); d.setDate(d.getDate() - 29);
-    startDate.value = d.toISOString().slice(0,10); endDate.value = max; render();
-  });
-  render();
+  periodSelect.addEventListener('change', applyPeriod);
+  applyPeriod();
 }
 async function loadLiveData() {
   const res = await fetch('/api/data', { cache: 'no-store' });
