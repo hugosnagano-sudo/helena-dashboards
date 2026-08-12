@@ -197,15 +197,9 @@ function render() {
   const filtered = DATA.projects.map(withFilteredRows);
   const selected = baseSelect.value;
   const rangeText = `${startDate.value || minDate() || 'início'} → ${endDate.value || maxDate() || 'fim'}`;
-  subtitle.textContent = `Selecione uma base, os dados consolidados ou todas as bases. Período analisado: ${rangeText}. Última atualização: ${dateTime(DATA.generatedAt)}. Origem dos dados: ${dataSource}.`;
+  subtitle.textContent = `Selecione uma base ou os dados consolidados. Período analisado: ${rangeText}. Última atualização: ${dateTime(DATA.generatedAt)}. Origem dos dados: ${dataSource}.`;
   let html = '';
-  if (selected === 'all') {
-    const total = {key:'consolidado', name:'Dados consolidados', color:'#22c55e', note:'Soma de todas as bases', rows:aggregateProjects(filtered)};
-    const s = summarize(total.rows);
-    html += `<div class="panel"><div class="grid">${cards(s)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div></div>`;
-    html += `<div class="charts"><div class="panel">${chart(filtered, 'spend', 'Gasto diário por base')}</div><div class="panel">${chart(filtered, 'purchases_voomp', 'Compras Voomp por base')}</div></div>`;
-    html += filtered.map(p => section(p)).join('');
-  } else if (selected === 'consolidado') {
+  if (selected === 'consolidado') {
     const total = {key:'consolidado', name:'Dados consolidados', color:'#22c55e', note:'Soma diária de todas as bases', rows:aggregateProjects(filtered)};
     html += section(total, 'Dados consolidados');
   } else {
@@ -216,7 +210,7 @@ function render() {
   try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:selected,start:startDate.value,end:endDate.value})); } catch(e) {}
 }
 function setup() {
-  const opts = [['all','Todas as bases'], ['consolidado','Dados consolidados'], ...DATA.projects.map(p => [p.key,p.name])];
+  const opts = [['consolidado','Dados consolidados'], ...DATA.projects.map(p => [p.key,p.name])];
   baseSelect.innerHTML = opts.map(([v,l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('');
   try {
     const saved = JSON.parse(localStorage.getItem('metaads-dashboard-state') || '{}');
