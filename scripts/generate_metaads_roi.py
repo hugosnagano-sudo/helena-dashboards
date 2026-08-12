@@ -101,14 +101,24 @@ def voomp_daily(rows: list[list[str]], product_name: str | None = None) -> dict[
             for date, values in data.items()}
 
 
-def daily(rows: list[list[str]], has_header: bool, category: str | None = None) -> dict[str, dict]:
+def daily(rows: list[list[str]], has_header: bool, category: str | None = None) -> tuple[dict[str, dict], list[dict]]:
     data = defaultdict(lambda: defaultdict(float))
+    details = []
     for row in rows[1 if has_header else 0:]:
         if not row or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(row[0])):
             continue
         record = dict(zip(FIELDS, row))
         if category and f"[{category}]" not in record.get("campaign_name", "").lower():
             continue
+        detail = {
+            "date": record["date"], "currency": record.get("currency") or "BRL",
+            "campaign_id": record.get("campaign_id", ""), "campaign_name": record.get("campaign_name", "Sem campanha"),
+            "adset_id": record.get("adset_id", ""), "adset_name": record.get("adset_name", "Sem conjunto de anúncios"),
+            "ad_id": record.get("ad_id", ""), "ad_name": record.get("ad_name", "Sem anúncio"),
+        }
+        for name in ("spend", "impressions", "clicks", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"):
+            detail[name] = number(record.get(name, "0"))
+        details.append(detail)
         day = data[record["date"]]
         day["date"] = record["date"]
         day["currency"] = record.get("currency") or "BRL"
@@ -121,7 +131,7 @@ def daily(rows: list[list[str]], has_header: bool, category: str | None = None) 
         for key, value in list(day.items()):
             if isinstance(value, float):
                 day[key] = round(value, 2)
-    return data
+    return data, details
 
 
 def main() -> None:
@@ -143,7 +153,7 @@ def main() -> None:
         sheet_id = source["sheet_id"]
         if sheet_id not in sheets:
             sheets[sheet_id] = values(sheet_id)
-        fresh = daily(sheets[sheet_id], source["has_header"], source.get("category"))
+        fresh, details = daily(sheets[sheet_id], source["has_header"], source.get("category"))
         previous = existing_projects.get(key, {})
         existing = {row["date"]: row for row in previous.get("rows", [])}
         product_sales = (voomp["primeiros-dentinhos"] if key == "primeiros-dentinhos"
@@ -160,6 +170,7 @@ def main() -> None:
             "color": source["color"],
             "note": source["note"],
             "rows": [existing[d] for d in sorted(existing)],
+            "detailRows": details,
         })
         report[key] = {"days_updated": len(fresh), "last_date": max(fresh) if fresh else None,
                        "voomp_sales": sum(day["purchases_voomp"] for day in product_sales.values())}
