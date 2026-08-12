@@ -47,6 +47,9 @@
     .charts { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0; }
     svg { width:100%; height:auto; background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:10px; }
     .chart-title { font-weight:700; margin-bottom:8px; } .legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:13px; }
+    .chart-wrap { position:relative; } .interactive-chart { cursor:crosshair; touch-action:none; }
+    .chart-tooltip { position:absolute; display:none; pointer-events:none; z-index:2; min-width:176px; padding:9px 11px; border:1px solid rgba(148,163,184,.45); border-radius:10px; background:rgba(2,6,23,.96); box-shadow:0 10px 24px rgba(0,0,0,.35); color:#e2e8f0; font-size:12px; line-height:1.55; }
+    .chart-tooltip strong { display:block; color:#fff; margin-bottom:3px; } .chart-tooltip .spend { color:#f87171; } .chart-tooltip .sales { color:#4ade80; }
     .project { margin-top:18px; }
     table { width:100%; border-collapse:collapse; font-size:13px; overflow:hidden; border-radius:12px; }
     th,td { padding:9px 10px; border-bottom:1px solid rgba(148,163,184,.12); text-align:right; white-space:nowrap; } th:first-child,td:first-child { text-align:left; } th { color:#cbd5e1; background:#0b1220; position:sticky; top:0; }
@@ -177,16 +180,40 @@ function cards(s) { return `
   ${card('Landing page views', n(s.landing_views), `Connect ${pct(s.connect_rate)}`)}
   ${card('Checkouts Meta', n(s.checkouts_meta), `Page→Checkout ${pct(s.page_to_checkout)}`)}
   ${card('Add Payment Info', n(s.add_payment_info_meta), 'evento Meta')}`; }
-function salesAndSpendChart(project) {
+function salesAndSpendChart(project, cumulative=false) {
   const dates = project.rows.map(r => r.date).filter(Boolean).sort().slice(-45);
   if (!dates.length) return `<p class="muted">Sem dados para gráfico.</p>`;
   const byDate = new Map(project.rows.map(r => [r.date, r]));
   const spend = dates.map(date => Number(byDate.get(date)?.spend || 0));
   const sales = dates.map(date => Number(byDate.get(date)?.value_voomp || 0));
+  if (cumulative) {
+    for (let i = 1; i < dates.length; i++) { spend[i] += spend[i - 1]; sales[i] += sales[i - 1]; }
+  }
   const maxSpend = Math.max(1, ...spend);
   const maxSales = Math.max(1, ...sales);
   const line = (values, max) => values.map((value, i) => `${(i / Math.max(1, values.length - 1) * 720 + 20).toFixed(1)},${(210 - (value / max) * 180).toFixed(1)}`).join(' ');
-  return `<div class="chart-title">Gastos e receita por dia</div><svg viewBox="0 0 760 220" aria-label="Gastos e receita por dia"><line x1="20" y1="210" x2="740" y2="210" stroke="#334155" stroke-width="1" /><polyline fill="none" stroke="#ef4444" stroke-width="3" points="${line(spend, maxSpend)}" /><polyline fill="none" stroke="#22c55e" stroke-width="3" points="${line(sales, maxSales)}" /></svg><div class="legend"><span><b style="color:#ef4444">●</b> Gastos</span> <span><b style="color:#22c55e">●</b> Receita Voomp</span></div><div class="hint">Últimos ${dates.length} dias com dados. Gastos: até ${esc(brl(maxSpend))} • Receita: até ${esc(brl(maxSales))}. As linhas usam escalas próprias.</div>`;
+  const title = cumulative ? 'Gastos e receita acumulados' : 'Gastos e receita por dia';
+  const payload = encodeURIComponent(JSON.stringify({dates, spend, sales}));
+  return `<div class="chart-title">${title}</div><div class="chart-wrap"><svg class="interactive-chart" data-chart="${payload}" viewBox="0 0 760 220" aria-label="${title}"><line x1="20" y1="210" x2="740" y2="210" stroke="#334155" stroke-width="1" /><polyline fill="none" stroke="#ef4444" stroke-width="3" points="${line(spend, maxSpend)}" /><polyline fill="none" stroke="#22c55e" stroke-width="3" points="${line(sales, maxSales)}" /><line class="hover-line" x1="20" y1="20" x2="20" y2="210" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 3" visibility="hidden" /></svg><div class="chart-tooltip"></div></div><div class="legend"><span><b style="color:#ef4444">●</b> Gastos</span> <span><b style="color:#22c55e">●</b> Receita Voomp</span></div><div class="hint">Passe o mouse sobre o gráfico para ver a data e os valores. As linhas usam escalas próprias.</div>`;
+}
+function setupChartTooltips() {
+  document.querySelectorAll('.interactive-chart').forEach(svg => {
+    const data = JSON.parse(decodeURIComponent(svg.dataset.chart));
+    const wrap = svg.closest('.chart-wrap'); const tooltip = wrap.querySelector('.chart-tooltip'); const guide = svg.querySelector('.hover-line');
+    const hide = () => { tooltip.style.display = 'none'; guide.setAttribute('visibility', 'hidden'); };
+    svg.addEventListener('pointermove', event => {
+      const rect = svg.getBoundingClientRect();
+      const x = Math.max(20, Math.min(740, (event.clientX - rect.left) / rect.width * 760));
+      const index = Math.round((x - 20) / 720 * Math.max(1, data.dates.length - 1));
+      const pointX = 20 + index / Math.max(1, data.dates.length - 1) * 720;
+      guide.setAttribute('x1', pointX); guide.setAttribute('x2', pointX); guide.setAttribute('visibility', 'visible');
+      tooltip.innerHTML = `<strong>${esc(data.dates[index])}</strong><span class="spend">● Gastos: ${esc(brl(data.spend[index]))}</span><br><span class="sales">● Receita Voomp: ${esc(brl(data.sales[index]))}</span>`;
+      tooltip.style.display = 'block';
+      tooltip.style.left = `${Math.max(8, Math.min(event.clientX - wrap.getBoundingClientRect().left + 14, wrap.clientWidth - tooltip.offsetWidth - 8))}px`;
+      tooltip.style.top = `${Math.max(8, event.clientY - wrap.getBoundingClientRect().top + 14)}px`;
+    });
+    svg.addEventListener('pointerleave', hide); svg.addEventListener('pointercancel', hide);
+  });
 }
 function table(project, days=14) {
   const rows = [...project.rows].slice(-days).reverse();
@@ -195,7 +222,7 @@ function table(project, days=14) {
 }
 function section(project, title=null) {
   const s = summarize(project.rows);
-  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div><div class="charts"><div class="panel">${salesAndSpendChart(project)}</div></div><h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
+  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s)}</div><div class="charts"><div class="panel">${salesAndSpendChart(project)}</div><div class="panel">${salesAndSpendChart(project, true)}</div></div><h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
 }
 function render() {
   const filtered = DATA.projects.map(withFilteredRows);
@@ -210,6 +237,7 @@ function render() {
     html += p ? section(p) : `<p class="muted">Base não encontrada.</p>`;
   }
   app.innerHTML = html;
+  setupChartTooltips();
   try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:selected,period:periodSelect.value,start:startDate.value,end:endDate.value})); } catch(e) {}
 }
 function setup() {
