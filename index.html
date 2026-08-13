@@ -227,7 +227,6 @@ function cards(s, ticketValue, ticketHint, voompAvailable=true) { return `
   ${card('Compras Voomp', voompAvailable ? n(s.purchases_voomp) : 'N/D', voompAvailable ? `ROAS Voomp ${roas(s.roas_voomp)}` : 'sem atribuição por anúncio')}
   ${card('Receita Voomp', voompAvailable ? brl(s.value_voomp) : 'N/D', voompAvailable ? 'seller_balance' : 'sem atribuição por anúncio')}
   ${card('Landing page views', n(s.landing_views), `Connect ${pct(s.connect_rate)}`)}
-  ${card('Checkouts Meta', n(s.checkouts_meta), `Page→Checkout ${pct(s.page_to_checkout)}`)}
   ${card('Add Payment Info', n(s.add_payment_info_meta), 'evento Meta')}`; }
 function salesAndSpendChart(project, cumulative=false) {
   const dates = project.rows.map(r => r.date).filter(Boolean).sort().slice(-45);
