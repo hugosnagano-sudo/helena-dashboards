@@ -205,10 +205,10 @@ function costBenchmarkCard(label, current, ideal, available=true) {
   return `<div class="benchmark-card ${tone}"><div class="label">${esc(label)}</div><div class="benchmark-row"><strong>${esc(available ? pct(current) : 'N/D')}</strong><span>${esc(`Ideal: até ${pct(ideal)}`)}</span></div></div>`;
 }
 function benchmarks(s, voompAvailable=true) { return `
+  ${benchmarkCard('Connect Rate', s.connect_rate, BENCHMARKS.connectRate, s.clicks > 0)}
   ${costBenchmarkCard('Custo por View de Página de Destino', s.cost_landing_pct, BENCHMARKS.costLandingObjective, s.landing_views > 0)}
   ${costBenchmarkCard('Custo por Finalização de Compra', s.cost_checkout_pct, BENCHMARKS.costCheckoutObjective, s.checkouts_meta > 0)}
   ${costBenchmarkCard('Custo por Resultado (Voomp)', s.cost_result_pct, BENCHMARKS.costResultObjective, voompAvailable && s.purchases_voomp > 0)}
-  ${benchmarkCard('Connect Rate', s.connect_rate, BENCHMARKS.connectRate, s.clicks > 0)}
   ${benchmarkCard('Page → Checkout', s.page_to_checkout, BENCHMARKS.pageToCheckout, s.landing_views > 0)}
   ${benchmarkCard('Taxa Checkout vs Compra', s.checkout_purchase_rate_voomp, BENCHMARKS.checkoutPurchase, voompAvailable && s.checkouts_meta > 0)}
   ${benchmarkCard('Taxa PageView vs Compra', s.page_purchase_rate_voomp, BENCHMARKS.pagePurchase, voompAvailable && s.landing_views > 0)}
