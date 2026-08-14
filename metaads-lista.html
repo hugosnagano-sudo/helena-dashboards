@@ -241,7 +241,7 @@ function benchmarkCells(s, voompAvailable=false) {
 }
 function benchmarkTable(groups) {
   if (!groups.length) return '<tr><td colspan="16" class="selection-note">Nenhum anúncio com entrega no período selecionado.</td></tr>';
-  return groups.map(group => `<tr><td>${esc(group.base)}</td><td>${esc(group.campaign)}</td><td>${esc(group.adset)}</td><td>${esc(group.ad)}</td>${benchmarkCells(group.summary)}</tr>`).join('');
+  return groups.map(group => `<tr><td>${esc(group.base)}</td><td>${esc(group.campaign)}</td><td>${esc(group.adset)}</td><td>${esc(group.ad)}</td>${benchmarkCells(group.summary, true)}</tr>`).join('');
 }
 function cards(s, ticketValue, ticketHint, voompAvailable=true) { return `
   ${card('Gasto total', brl(s.spend), 'Meta Ads')}
