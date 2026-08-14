@@ -60,6 +60,13 @@
 <body><main>
   <div class="hero"><div class="panel"><h1>MetaAds Lista</h1><p class="muted" id="lastUpdated"></p></div></div>
   <div class="topbar">
+    <div class="date-row">
+      <div class="field source-modified"><label>Planilha atualizada em</label><output id="sheetModified">—</output></div>
+      <div class="field"><label for="startDate">Data inicial</label><input id="startDate" type="date" /></div>
+      <div class="field"><label for="endDate">Data final</label><input id="endDate" type="date" /></div>
+      <div class="field"><label for="periodSelect">Período</label><select id="periodSelect"><option value="2">Últimos 2 dias</option><option value="7">Últimos 7 dias</option><option value="14">Últimos 14 dias</option><option value="28" selected>Últimos 28 dias</option><option value="max">Máximo</option></select></div>
+      <button id="clearDates" class="secondary" type="button">Limpar datas</button>
+    </div>
     <div class="table-wrap"><table class="benchmark-table" aria-label="Benchmarks e seleção de nível">
       <thead><tr><th>Base</th><th>Campanha</th><th>Conjunto de anúncios</th><th>Anúncio</th><th class="benchmark-column">Connect Rate</th><th class="benchmark-column">Custo por View de Página de Destino</th><th class="benchmark-column">Custo por Finalização de Compra</th><th class="benchmark-column">Custo por Resultado (Voomp)</th><th class="benchmark-column">Page → Checkout</th><th class="benchmark-column">Taxa Checkout vs Compra</th><th class="benchmark-column">Taxa PageView vs Compra</th><th class="benchmark-column">Taxa de Compra OrderBump 1</th><th class="benchmark-column">Taxa de Compra OrderBump 2</th><th class="benchmark-column">Taxa de Compra OrderBump 3</th><th class="benchmark-column">Taxa de Compra Upsell</th><th class="benchmark-column">Taxa de Compra Downsell</th></tr></thead>
       <tbody><tr class="selection-row">
@@ -71,13 +78,6 @@
       </tr></tbody>
       <tbody id="benchmarkRows"></tbody>
     </table></div>
-    <div class="date-row">
-      <div class="field source-modified"><label>Planilha atualizada em</label><output id="sheetModified">—</output></div>
-      <div class="field"><label for="startDate">Data inicial</label><input id="startDate" type="date" /></div>
-      <div class="field"><label for="endDate">Data final</label><input id="endDate" type="date" /></div>
-      <div class="field"><label for="periodSelect">Período</label><select id="periodSelect"><option value="2">Últimos 2 dias</option><option value="7">Últimos 7 dias</option><option value="14">Últimos 14 dias</option><option value="28" selected>Últimos 28 dias</option><option value="max">Máximo</option></select></div>
-      <button id="clearDates" class="secondary" type="button">Limpar datas</button>
-    </div>
   </div>
   <div id="app"></div>
 </main>
