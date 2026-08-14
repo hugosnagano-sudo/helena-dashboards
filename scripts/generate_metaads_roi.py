@@ -58,10 +58,10 @@ VOOMP_SHEETS = {
     "lt": "1JQPLF1diqFFvDENstwsa6NUdVoJOC5phSSrbYe1qZiI",
     "primeiros-dentinhos": "1pUaUDlMpkki6_ribAaif2f6h3QRBZNq9fbymMBalKu8",
 }
-FIELDS = ["date", "account", "account_id", "campaign_id", "campaign_name", "adset_id", "adset_name", "ad_id", "ad_name", "spend", "currency", "impressions", "clicks", "ctr", "cpc", "cpm", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"]
+FIELDS = ["date", "account", "account_id", "campaign_id", "campaign_name", "adset_id", "adset_name", "ad_id", "ad_name", "spend", "currency", "impressions", "clicks", "ctr", "cpc", "cpm", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta", "source", "notes", "link_clicks"]
 
 
-def values(sheet_id: str, range_name: str = "MetaAds!A:X") -> list[list[str]]:
+def values(sheet_id: str, range_name: str = "MetaAds!A:Z") -> list[list[str]]:
     out = subprocess.check_output([GOG, "-a", ACCOUNT, "sheets", "get", sheet_id, range_name, "--json", "--results-only"], text=True)
     return json.loads(out)
 
@@ -121,13 +121,13 @@ def daily(rows: list[list[str]], has_header: bool, category: str | None = None) 
             "adset_id": record.get("adset_id", ""), "adset_name": record.get("adset_name", "Sem conjunto de anúncios"),
             "ad_id": record.get("ad_id", ""), "ad_name": record.get("ad_name", "Sem anúncio"),
         }
-        for name in ("spend", "impressions", "clicks", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"):
+        for name in ("spend", "impressions", "clicks", "link_clicks", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"):
             detail[name] = number(record.get(name, "0"))
         details.append(detail)
         day = data[record["date"]]
         day["date"] = record["date"]
         day["currency"] = record.get("currency") or "BRL"
-        for name in ("spend", "impressions", "clicks", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"):
+        for name in ("spend", "impressions", "clicks", "link_clicks", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"):
             day[name] += number(record.get(name, "0"))
     for day in data.values():
         day["ctr"] = (day["clicks"] / day["impressions"] * 100) if day["impressions"] else 0
