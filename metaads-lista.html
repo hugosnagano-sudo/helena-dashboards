@@ -45,17 +45,8 @@
     .benchmark-row { display:flex; justify-content:space-between; gap:10px; align-items:baseline; margin-top:8px; } .benchmark-row strong { font-size:22px; } .benchmark-row span { color:var(--muted); font-size:12px; font-weight:800; }
     .card { background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:14px; min-height:96px; }
     .label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; } .value { font-size:25px; font-weight:750; margin-top:8px; }
-    .charts { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0; }
-    svg { width:100%; height:auto; background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:10px; }
-    .chart-title { font-weight:700; margin-bottom:8px; } .legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:13px; }
-    .chart-wrap { position:relative; } .interactive-chart { cursor:crosshair; touch-action:none; }
-    .chart-tooltip { position:absolute; display:none; pointer-events:none; z-index:2; min-width:176px; padding:9px 11px; border:1px solid rgba(148,163,184,.45); border-radius:10px; background:rgba(2,6,23,.96); box-shadow:0 10px 24px rgba(0,0,0,.35); color:#e2e8f0; font-size:12px; line-height:1.55; }
-    .chart-tooltip strong { display:block; color:#fff; margin-bottom:3px; } .chart-tooltip .spend { color:#f87171; } .chart-tooltip .sales { color:#4ade80; }
     .project { margin-top:18px; }
-    table { width:100%; border-collapse:collapse; font-size:13px; overflow:hidden; border-radius:12px; }
-    th,td { padding:9px 10px; border-bottom:1px solid rgba(148,163,184,.12); text-align:right; white-space:nowrap; } th:first-child,td:first-child { text-align:left; } th { color:#cbd5e1; background:#0b1220; position:sticky; top:0; }
-    tbody tr:hover { background:rgba(148,163,184,.06); }
-    @media (max-width:900px) { .charts { grid-template-columns:1fr; } .grid,.benchmarks { grid-template-columns:repeat(2,minmax(0,1fr)); } table { display:block; overflow-x:auto; } .topbar { position:static; } }
+    @media (max-width:900px) { .grid,.benchmarks { grid-template-columns:repeat(2,minmax(0,1fr)); } .topbar { position:static; } }
   </style>
 </head>
 <body><main>
@@ -289,8 +280,7 @@ function section(project, title=null, voompAvailable=true) {
   const consolidated = project.key === 'consolidado';
   const ticketValue = consolidated && s.purchases_voomp ? s.purchase_ticket_total / s.purchases_voomp : (project.productPrice || 67);
   const ticketHint = consolidated ? 'média ponderada pelas compras Voomp' : 'referência para os custos percentuais';
-  const charts = voompAvailable ? `<div class="charts"><div class="panel">${salesAndSpendChart(project)}</div><div class="panel">${salesAndSpendChart(project, true)}</div></div>` : `<div class="panel" style="margin-top:18px"><div class="chart-title">Receita e lucro por detalhamento</div><p class="muted">A Voomp disponibilizada hoje é consolidada por base, não por campanha, conjunto ou anúncio. Por isso, receita, lucro e métricas Voomp ficam como N/D neste nível.</p></div>`;
-  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s, ticketValue, ticketHint, voompAvailable)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s, voompAvailable)}</div>${charts}<h3>Últimos 14 dias do período</h3>${table(project)}</section>`;
+  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s, ticketValue, ticketHint, voompAvailable)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s, voompAvailable)}</div></section>`;
 }
 function render() {
   const filtered = DATA.projects.map(withFilteredRows);
