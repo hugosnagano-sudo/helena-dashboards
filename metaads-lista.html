@@ -27,47 +27,57 @@
     main { max-width:1180px; margin:0 auto; padding:24px 20px 56px; }
     h1 { font-size:34px; margin:0 0 8px; } h2 { margin:0 0 6px; border-left:5px solid var(--accent,#22c55e); padding-left:10px; } h3 { margin-top:28px; }
     .muted,.hint { color:var(--muted); } .hint { font-size:12px; margin-top:4px; }
-    .topbar { display:flex; justify-content:flex-start; align-items:center; gap:12px; margin-bottom:14px; position:sticky; top:0; z-index:5; padding:8px 0; backdrop-filter:blur(10px); flex-wrap:wrap; }
-    .control-row { display:flex; flex-direction:column; align-items:stretch; gap:10px; background:rgba(15,23,42,.92); border:1px solid rgba(148,163,184,.25); border-radius:14px; padding:10px 12px; box-shadow:0 10px 30px rgba(0,0,0,.22); }
-    .base-row,.date-row,.breakdown-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .topbar { margin-bottom:14px; position:sticky; top:0; z-index:5; padding:8px 0; backdrop-filter:blur(10px); }
+    .date-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:10px; }
     .field { display:flex; align-items:center; gap:8px; }
     .field label { color:#cbd5e1; font-size:13px; font-weight:700; }
     select,input[type=date] { background:#0b1220; color:var(--text); border:1px solid rgba(148,163,184,.35); border-radius:10px; padding:8px 10px; font-weight:700; }
-    select { min-width:220px; } input[type=date] { min-width:145px; }
+    select { min-width:180px; width:100%; } input[type=date] { min-width:145px; }
     .source-modified output { color:var(--muted); font-size:13px; font-weight:700; }
     button { background:#1d4ed8; color:white; border:0; border-radius:10px; padding:9px 12px; font-weight:800; cursor:pointer; } button.secondary { background:#334155; }
     .hero { display:grid; grid-template-columns:1fr; gap:16px; align-items:stretch; margin-bottom:22px; }
     .panel,.project { background:rgba(17,24,39,.86); border:1px solid rgba(148,163,184,.18); border-radius:18px; padding:18px; box-shadow:0 14px 40px rgba(0,0,0,.25); }
     .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .benchmarks { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .benchmark-card { background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:14px; min-height:96px; }
-    .benchmark-card.good { border-color:rgba(34,197,94,.45); } .benchmark-card.warn { border-color:rgba(245,158,11,.45); } .benchmark-card.bad { border-color:rgba(239,68,68,.45); }
-    .benchmark-row { display:flex; justify-content:space-between; gap:10px; align-items:baseline; margin-top:8px; } .benchmark-row strong { font-size:22px; } .benchmark-row span { color:var(--muted); font-size:12px; font-weight:800; }
+    .table-wrap { overflow-x:auto; border:1px solid rgba(148,163,184,.2); border-radius:14px; background:rgba(15,23,42,.92); box-shadow:0 10px 30px rgba(0,0,0,.22); }
+    .benchmark-table { width:100%; min-width:1080px; border-collapse:collapse; }
+    .benchmark-table th,.benchmark-table td { padding:11px 12px; border-bottom:1px solid rgba(148,163,184,.16); text-align:left; vertical-align:middle; }
+    .benchmark-table th { color:#cbd5e1; font-size:11px; letter-spacing:.08em; text-transform:uppercase; background:#111827; white-space:nowrap; }
+    .benchmark-table td { font-size:13px; }
+    .benchmark-table tbody:last-child tr:last-child td { border-bottom:0; }
+    .selection-row td { background:#0b1220; }
+    .selection-row select { min-width:150px; }
+    .selection-note { color:var(--muted); font-size:12px; }
+    .benchmark-name { font-weight:800; color:#e5e7eb; }
+    .benchmark-current { font-size:18px; font-weight:850; white-space:nowrap; }
+    .benchmark-target { color:var(--muted); font-weight:700; white-space:nowrap; }
+    .status { font-weight:800; white-space:nowrap; }
+    .status.good { color:#4ade80; } .status.bad { color:#f87171; } .status.warn { color:#fbbf24; }
     .card { background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:14px; min-height:96px; }
     .label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; } .value { font-size:25px; font-weight:750; margin-top:8px; }
     .project { margin-top:18px; }
-    @media (max-width:900px) { .grid,.benchmarks { grid-template-columns:repeat(2,minmax(0,1fr)); } .topbar { position:static; } }
+    @media (max-width:900px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .topbar { position:static; } }
   </style>
 </head>
 <body><main>
   <div class="hero"><div class="panel"><h1>MetaAds Lista</h1><p class="muted" id="lastUpdated"></p></div></div>
   <div class="topbar">
-    <div class="control-row">
-      <div class="base-row">
-        <div class="field"><label for="baseSelect">Base</label><select id="baseSelect"></select></div>
-        <div class="field source-modified"><label>Planilha atualizada em</label><output id="sheetModified">—</output></div>
-      </div>
-      <div class="breakdown-row">
-      <div class="field"><label for="campaignSelect">Campanha</label><select id="campaignSelect"></select></div>
-      <div class="field"><label for="adsetSelect">Conjunto</label><select id="adsetSelect"></select></div>
-      <div class="field"><label for="adSelect">Anúncio</label><select id="adSelect"></select></div>
-      </div>
-      <div class="date-row">
+    <div class="table-wrap"><table class="benchmark-table" aria-label="Benchmarks e seleção de nível">
+      <thead><tr><th>Base</th><th>Campanha</th><th>Conjunto de anúncios</th><th>Anúncio</th><th>Benchmark</th><th>Resultado</th><th>Meta</th><th>Status</th></tr></thead>
+      <tbody><tr class="selection-row">
+        <td><select id="baseSelect" aria-label="Base"></select></td>
+        <td><select id="campaignSelect" aria-label="Campanha"></select></td>
+        <td><select id="adsetSelect" aria-label="Conjunto de anúncios"></select></td>
+        <td><select id="adSelect" aria-label="Anúncio"></select></td>
+        <td colspan="4" class="selection-note">Use as quatro primeiras colunas para filtrar em sequência: base → campanha → conjunto → anúncio.</td>
+      </tr></tbody>
+      <tbody id="benchmarkRows"></tbody>
+    </table></div>
+    <div class="date-row">
+      <div class="field source-modified"><label>Planilha atualizada em</label><output id="sheetModified">—</output></div>
       <div class="field"><label for="startDate">Data inicial</label><input id="startDate" type="date" /></div>
       <div class="field"><label for="endDate">Data final</label><input id="endDate" type="date" /></div>
       <div class="field"><label for="periodSelect">Período</label><select id="periodSelect"><option value="2">Últimos 2 dias</option><option value="7">Últimos 7 dias</option><option value="14">Últimos 14 dias</option><option value="28" selected>Últimos 28 dias</option><option value="max">Máximo</option></select></div>
       <button id="clearDates" class="secondary" type="button">Limpar datas</button>
-      </div>
     </div>
   </div>
   <div id="app"></div>
@@ -107,6 +117,7 @@ const startDate = document.getElementById('startDate');
 const endDate = document.getElementById('endDate');
 const periodSelect = document.getElementById('periodSelect');
 const app = document.getElementById('app');
+const benchmarkRows = document.getElementById('benchmarkRows');
 const lastUpdated = document.getElementById('lastUpdated');
 const sheetModified = document.getElementById('sheetModified');
 
@@ -196,29 +207,28 @@ function summarize(rows, productPrice=67) {
   return s;
 }
 function card(label, value, hint='') { return `<div class="card"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div><div class="hint">${esc(hint)}</div></div>`; }
-function benchmarkCard(label, current, ideal, available=true) {
-  const tone = !available ? 'warn' : (Number(current || 0) >= Number(ideal || 0) ? 'good' : 'bad');
-  const currentText = available ? pct(current) : 'N/D';
-  const idealText = ideal ? `Ideal: acima de ${pct(ideal)}` : 'Referência salva';
-  return `<div class="benchmark-card ${tone}"><div class="label">${esc(label)}</div><div class="benchmark-row"><strong>${esc(currentText)}</strong><span>${esc(idealText)}</span></div></div>`;
+function benchmarkEntries(s, voompAvailable=true) { return [
+  ['Connect Rate', s.connect_rate, BENCHMARKS.connectRate, s.link_clicks > 0, 'acima de'],
+  ['Custo por View de Página de Destino', s.cost_landing_pct, BENCHMARKS.costLandingObjective, s.landing_views > 0, 'até'],
+  ['Custo por Finalização de Compra', s.cost_checkout_pct, BENCHMARKS.costCheckoutObjective, s.checkouts_meta > 0, 'até'],
+  ['Custo por Resultado (Voomp)', s.cost_result_pct, BENCHMARKS.costResultObjective, voompAvailable && s.purchases_voomp > 0, 'até'],
+  ['Page → Checkout', s.page_to_checkout, BENCHMARKS.pageToCheckout, s.landing_views > 0, 'acima de'],
+  ['Taxa Checkout vs Compra', s.checkout_purchase_rate_voomp, BENCHMARKS.checkoutPurchase, voompAvailable && s.checkouts_meta > 0, 'acima de'],
+  ['Taxa PageView vs Compra', s.page_purchase_rate_voomp, BENCHMARKS.pagePurchase, voompAvailable && s.landing_views > 0, 'acima de'],
+  ['Taxa de Compra OrderBump 1', 0, BENCHMARKS.orderBump1, false, 'acima de'],
+  ['Taxa de Compra OrderBump 2', 0, BENCHMARKS.orderBump2, false, 'acima de'],
+  ['Taxa de Compra OrderBump 3', 0, BENCHMARKS.orderBump3, false, 'acima de'],
+  ['Taxa de Compra Upsell', 0, BENCHMARKS.upsell, false, 'acima de'],
+  ['Taxa de Compra Downsell', 0, BENCHMARKS.downsell, false, 'acima de']
+]; }
+function benchmarkTable(s, context, voompAvailable=true) {
+  const labels = [context.base, context.campaign, context.adset, context.ad];
+  return benchmarkEntries(s, voompAvailable).map(([label, current, ideal, available, direction]) => {
+    const tone = !available ? 'warn' : (direction === 'até' ? Number(current || 0) <= Number(ideal || 0) : Number(current || 0) >= Number(ideal || 0)) ? 'good' : 'bad';
+    const status = !available ? 'Sem dados' : tone === 'good' ? 'Dentro da meta' : 'Fora da meta';
+    return `<tr>${labels.map(value => `<td>${esc(value || 'Todos')}</td>`).join('')}<td class="benchmark-name">${esc(label)}</td><td class="benchmark-current">${esc(available ? pct(current) : 'N/D')}</td><td class="benchmark-target">Ideal: ${esc(direction)} ${esc(pct(ideal))}</td><td><span class="status ${tone}">${esc(status)}</span></td></tr>`;
+  }).join('');
 }
-function costBenchmarkCard(label, current, ideal, available=true) {
-  const tone = !available ? 'warn' : (Number(current || 0) <= Number(ideal || 0) ? 'good' : 'bad');
-  return `<div class="benchmark-card ${tone}"><div class="label">${esc(label)}</div><div class="benchmark-row"><strong>${esc(available ? pct(current) : 'N/D')}</strong><span>${esc(`Ideal: até ${pct(ideal)}`)}</span></div></div>`;
-}
-function benchmarks(s, voompAvailable=true) { return `
-  ${benchmarkCard('Connect Rate', s.connect_rate, BENCHMARKS.connectRate, s.link_clicks > 0)}
-  ${costBenchmarkCard('Custo por View de Página de Destino', s.cost_landing_pct, BENCHMARKS.costLandingObjective, s.landing_views > 0)}
-  ${costBenchmarkCard('Custo por Finalização de Compra', s.cost_checkout_pct, BENCHMARKS.costCheckoutObjective, s.checkouts_meta > 0)}
-  ${costBenchmarkCard('Custo por Resultado (Voomp)', s.cost_result_pct, BENCHMARKS.costResultObjective, voompAvailable && s.purchases_voomp > 0)}
-  ${benchmarkCard('Page → Checkout', s.page_to_checkout, BENCHMARKS.pageToCheckout, s.landing_views > 0)}
-  ${benchmarkCard('Taxa Checkout vs Compra', s.checkout_purchase_rate_voomp, BENCHMARKS.checkoutPurchase, voompAvailable && s.checkouts_meta > 0)}
-  ${benchmarkCard('Taxa PageView vs Compra', s.page_purchase_rate_voomp, BENCHMARKS.pagePurchase, voompAvailable && s.landing_views > 0)}
-  ${benchmarkCard('Taxa de Compra OrderBump 1', 0, BENCHMARKS.orderBump1, false)}
-  ${benchmarkCard('Taxa de Compra OrderBump 2', 0, BENCHMARKS.orderBump2, false)}
-  ${benchmarkCard('Taxa de Compra OrderBump 3', 0, BENCHMARKS.orderBump3, false)}
-  ${benchmarkCard('Taxa de Compra Upsell', 0, BENCHMARKS.upsell, false)}
-  ${benchmarkCard('Taxa de Compra Downsell', 0, BENCHMARKS.downsell, false)}`; }
 function cards(s, ticketValue, ticketHint, voompAvailable=true) { return `
   ${card('Gasto total', brl(s.spend), 'Meta Ads')}
   ${card('Ticket considerado', brl(ticketValue), ticketHint)}
@@ -280,7 +290,7 @@ function section(project, title=null, voompAvailable=true) {
   const consolidated = project.key === 'consolidado';
   const ticketValue = consolidated && s.purchases_voomp ? s.purchase_ticket_total / s.purchases_voomp : (project.productPrice || 67);
   const ticketHint = consolidated ? 'média ponderada pelas compras Voomp' : 'referência para os custos percentuais';
-  return `<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s, ticketValue, ticketHint, voompAvailable)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p><div class="benchmarks">${benchmarks(s, voompAvailable)}</div></section>`;
+  return { html:`<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s, ticketValue, ticketHint, voompAvailable)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p></section>`, summary:s, voompAvailable };
 }
 function render() {
   const filtered = DATA.projects.map(withFilteredRows);
@@ -291,26 +301,30 @@ function render() {
   sheetModified.textContent = sourceModifiedAt
     ? dateTime(sourceModifiedAt)
     : '—';
-  let html = '';
+  let result;
+  let context = {base: baseSelect.options[baseSelect.selectedIndex]?.text || 'Todos', campaign: campaignSelect.value || 'Todas', adset: adsetSelect.value || 'Todos', ad: adSelect.value || 'Todos'};
   if (selected === 'consolidado') {
     campaignSelect.disabled = adsetSelect.disabled = adSelect.disabled = true;
     campaignSelect.innerHTML = '<option>Selecione uma base</option>'; adsetSelect.innerHTML = '<option>Selecione uma base</option>'; adSelect.innerHTML = '<option>Selecione uma base</option>';
     const total = {key:'consolidado', name:'Dados consolidados', color:'#22c55e', note:'Soma diária de todas as bases; custos ponderados pelo ticket de cada produto', rows:aggregateProjects(filtered)};
-    html += section(total, 'Dados consolidados');
+    result = section(total, 'Dados consolidados');
+    context = {base:'Dados consolidados', campaign:'—', adset:'—', ad:'—'};
   } else {
     const p = filtered.find(p => p.key === selected);
-    if (!p) html += `<p class="muted">Base não encontrada.</p>`;
+    if (!p) result = {html:`<p class="muted">Base não encontrada.</p>`, summary:null, voompAvailable:false};
     else {
       refreshBreakdownOptions(p);
+      context = {base:p.name, campaign:campaignSelect.value || 'Todas', adset:adsetSelect.value || 'Todos', ad:adSelect.value || 'Todos'};
       const drilldown = drilldownLabel();
       if (drilldown) {
         const details = selectedBreakdownRows(p);
         const summary = aggregateProjects([{...p, rows: details}]);
-        html += section({...p, name: drilldown, note: `Detalhamento de ${p.name}; métricas de entrega da Meta Ads`, rows: summary}, drilldown, false);
-      } else html += section(p);
+        result = section({...p, name: drilldown, note: `Detalhamento de ${p.name}; métricas de entrega da Meta Ads`, rows: summary}, drilldown, false);
+      } else result = section(p);
     }
   }
-  app.innerHTML = html;
+  app.innerHTML = result.html;
+  benchmarkRows.innerHTML = result.summary ? benchmarkTable(result.summary, context, result.voompAvailable) : '';
   setupChartTooltips();
   try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:selected,period:periodSelect.value,start:startDate.value,end:endDate.value})); } catch(e) {}
 }
