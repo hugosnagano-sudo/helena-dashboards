@@ -66,6 +66,11 @@ def values(sheet_id: str, range_name: str = "MetaAds!A:X") -> list[list[str]]:
     return json.loads(out)
 
 
+def sheet_modified_at(sheet_id: str) -> str | None:
+    out = subprocess.check_output([GOG, "-a", ACCOUNT, "drive", "get", sheet_id, "--json", "--results-only"], text=True)
+    return json.loads(out).get("modifiedTime")
+
+
 def number(value: str) -> float:
     return float(str(value or "0").replace(".", "").replace(",", "."))
 
@@ -144,6 +149,7 @@ def main() -> None:
     projects = []
     report = {}
     sheets = {}
+    sheet_modified = {}
     voomp_rows = {
         "lt": values(VOOMP_SHEETS["lt"], "Vendas!A:CO"),
         "primeiros-dentinhos": values(VOOMP_SHEETS["primeiros-dentinhos"], "Vendas!A:CO"),
@@ -153,6 +159,7 @@ def main() -> None:
         sheet_id = source["sheet_id"]
         if sheet_id not in sheets:
             sheets[sheet_id] = values(sheet_id)
+            sheet_modified[sheet_id] = sheet_modified_at(sheet_id)
         fresh, details = daily(sheets[sheet_id], source["has_header"], source.get("category"))
         previous = existing_projects.get(key, {})
         existing = {row["date"]: row for row in previous.get("rows", [])}
@@ -169,6 +176,7 @@ def main() -> None:
             "short": source["short"],
             "color": source["color"],
             "note": source["note"],
+            "sourceModifiedAt": sheet_modified[sheet_id],
             "rows": [existing[d] for d in sorted(existing)],
             "detailRows": details,
         })
