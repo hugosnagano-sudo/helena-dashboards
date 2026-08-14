@@ -49,9 +49,8 @@
     .selection-note { color:var(--muted); font-size:10px; }
     .benchmark-column { min-width:150px; white-space:normal !important; }
     .benchmark-current { font-size:13px; font-weight:850; white-space:nowrap; }
+    .benchmark-current.good { color:#4ade80; } .benchmark-current.bad { color:#f87171; } .benchmark-current.warn { color:#fbbf24; }
     .benchmark-target { display:block; margin-top:2px; color:var(--muted); font-size:10px; font-weight:700; white-space:nowrap; }
-    .status { font-size:10px; font-weight:800; white-space:nowrap; }
-    .status.good { color:#4ade80; } .status.bad { color:#f87171; } .status.warn { color:#fbbf24; }
     .card { background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:14px; min-height:96px; }
     .label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; } .value { font-size:25px; font-weight:750; margin-top:8px; }
     .project { margin-top:18px; }
@@ -237,8 +236,7 @@ function benchmarkEntries(s, voompAvailable=true) { return [
 function benchmarkCells(s, voompAvailable=false) {
   return benchmarkEntries(s, voompAvailable).map(([, current, ideal, available, direction]) => {
     const tone = !available ? 'warn' : (direction === 'até' ? Number(current || 0) <= Number(ideal || 0) : Number(current || 0) >= Number(ideal || 0)) ? 'good' : 'bad';
-    const status = !available ? 'Sem dados' : tone === 'good' ? 'Dentro da meta' : 'Fora da meta';
-    return `<td><span class="benchmark-current">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">Meta: ${esc(direction)} ${esc(pct(ideal))}</span><span class="status ${tone}">${esc(status)}</span></td>`;
+    return `<td><span class="benchmark-current ${tone}">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">Meta: ${esc(direction)} ${esc(pct(ideal))}</span></td>`;
   }).join('');
 }
 function benchmarkTable(groups) {
