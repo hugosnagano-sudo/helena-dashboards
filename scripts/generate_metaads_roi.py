@@ -11,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML = ROOT / "index.html"
+DASHBOARD_HTMLS = (HTML, ROOT / "metaads-lista.html")
 GOG = "/data/.openclaw/bin/gog"
 ACCOUNT = "agente.drahelen@gmail.com"
 SOURCES = {
@@ -58,6 +59,7 @@ VOOMP_SHEETS = {
     "lt": "1JQPLF1diqFFvDENstwsa6NUdVoJOC5phSSrbYe1qZiI",
     "primeiros-dentinhos": "1pUaUDlMpkki6_ribAaif2f6h3QRBZNq9fbymMBalKu8",
 }
+ANALYSES_SHEET = "1racOzPJf2JqfvA4etRDFmxKRdl6fcGtG23KiElW7x3Q"
 FIELDS = ["date", "account", "account_id", "campaign_id", "campaign_name", "adset_id", "adset_name", "ad_id", "ad_name", "spend", "currency", "impressions", "clicks", "ctr", "cpc", "cpm", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta", "source", "notes", "link_clicks"]
 
 
@@ -104,6 +106,39 @@ def voomp_daily(rows: list[list[str]], product_name: str | None = None) -> dict[
         data[date]["value_voomp"] += number(value("sale.seller_balance"))
     return {date: {"purchases_voomp": values["purchases_voomp"], "value_voomp": round(values["value_voomp"], 2)}
             for date, values in data.items()}
+
+
+def attributed_voomp(rows: list[list[str]], product_name: str | None = None, product_fragment: str | None = None) -> dict[tuple[str, str], dict]:
+    """Agrupa vendas pagas já atribuídas a um anúncio pela aba de Análises."""
+    if not rows:
+        return {}
+    header = {name: index for index, name in enumerate(rows[0])}
+    required = ("Produto", "Data/hora pagamento (BRT)", "Saldo Voomp", "ID do anúncio", "Confiança")
+    missing = [name for name in required if name not in header]
+    if missing:
+        raise RuntimeError(f"Colunas da atribuição ausentes: {', '.join(missing)}")
+    data = defaultdict(lambda: {"purchases_voomp": 0, "value_voomp": 0.0})
+    for row in rows[1:]:
+        def value(name: str) -> str:
+            index = header[name]
+            return str(row[index]) if index < len(row) else ""
+        if value("Confiança") == "Sem atribuição":
+            continue
+        if product_name and value("Produto") != product_name:
+            continue
+        if product_fragment and product_fragment.lower() not in value("Produto").lower():
+            continue
+        try:
+            date = datetime.strptime(value("Data/hora pagamento (BRT)"), "%d/%m/%Y %H:%M:%S").strftime("%Y-%m-%d")
+        except ValueError:
+            continue
+        ad_id = value("ID do anúncio")
+        if not ad_id:
+            continue
+        data[(date, ad_id)]["purchases_voomp"] += 1
+        data[(date, ad_id)]["value_voomp"] += number(value("Saldo Voomp"))
+    return {key: {"purchases_voomp": values["purchases_voomp"], "value_voomp": round(values["value_voomp"], 2)}
+            for key, values in data.items()}
 
 
 def daily(rows: list[list[str]], has_header: bool, category: str | None = None) -> tuple[dict[str, dict], list[dict]]:
@@ -154,6 +189,7 @@ def main() -> None:
         "lt": values(VOOMP_SHEETS["lt"], "Vendas!A:CO"),
         "primeiros-dentinhos": values(VOOMP_SHEETS["primeiros-dentinhos"], "Vendas!A:CO"),
     }
+    attribution_rows = values(ANALYSES_SHEET, "Atribuição de Vendas!A:S")
     voomp = {"primeiros-dentinhos": voomp_daily(voomp_rows["primeiros-dentinhos"])}
     for key, source in SOURCES.items():
         sheet_id = source["sheet_id"]
@@ -165,6 +201,25 @@ def main() -> None:
         existing = {row["date"]: row for row in previous.get("rows", [])}
         product_sales = (voomp["primeiros-dentinhos"] if key == "primeiros-dentinhos"
                          else voomp_daily(voomp_rows["lt"], source.get("voomp_product")))
+        attributed_sales = attributed_voomp(
+            attribution_rows,
+            None if key == "primeiros-dentinhos" else source.get("voomp_product"),
+            "dentinhos" if key == "primeiros-dentinhos" else None,
+        )
+        detail_by_key = {(detail["date"], detail["ad_id"]): detail for detail in details}
+        for sales_key, sales in attributed_sales.items():
+            detail = detail_by_key.get(sales_key)
+            if detail is None:
+                _, ad_id = sales_key
+                template = next((item for item in details if item["ad_id"] == ad_id), None)
+                if template is None:
+                    continue
+                detail = {**template, "date": sales_key[0]}
+                for metric in ("spend", "impressions", "clicks", "link_clicks", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"):
+                    detail[metric] = 0
+                details.append(detail)
+                detail_by_key[sales_key] = detail
+            detail.update(sales)
         all_dates = sorted(set(existing) | set(fresh) | set(product_sales))
         for date in all_dates:
             row = fresh.get(date, existing.get(date, {"date": date, "currency": "BRL"}) )
@@ -181,11 +236,20 @@ def main() -> None:
             "detailRows": details,
         })
         report[key] = {"days_updated": len(fresh), "last_date": max(fresh) if fresh else None,
-                       "voomp_sales": sum(day["purchases_voomp"] for day in product_sales.values())}
+                       "voomp_sales": sum(day["purchases_voomp"] for day in product_sales.values()),
+                       "attributed_voomp_sales": sum(day["purchases_voomp"] for day in attributed_sales.values())}
     payload["projects"] = projects
     payload["generatedAt"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     output = json.dumps(payload, ensure_ascii=False)
-    HTML.write_text(text[:match.start(1)] + output + text[match.end(1):], encoding="utf-8")
+    for dashboard_html in DASHBOARD_HTMLS:
+        dashboard_text = dashboard_html.read_text(encoding="utf-8")
+        dashboard_match = re.search(r'<script id="dashboard-data" type="application/json">(.*?)</script>', dashboard_text, re.S)
+        if not dashboard_match:
+            raise RuntimeError(f"Dados embutidos não encontrados em {dashboard_html.name}")
+        dashboard_html.write_text(
+            dashboard_text[:dashboard_match.start(1)] + output + dashboard_text[dashboard_match.end(1):],
+            encoding="utf-8",
+        )
     print(json.dumps(report, ensure_ascii=False))
 
 
