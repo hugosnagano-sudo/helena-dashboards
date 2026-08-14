@@ -39,7 +39,7 @@
     .panel,.project { background:rgba(17,24,39,.86); border:1px solid rgba(148,163,184,.18); border-radius:18px; padding:18px; box-shadow:0 14px 40px rgba(0,0,0,.25); }
     .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
     .table-wrap { overflow-x:auto; border:1px solid rgba(148,163,184,.2); border-radius:14px; background:rgba(15,23,42,.92); box-shadow:0 10px 30px rgba(0,0,0,.22); }
-    .benchmark-table { width:100%; min-width:1080px; border-collapse:collapse; }
+    .benchmark-table { width:100%; min-width:3120px; border-collapse:collapse; }
     .benchmark-table th,.benchmark-table td { padding:11px 12px; border-bottom:1px solid rgba(148,163,184,.16); text-align:left; vertical-align:middle; }
     .benchmark-table th { color:#cbd5e1; font-size:11px; letter-spacing:.08em; text-transform:uppercase; background:#111827; white-space:nowrap; }
     .benchmark-table td { font-size:13px; }
@@ -47,9 +47,9 @@
     .selection-row td { background:#0b1220; }
     .selection-row select { min-width:150px; }
     .selection-note { color:var(--muted); font-size:12px; }
-    .benchmark-name { font-weight:800; color:#e5e7eb; }
-    .benchmark-current { font-size:18px; font-weight:850; white-space:nowrap; }
-    .benchmark-target { color:var(--muted); font-weight:700; white-space:nowrap; }
+    .benchmark-column { min-width:210px; white-space:normal !important; }
+    .benchmark-current { font-size:16px; font-weight:850; white-space:nowrap; }
+    .benchmark-target { display:block; margin-top:3px; color:var(--muted); font-weight:700; white-space:nowrap; }
     .status { font-weight:800; white-space:nowrap; }
     .status.good { color:#4ade80; } .status.bad { color:#f87171; } .status.warn { color:#fbbf24; }
     .card { background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:14px; min-height:96px; }
@@ -62,13 +62,13 @@
   <div class="hero"><div class="panel"><h1>MetaAds Lista</h1><p class="muted" id="lastUpdated"></p></div></div>
   <div class="topbar">
     <div class="table-wrap"><table class="benchmark-table" aria-label="Benchmarks e seleção de nível">
-      <thead><tr><th>Base</th><th>Campanha</th><th>Conjunto de anúncios</th><th>Anúncio</th><th>Benchmark</th><th>Resultado</th><th>Meta</th><th>Status</th></tr></thead>
+      <thead><tr><th>Base</th><th>Campanha</th><th>Conjunto de anúncios</th><th>Anúncio</th><th class="benchmark-column">Connect Rate</th><th class="benchmark-column">Custo por View de Página de Destino</th><th class="benchmark-column">Custo por Finalização de Compra</th><th class="benchmark-column">Custo por Resultado (Voomp)</th><th class="benchmark-column">Page → Checkout</th><th class="benchmark-column">Taxa Checkout vs Compra</th><th class="benchmark-column">Taxa PageView vs Compra</th><th class="benchmark-column">Taxa de Compra OrderBump 1</th><th class="benchmark-column">Taxa de Compra OrderBump 2</th><th class="benchmark-column">Taxa de Compra OrderBump 3</th><th class="benchmark-column">Taxa de Compra Upsell</th><th class="benchmark-column">Taxa de Compra Downsell</th></tr></thead>
       <tbody><tr class="selection-row">
         <td><select id="baseSelect" aria-label="Base"></select></td>
         <td><select id="campaignSelect" aria-label="Campanha"></select></td>
         <td><select id="adsetSelect" aria-label="Conjunto de anúncios"></select></td>
         <td><select id="adSelect" aria-label="Anúncio"></select></td>
-        <td colspan="4" class="selection-note">Use as quatro primeiras colunas para filtrar em sequência: base → campanha → conjunto → anúncio.</td>
+        <td colspan="12" class="selection-note">Use as quatro primeiras colunas para filtrar em sequência: base → campanha → conjunto → anúncio.</td>
       </tr></tbody>
       <tbody id="benchmarkRows"></tbody>
     </table></div>
@@ -223,11 +223,12 @@ function benchmarkEntries(s, voompAvailable=true) { return [
 ]; }
 function benchmarkTable(s, context, voompAvailable=true) {
   const labels = [context.base, context.campaign, context.adset, context.ad];
-  return benchmarkEntries(s, voompAvailable).map(([label, current, ideal, available, direction]) => {
+  const cells = benchmarkEntries(s, voompAvailable).map(([, current, ideal, available, direction]) => {
     const tone = !available ? 'warn' : (direction === 'até' ? Number(current || 0) <= Number(ideal || 0) : Number(current || 0) >= Number(ideal || 0)) ? 'good' : 'bad';
     const status = !available ? 'Sem dados' : tone === 'good' ? 'Dentro da meta' : 'Fora da meta';
-    return `<tr>${labels.map(value => `<td>${esc(value || 'Todos')}</td>`).join('')}<td class="benchmark-name">${esc(label)}</td><td class="benchmark-current">${esc(available ? pct(current) : 'N/D')}</td><td class="benchmark-target">Ideal: ${esc(direction)} ${esc(pct(ideal))}</td><td><span class="status ${tone}">${esc(status)}</span></td></tr>`;
+    return `<td><span class="benchmark-current">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">Meta: ${esc(direction)} ${esc(pct(ideal))}</span><span class="status ${tone}">${esc(status)}</span></td>`;
   }).join('');
+  return `<tr>${labels.map(value => `<td>${esc(value || 'Todos')}</td>`).join('')}${cells}</tr>`;
 }
 function cards(s, ticketValue, ticketHint, voompAvailable=true) { return `
   ${card('Gasto total', brl(s.spend), 'Meta Ads')}
