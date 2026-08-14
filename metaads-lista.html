@@ -149,8 +149,18 @@ function optionList(select, values, blank, keep='') {
   if (keep && values.includes(keep)) select.value = keep;
   select.disabled = !values.length;
 }
-function refreshBreakdownOptions(project) {
-  const details = (project?.detailRows || []).filter(inRange);
+function allDetailRows() {
+  return DATA.projects.flatMap(project => (project.detailRows || []).map(row => ({...row, base_key:project.key, base_name:project.name, product_price:PRODUCT_PRICES[project.key] || 67})));
+}
+function filteredDetailRows() {
+  return allDetailRows().filter(row => inRange(row)
+    && (!baseSelect.value || row.base_key === baseSelect.value)
+    && (!campaignSelect.value || row.campaign_name === campaignSelect.value)
+    && (!adsetSelect.value || row.adset_name === adsetSelect.value)
+    && (!adSelect.value || row.ad_name === adSelect.value));
+}
+function refreshBreakdownOptions() {
+  const details = allDetailRows().filter(row => inRange(row) && (!baseSelect.value || row.base_key === baseSelect.value));
   const campaigns = [...new Set(details.map(row => row.campaign_name).filter(Boolean))].sort();
   const priorCampaign = campaignSelect.value;
   optionList(campaignSelect, campaigns, 'Todas as campanhas', priorCampaign);
@@ -160,14 +170,17 @@ function refreshBreakdownOptions(project) {
   const ads = [...new Set(details.filter(row => (!campaignSelect.value || row.campaign_name === campaignSelect.value) && (!adsetSelect.value || row.adset_name === adsetSelect.value)).map(row => row.ad_name).filter(Boolean))].sort();
   optionList(adSelect, ads, 'Todos os anúncios', adSelect.value);
 }
-function selectedBreakdownRows(project) {
-  return (project.detailRows || []).filter(row => inRange(row)
-    && (!campaignSelect.value || row.campaign_name === campaignSelect.value)
-    && (!adsetSelect.value || row.adset_name === adsetSelect.value)
-    && (!adSelect.value || row.ad_name === adSelect.value));
-}
-function drilldownLabel() {
-  return [campaignSelect.value, adsetSelect.value, adSelect.value].filter(Boolean).join(' › ');
+function activeAds() {
+  const groups = new Map();
+  for (const row of filteredDetailRows()) {
+    const key = [row.base_key, row.campaign_id || row.campaign_name, row.adset_id || row.adset_name, row.ad_id || row.ad_name].join('|');
+    const group = groups.get(key) || {base:row.base_name, campaign:row.campaign_name, adset:row.adset_name, ad:row.ad_name, productPrice:row.product_price, rows:[]};
+    group.rows.push(row); groups.set(key, group);
+  }
+  return [...groups.values()]
+    .map(group => ({...group, summary:summarize(group.rows, group.productPrice)}))
+    .filter(group => group.summary.spend > 0 || group.summary.impressions > 0)
+    .sort((a,b) => [a.base,a.campaign,a.adset,a.ad].join('|').localeCompare([b.base,b.campaign,b.adset,b.ad].join('|'), 'pt-BR'));
 }
 function aggregateProjects(projects) {
   const byDate = new Map();
@@ -221,14 +234,16 @@ function benchmarkEntries(s, voompAvailable=true) { return [
   ['Taxa de Compra Upsell', 0, BENCHMARKS.upsell, false, 'acima de'],
   ['Taxa de Compra Downsell', 0, BENCHMARKS.downsell, false, 'acima de']
 ]; }
-function benchmarkTable(s, context, voompAvailable=true) {
-  const labels = [context.base, context.campaign, context.adset, context.ad];
-  const cells = benchmarkEntries(s, voompAvailable).map(([, current, ideal, available, direction]) => {
+function benchmarkCells(s, voompAvailable=false) {
+  return benchmarkEntries(s, voompAvailable).map(([, current, ideal, available, direction]) => {
     const tone = !available ? 'warn' : (direction === 'até' ? Number(current || 0) <= Number(ideal || 0) : Number(current || 0) >= Number(ideal || 0)) ? 'good' : 'bad';
     const status = !available ? 'Sem dados' : tone === 'good' ? 'Dentro da meta' : 'Fora da meta';
     return `<td><span class="benchmark-current">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">Meta: ${esc(direction)} ${esc(pct(ideal))}</span><span class="status ${tone}">${esc(status)}</span></td>`;
   }).join('');
-  return `<tr>${labels.map(value => `<td>${esc(value || 'Todos')}</td>`).join('')}${cells}</tr>`;
+}
+function benchmarkTable(groups) {
+  if (!groups.length) return '<tr><td colspan="16" class="selection-note">Nenhum anúncio com entrega no período selecionado.</td></tr>';
+  return groups.map(group => `<tr><td>${esc(group.base)}</td><td>${esc(group.campaign)}</td><td>${esc(group.adset)}</td><td>${esc(group.ad)}</td>${benchmarkCells(group.summary)}</tr>`).join('');
 }
 function cards(s, ticketValue, ticketHint, voompAvailable=true) { return `
   ${card('Gasto total', brl(s.spend), 'Meta Ads')}
@@ -294,43 +309,21 @@ function section(project, title=null, voompAvailable=true) {
   return { html:`<section class="project" style="--accent:${project.color}"><h2>${esc(title || project.name)}</h2><p class="muted">${esc(project.note || '')} · período: ${esc(s.first_date)} → ${esc(s.last_date)} · ${s.days} dias</p><div class="grid">${cards(s, ticketValue, ticketHint, voompAvailable)}</div><h3>Benchmarks objetivos</h3><p class="hint">Metas salvas em 2026-08-10. As taxas de funil dependem de dados de página/checkout; quando ausentes, ficam como N/D.</p></section>`, summary:s, voompAvailable };
 }
 function render() {
-  const filtered = DATA.projects.map(withFilteredRows);
-  const selected = baseSelect.value;
   lastUpdated.textContent = `Versão do dia: ${dateTime(DATA.generatedAt)}.`;
-  const selectedProject = DATA.projects.find(project => project.key === selected);
-  const sourceModifiedAt = selectedProject?.sourceModifiedAt || SOURCE_MODIFIED_AT[selected];
+  const selectedProject = DATA.projects.find(project => project.key === baseSelect.value);
+  const sourceModifiedAt = selectedProject?.sourceModifiedAt || SOURCE_MODIFIED_AT[baseSelect.value];
   sheetModified.textContent = sourceModifiedAt
     ? dateTime(sourceModifiedAt)
-    : '—';
-  let result;
-  let context = {base: baseSelect.options[baseSelect.selectedIndex]?.text || 'Todos', campaign: campaignSelect.value || 'Todas', adset: adsetSelect.value || 'Todos', ad: adSelect.value || 'Todos'};
-  if (selected === 'consolidado') {
-    campaignSelect.disabled = adsetSelect.disabled = adSelect.disabled = true;
-    campaignSelect.innerHTML = '<option>Selecione uma base</option>'; adsetSelect.innerHTML = '<option>Selecione uma base</option>'; adSelect.innerHTML = '<option>Selecione uma base</option>';
-    const total = {key:'consolidado', name:'Dados consolidados', color:'#22c55e', note:'Soma diária de todas as bases; custos ponderados pelo ticket de cada produto', rows:aggregateProjects(filtered)};
-    result = section(total, 'Dados consolidados');
-    context = {base:'Dados consolidados', campaign:'—', adset:'—', ad:'—'};
-  } else {
-    const p = filtered.find(p => p.key === selected);
-    if (!p) result = {html:`<p class="muted">Base não encontrada.</p>`, summary:null, voompAvailable:false};
-    else {
-      refreshBreakdownOptions(p);
-      context = {base:p.name, campaign:campaignSelect.value || 'Todas', adset:adsetSelect.value || 'Todos', ad:adSelect.value || 'Todos'};
-      const drilldown = drilldownLabel();
-      if (drilldown) {
-        const details = selectedBreakdownRows(p);
-        const summary = aggregateProjects([{...p, rows: details}]);
-        result = section({...p, name: drilldown, note: `Detalhamento de ${p.name}; métricas de entrega da Meta Ads`, rows: summary}, drilldown, false);
-      } else result = section(p);
-    }
-  }
-  app.innerHTML = result.html;
-  benchmarkRows.innerHTML = result.summary ? benchmarkTable(result.summary, context, result.voompAvailable) : '';
+    : 'Várias bases selecionadas';
+  refreshBreakdownOptions();
+  const groups = activeAds();
+  app.innerHTML = `<p class="hint">${groups.length} anúncio(s) com entrega no período selecionado. A listagem mostra uma linha por anúncio.</p>`;
+  benchmarkRows.innerHTML = benchmarkTable(groups);
   setupChartTooltips();
   try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:selected,period:periodSelect.value,start:startDate.value,end:endDate.value})); } catch(e) {}
 }
 function setup() {
-  const opts = [['consolidado','Dados consolidados'], ...DATA.projects.map(p => [p.key,p.name])];
+  const opts = [['','Todas as bases'], ...DATA.projects.map(p => [p.key,p.name])];
   baseSelect.innerHTML = opts.map(([v,l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('');
   try {
     const saved = JSON.parse(localStorage.getItem('metaads-dashboard-state') || '{}');
