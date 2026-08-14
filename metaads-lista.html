@@ -220,22 +220,22 @@ function summarize(rows, productPrice=67) {
 }
 function card(label, value, hint='') { return `<div class="card"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div><div class="hint">${esc(hint)}</div></div>`; }
 function benchmarkEntries(s, voompAvailable=true) { return [
-  ['Connect Rate', s.connect_rate, BENCHMARKS.connectRate, s.link_clicks > 0, 'acima de'],
-  ['Custo por View de Página de Destino', s.cost_landing_pct, BENCHMARKS.costLandingObjective, s.landing_views > 0, 'até'],
-  ['Custo por Finalização de Compra', s.cost_checkout_pct, BENCHMARKS.costCheckoutObjective, s.checkouts_meta > 0, 'até'],
-  ['Custo por Resultado (Voomp)', s.cost_result_pct, BENCHMARKS.costResultObjective, voompAvailable && s.purchases_voomp > 0, 'até'],
-  ['Page → Checkout', s.page_to_checkout, BENCHMARKS.pageToCheckout, s.landing_views > 0, 'acima de'],
-  ['Taxa Checkout vs Compra', s.checkout_purchase_rate_voomp, BENCHMARKS.checkoutPurchase, voompAvailable && s.checkouts_meta > 0, 'acima de'],
-  ['Taxa PageView vs Compra', s.page_purchase_rate_voomp, BENCHMARKS.pagePurchase, voompAvailable && s.landing_views > 0, 'acima de'],
-  ['Taxa de Compra OrderBump 1', 0, BENCHMARKS.orderBump1, false, 'acima de'],
-  ['Taxa de Compra OrderBump 2', 0, BENCHMARKS.orderBump2, false, 'acima de'],
-  ['Taxa de Compra OrderBump 3', 0, BENCHMARKS.orderBump3, false, 'acima de'],
-  ['Taxa de Compra Upsell', 0, BENCHMARKS.upsell, false, 'acima de'],
-  ['Taxa de Compra Downsell', 0, BENCHMARKS.downsell, false, 'acima de']
+  ['Connect Rate', s.connect_rate, BENCHMARKS.connectRate, s.link_clicks > 0, '>'],
+  ['Custo por View de Página de Destino', s.cost_landing_pct, BENCHMARKS.costLandingObjective, s.landing_views > 0, '<'],
+  ['Custo por Finalização de Compra', s.cost_checkout_pct, BENCHMARKS.costCheckoutObjective, s.checkouts_meta > 0, '<'],
+  ['Custo por Resultado (Voomp)', s.cost_result_pct, BENCHMARKS.costResultObjective, voompAvailable && s.purchases_voomp > 0, '<'],
+  ['Page → Checkout', s.page_to_checkout, BENCHMARKS.pageToCheckout, s.landing_views > 0, '>'],
+  ['Taxa Checkout vs Compra', s.checkout_purchase_rate_voomp, BENCHMARKS.checkoutPurchase, voompAvailable && s.checkouts_meta > 0, '>'],
+  ['Taxa PageView vs Compra', s.page_purchase_rate_voomp, BENCHMARKS.pagePurchase, voompAvailable && s.landing_views > 0, '>'],
+  ['Taxa de Compra OrderBump 1', 0, BENCHMARKS.orderBump1, false, '>'],
+  ['Taxa de Compra OrderBump 2', 0, BENCHMARKS.orderBump2, false, '>'],
+  ['Taxa de Compra OrderBump 3', 0, BENCHMARKS.orderBump3, false, '>'],
+  ['Taxa de Compra Upsell', 0, BENCHMARKS.upsell, false, '>'],
+  ['Taxa de Compra Downsell', 0, BENCHMARKS.downsell, false, '>']
 ]; }
 function benchmarkCells(s, voompAvailable=false) {
   return benchmarkEntries(s, voompAvailable).map(([, current, ideal, available, direction]) => {
-    const tone = !available ? 'warn' : (direction === 'até' ? Number(current || 0) <= Number(ideal || 0) : Number(current || 0) >= Number(ideal || 0)) ? 'good' : 'bad';
+    const tone = !available ? 'warn' : (direction === '<' ? Number(current || 0) <= Number(ideal || 0) : Number(current || 0) >= Number(ideal || 0)) ? 'good' : 'bad';
     return `<td><span class="benchmark-current ${tone}">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">${esc(direction)} ${esc(pct(ideal))}</span></td>`;
   }).join('');
 }
