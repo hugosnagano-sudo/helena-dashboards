@@ -236,7 +236,7 @@ function benchmarkEntries(s, voompAvailable=true) { return [
 function benchmarkCells(s, voompAvailable=false) {
   return benchmarkEntries(s, voompAvailable).map(([, current, ideal, available, direction]) => {
     const tone = !available ? 'warn' : (direction === 'até' ? Number(current || 0) <= Number(ideal || 0) : Number(current || 0) >= Number(ideal || 0)) ? 'good' : 'bad';
-    return `<td><span class="benchmark-current ${tone}">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">Meta: ${esc(direction)} ${esc(pct(ideal))}</span></td>`;
+    return `<td><span class="benchmark-current ${tone}">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">${esc(direction)} ${esc(pct(ideal))}</span></td>`;
   }).join('');
 }
 function benchmarkTable(groups) {
