@@ -142,6 +142,14 @@ const dateTime = value => {
 function allRows() { return DATA.projects.flatMap(p => p.rows); }
 function minDate() { return allRows().map(r => r.date).filter(Boolean).sort()[0] || ''; }
 function maxDate() { return allRows().map(r => r.date).filter(Boolean).sort().at(-1) || ''; }
+function saoPauloDate(offsetDays=0) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone:'America/Sao_Paulo', year:'numeric', month:'2-digit', day:'2-digit'
+  }).formatToParts(new Date()).filter(part => part.type !== 'literal').map(part => [part.type, part.value]));
+  const date = new Date(`${parts.year}-${parts.month}-${parts.day}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + offsetDays);
+  return date.toISOString().slice(0,10);
+}
 function inRange(row) {
   if (startDate.value && row.date < startDate.value) return false;
   if (endDate.value && row.date > endDate.value) return false;
@@ -375,12 +383,10 @@ function setup() {
     if (saved.period && [...periodSelect.options].some(option => option.value === saved.period)) periodSelect.value = saved.period;
   } catch(e) {}
   const applyPeriod = () => {
-    const max = maxDate(); if (!max) return;
     if (periodSelect.value === 'max') { startDate.value = ''; endDate.value = ''; render(); return; }
-    // O último dia disponível já é o último dia fechado da base. Não o subtraia,
-    // pois isso excluía ontem quando a atualização chegava até ontem.
-    const lastAvailable = new Date(max + 'T00:00:00');
-    const first = new Date(lastAvailable); first.setDate(first.getDate() - (Number(periodSelect.value) - 1));
+    // Períodos rápidos sempre encerram em ontem, no fuso operacional (São Paulo).
+    const lastAvailable = new Date(`${saoPauloDate(-1)}T00:00:00Z`);
+    const first = new Date(lastAvailable); first.setUTCDate(first.getUTCDate() - (Number(periodSelect.value) - 1));
     startDate.value = first.toISOString().slice(0,10);
     endDate.value = lastAvailable.toISOString().slice(0,10);
     render();
