@@ -38,13 +38,16 @@
     .hero { display:grid; grid-template-columns:1fr; gap:16px; align-items:stretch; margin-bottom:22px; }
     .panel,.project { background:rgba(17,24,39,.86); border:1px solid rgba(148,163,184,.18); border-radius:18px; padding:18px; box-shadow:0 14px 40px rgba(0,0,0,.25); }
     .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .table-wrap { overflow-x:auto; border:1px solid rgba(148,163,184,.2); border-radius:14px; background:rgba(15,23,42,.92); box-shadow:0 10px 30px rgba(0,0,0,.22); }
+    .table-wrap { --table-header-height:48px; height:min(68vh,680px); overflow:auto; position:relative; border:1px solid rgba(148,163,184,.2); border-radius:14px; background:rgba(15,23,42,.92); box-shadow:0 10px 30px rgba(0,0,0,.22); }
     .benchmark-table { width:100%; min-width:1660px; border-collapse:collapse; }
     .benchmark-table th,.benchmark-table td { padding:7px 8px; border-bottom:1px solid rgba(148,163,184,.16); text-align:left; vertical-align:middle; }
-    .benchmark-table th { color:#cbd5e1; font-size:10px; letter-spacing:.04em; text-transform:uppercase; background:#111827; white-space:nowrap; }
+    .benchmark-table th { color:#cbd5e1; font-size:10px; letter-spacing:.04em; text-transform:uppercase; background:#111827; white-space:nowrap; position:sticky; top:0; z-index:3; }
+    .benchmark-table th[data-sort-key] { cursor:pointer; user-select:none; }
+    .benchmark-table th[data-sort-key]:hover { color:#fff; background:#172033; }
+    .sort-indicator { display:inline-block; margin-left:3px; color:#64748b; font-size:11px; }
     .benchmark-table td { font-size:12px; }
     .benchmark-table tbody:last-child tr:last-child td { border-bottom:0; }
-    .selection-row td { background:#0b1220; }
+    .selection-row td { position:sticky; top:var(--table-header-height); z-index:2; background:#0b1220; }
     .selection-row select { min-width:118px; }
     .selection-note { color:var(--muted); font-size:11px; }
     .benchmark-column { min-width:100px; white-space:normal !important; }
@@ -54,7 +57,7 @@
     .card { background:#0b1220; border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:14px; min-height:96px; }
     .label { color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.08em; } .value { font-size:26px; font-weight:750; margin-top:8px; }
     .project { margin-top:18px; }
-    @media (max-width:900px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .topbar { position:static; } }
+    @media (max-width:900px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .topbar { position:static; } .table-wrap { height:62vh; } }
   </style>
 </head>
 <body><main>
@@ -69,7 +72,7 @@
     </div>
     <div id="app"></div>
     <div class="table-wrap"><table class="benchmark-table" aria-label="Benchmarks e seleção de nível">
-      <thead><tr><th>Base</th><th>Campanha</th><th>Conjunto de anúncios</th><th>Anúncio</th><th class="benchmark-column">Connect Rate</th><th class="benchmark-column">Custo por View de Página de Destino</th><th class="benchmark-column">Custo por Finalização de Compra</th><th class="benchmark-column">Custo por Resultado (Voomp)</th><th class="benchmark-column">Page → Checkout</th><th class="benchmark-column">Taxa Checkout vs Compra</th><th class="benchmark-column">Taxa PageView vs Compra</th><th class="benchmark-column">Taxa de Compra OrderBump 1</th><th class="benchmark-column">Taxa de Compra OrderBump 2</th><th class="benchmark-column">Taxa de Compra OrderBump 3</th><th class="benchmark-column">Taxa de Compra Upsell</th><th class="benchmark-column">Taxa de Compra Downsell</th></tr></thead>
+      <thead><tr><th data-sort-key="base">Base <span class="sort-indicator">↕</span></th><th data-sort-key="campaign">Campanha <span class="sort-indicator">↕</span></th><th data-sort-key="adset">Conjunto de anúncios <span class="sort-indicator">↕</span></th><th data-sort-key="ad">Anúncio <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="connect-rate">Connect Rate <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-landing">Custo por View de Página de Destino <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-checkout">Custo por Finalização de Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-result">Custo por Resultado (Voomp) <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="page-checkout">Page → Checkout <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="checkout-purchase">Taxa Checkout vs Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="page-purchase">Taxa PageView vs Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-1">Taxa de Compra OrderBump 1 <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-2">Taxa de Compra OrderBump 2 <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-3">Taxa de Compra OrderBump 3 <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="upsell">Taxa de Compra Upsell <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="downsell">Taxa de Compra Downsell <span class="sort-indicator">↕</span></th></tr></thead>
       <tbody><tr class="selection-row">
         <td><select id="baseSelect" aria-label="Base"></select></td>
         <td><select id="campaignSelect" aria-label="Campanha"></select></td>
@@ -119,6 +122,8 @@ const app = document.getElementById('app');
 const benchmarkRows = document.getElementById('benchmarkRows');
 const lastUpdated = document.getElementById('lastUpdated');
 const sheetModified = document.getElementById('sheetModified');
+const tableWrap = document.querySelector('.table-wrap');
+let sortState = { key:null, direction:0 };
 
 const nf = new Intl.NumberFormat('pt-BR');
 const money = new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL' });
@@ -180,6 +185,45 @@ function activeAds() {
     .map(group => ({...group, summary:summarize(group.rows, group.productPrice)}))
     .filter(group => group.summary.spend > 0 || group.summary.impressions > 0)
     .sort((a,b) => [a.base,a.campaign,a.adset,a.ad].join('|').localeCompare([b.base,b.campaign,b.adset,b.ad].join('|'), 'pt-BR'));
+}
+function sortValue(group, key) {
+  const fields = { base:'base', campaign:'campaign', adset:'adset', ad:'ad' };
+  if (fields[key]) return group[fields[key]] || '';
+  const metrics = {
+    'connect-rate':'connect_rate', 'cost-landing':'cost_landing_pct', 'cost-checkout':'cost_checkout_pct',
+    'cost-result':'cost_result_pct', 'page-checkout':'page_to_checkout', 'checkout-purchase':'checkout_purchase_rate_voomp',
+    'page-purchase':'page_purchase_rate_voomp', 'order-bump-1':'order_bump_1', 'order-bump-2':'order_bump_2',
+    'order-bump-3':'order_bump_3', upsell:'upsell', downsell:'downsell'
+  };
+  const metric = metrics[key];
+  if (!metric || ['order_bump_1','order_bump_2','order_bump_3','upsell','downsell'].includes(metric)) return null;
+  const value = Number(group.summary[metric]);
+  return Number.isFinite(value) ? value : null;
+}
+function sortedGroups(groups) {
+  if (!sortState.key || !sortState.direction) return groups;
+  const direction = sortState.direction;
+  return [...groups].sort((a, b) => {
+    const av = sortValue(a, sortState.key); const bv = sortValue(b, sortState.key);
+    if (av == null && bv == null) return 0;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    if (typeof av === 'string') return av.localeCompare(bv, 'pt-BR', { sensitivity:'base' }) * direction;
+    return (av - bv) * direction;
+  });
+}
+function updateSortHeaders() {
+  document.querySelectorAll('[data-sort-key]').forEach(header => {
+    const active = header.dataset.sortKey === sortState.key;
+    const indicator = header.querySelector('.sort-indicator');
+    const direction = active ? sortState.direction : 0;
+    indicator.textContent = direction === 1 ? '↑' : direction === -1 ? '↓' : '↕';
+    header.setAttribute('aria-sort', direction === 1 ? 'ascending' : direction === -1 ? 'descending' : 'none');
+  });
+}
+function syncTableStickyOffset() {
+  const header = document.querySelector('.benchmark-table thead');
+  if (header) tableWrap.style.setProperty('--table-header-height', `${header.offsetHeight}px`);
 }
 function aggregateProjects(projects) {
   const byDate = new Map();
@@ -314,11 +358,13 @@ function render() {
     ? dateTime(sourceModifiedAt)
     : 'Várias bases selecionadas';
   refreshBreakdownOptions();
-  const groups = activeAds();
+  const groups = sortedGroups(activeAds());
   app.innerHTML = `<p class="hint">${groups.length} anúncio(s) com entrega no período selecionado. A listagem mostra uma linha por anúncio.</p>`;
   benchmarkRows.innerHTML = benchmarkTable(groups);
+  updateSortHeaders();
+  syncTableStickyOffset();
   setupChartTooltips();
-  try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:selected,period:periodSelect.value,start:startDate.value,end:endDate.value})); } catch(e) {}
+  try { localStorage.setItem('metaads-dashboard-state', JSON.stringify({base:baseSelect.value,period:periodSelect.value,start:startDate.value,end:endDate.value})); } catch(e) {}
 }
 function setup() {
   const opts = [['','Todas as bases'], ...DATA.projects.map(p => [p.key,p.name])];
@@ -343,6 +389,12 @@ function setup() {
   campaignSelect.addEventListener('change', () => { adsetSelect.value = ''; adSelect.value = ''; render(); });
   adsetSelect.addEventListener('change', () => { adSelect.value = ''; render(); });
   adSelect.addEventListener('change', render);
+  document.querySelectorAll('[data-sort-key]').forEach(header => header.addEventListener('click', () => {
+    const key = header.dataset.sortKey;
+    sortState = sortState.key !== key ? {key, direction:1} : {key, direction:sortState.direction === 1 ? -1 : sortState.direction === -1 ? 0 : 1};
+    render();
+  }));
+  window.addEventListener('resize', syncTableStickyOffset);
   document.getElementById('clearDates').addEventListener('click', () => { startDate.value=''; endDate.value=''; render(); });
   periodSelect.addEventListener('change', applyPeriod);
   applyPeriod();
