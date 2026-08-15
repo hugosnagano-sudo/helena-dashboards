@@ -377,11 +377,12 @@ function setup() {
   const applyPeriod = () => {
     const max = maxDate(); if (!max) return;
     if (periodSelect.value === 'max') { startDate.value = ''; endDate.value = ''; render(); return; }
-    const lastClosed = new Date(max + 'T00:00:00');
-    lastClosed.setDate(lastClosed.getDate() - 1);
-    const first = new Date(lastClosed); first.setDate(first.getDate() - (Number(periodSelect.value) - 1));
+    // O último dia disponível já é o último dia fechado da base. Não o subtraia,
+    // pois isso excluía ontem quando a atualização chegava até ontem.
+    const lastAvailable = new Date(max + 'T00:00:00');
+    const first = new Date(lastAvailable); first.setDate(first.getDate() - (Number(periodSelect.value) - 1));
     startDate.value = first.toISOString().slice(0,10);
-    endDate.value = lastClosed.toISOString().slice(0,10);
+    endDate.value = lastAvailable.toISOString().slice(0,10);
     render();
   };
   baseSelect.addEventListener('change', () => { campaignSelect.value = ''; adsetSelect.value = ''; adSelect.value = ''; render(); });
