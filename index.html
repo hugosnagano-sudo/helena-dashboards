@@ -136,6 +136,14 @@ const dateTime = value => {
 function allRows() { return DATA.projects.flatMap(p => p.rows); }
 function minDate() { return allRows().map(r => r.date).filter(Boolean).sort()[0] || ''; }
 function maxDate() { return allRows().map(r => r.date).filter(Boolean).sort().at(-1) || ''; }
+function saoPauloDate(offsetDays=0) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone:'America/Sao_Paulo', year:'numeric', month:'2-digit', day:'2-digit'
+  }).formatToParts(new Date()).filter(part => part.type !== 'literal').map(part => [part.type, part.value]));
+  const date = new Date(`${parts.year}-${parts.month}-${parts.day}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + offsetDays);
+  return date.toISOString().slice(0,10);
+}
 function inRange(row) {
   if (startDate.value && row.date < startDate.value) return false;
   if (endDate.value && row.date > endDate.value) return false;
@@ -333,11 +341,10 @@ function setup() {
     if (saved.period && [...periodSelect.options].some(option => option.value === saved.period)) periodSelect.value = saved.period;
   } catch(e) {}
   const applyPeriod = () => {
-    const max = maxDate(); if (!max) return;
     if (periodSelect.value === 'max') { startDate.value = ''; endDate.value = ''; render(); return; }
-    const lastClosed = new Date(max + 'T00:00:00');
-    lastClosed.setDate(lastClosed.getDate() - 1);
-    const first = new Date(lastClosed); first.setDate(first.getDate() - (Number(periodSelect.value) - 1));
+    // Períodos rápidos sempre encerram em ontem, no fuso operacional (São Paulo).
+    const lastClosed = new Date(`${saoPauloDate(-1)}T00:00:00Z`);
+    const first = new Date(lastClosed); first.setUTCDate(first.getUTCDate() - (Number(periodSelect.value) - 1));
     startDate.value = first.toISOString().slice(0,10);
     endDate.value = lastClosed.toISOString().slice(0,10);
     render();
