@@ -250,15 +250,15 @@ function salesAndSpendChart(project, cumulative=false) {
   if (cumulative) {
     for (let i = 1; i < dates.length; i++) { spend[i] += spend[i - 1]; sales[i] += sales[i - 1]; }
   }
-  const maxSpend = Math.max(1, ...spend);
-  const maxSales = Math.max(1, ...sales);
+  // Gastos e receita compartilham a escala para que suas alturas sejam comparáveis.
+  const maxSpendSales = Math.max(1, ...spend, ...sales);
   const profitScale = Math.max(1, ...dailySpend, ...dailySales, ...profit.map(Math.abs));
   const line = (values, max) => values.map((value, i) => `${(i / Math.max(1, values.length - 1) * 720 + 20).toFixed(1)},${(210 - (value / max) * 180).toFixed(1)}`).join(' ');
   const profitLine = values => values.map((value, i) => `${(i / Math.max(1, values.length - 1) * 720 + 20).toFixed(1)},${(115 - (value / profitScale) * 85).toFixed(1)}`).join(' ');
   const title = cumulative ? 'Gastos e receita acumulados' : 'Gastos e receita por dia';
   const payload = encodeURIComponent(JSON.stringify({dates, spend, sales, profit}));
   const profitHint = cumulative ? 'A linha de lucro mantém a escala diária.' : 'Lucro: Receita Voomp − Gastos.';
-  return `<div class="chart-title">${title}</div><div class="chart-wrap"><svg class="interactive-chart" data-chart="${payload}" viewBox="0 0 760 220" aria-label="${title}"><line x1="20" y1="210" x2="740" y2="210" stroke="#334155" stroke-width="1" /><line x1="20" y1="115" x2="740" y2="115" stroke="#475569" stroke-width="1" stroke-dasharray="3 3" /><polyline fill="none" stroke="#ef4444" stroke-width="3" points="${line(spend, maxSpend)}" /><polyline fill="none" stroke="#22c55e" stroke-width="3" points="${line(sales, maxSales)}" /><polyline fill="none" stroke="#eab308" stroke-width="3" points="${profitLine(profit)}" /><line class="hover-line" x1="20" y1="20" x2="20" y2="210" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 3" visibility="hidden" /></svg><div class="chart-tooltip"></div></div><div class="legend"><span><b style="color:#ef4444">●</b> Gastos</span> <span><b style="color:#22c55e">●</b> Receita Voomp</span> <span><b style="color:#eab308">●</b> Lucro</span></div><div class="hint">Passe o mouse sobre o gráfico para ver a data e os valores. ${profitHint}</div>`;
+  return `<div class="chart-title">${title}</div><div class="chart-wrap"><svg class="interactive-chart" data-chart="${payload}" viewBox="0 0 760 220" aria-label="${title}"><line x1="20" y1="210" x2="740" y2="210" stroke="#334155" stroke-width="1" /><line x1="20" y1="115" x2="740" y2="115" stroke="#475569" stroke-width="1" stroke-dasharray="3 3" /><polyline fill="none" stroke="#ef4444" stroke-width="3" points="${line(spend, maxSpendSales)}" /><polyline fill="none" stroke="#22c55e" stroke-width="3" points="${line(sales, maxSpendSales)}" /><polyline fill="none" stroke="#eab308" stroke-width="3" points="${profitLine(profit)}" /><line class="hover-line" x1="20" y1="20" x2="20" y2="210" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 3" visibility="hidden" /></svg><div class="chart-tooltip"></div></div><div class="legend"><span><b style="color:#ef4444">●</b> Gastos</span> <span><b style="color:#22c55e">●</b> Receita Voomp</span> <span><b style="color:#eab308">●</b> Lucro</span></div><div class="hint">Passe o mouse sobre o gráfico para ver a data e os valores. ${profitHint}</div>`;
 }
 function setupChartTooltips() {
   document.querySelectorAll('.interactive-chart').forEach(svg => {
