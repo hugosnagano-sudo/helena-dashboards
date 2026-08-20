@@ -78,33 +78,62 @@ def number(value: str) -> float:
 
 
 def voomp_daily(rows: list[list[str]], product_name: str | None = None) -> dict[str, dict]:
-    """Agrupa vendas pagas por data de confirmação e saldo real ao vendedor."""
+    """Agrupa vendas principais e seus order bumps por data de confirmação."""
     if not rows:
         return {}
     header = {name: index for index, name in enumerate(rows[0])}
-    required = ("sale.id", "sale.status", "sale.paid_at", "sale.seller_balance", "product.name")
+    required = ("sale.id", "sale.status", "sale.paid_at", "sale.created_at", "sale.seller_balance", "product.name", "client.email", "Order bump")
     missing = [name for name in required if name not in header]
     if missing:
         raise RuntimeError(f"Colunas Voomp ausentes: {', '.join(missing)}")
-    data = defaultdict(lambda: {"purchases_voomp": 0, "value_voomp": 0.0})
-    seen_sales = set()
+    sales = {}
     for row in rows[1:]:
         def value(name: str) -> str:
             index = header[name]
             return str(row[index]) if index < len(row) else ""
         sale_id = value("sale.id")
-        if not sale_id or sale_id in seen_sales or value("sale.status").lower() != "paid":
+        if not sale_id or value("sale.status").lower() != "paid":
             continue
-        if product_name and value("product.name") != product_name:
+        # Mantém só a última linha paga de cada venda, caso a planilha contenha
+        # eventos históricos duplicados da Voomp.
+        sales[sale_id] = {name: value(name) for name in required}
+    primary = [sale for sale in sales.values() if sale["Order bump"].strip().lower() != "sim"]
+    bumps = [sale for sale in sales.values() if sale["Order bump"].strip().lower() == "sim"]
+    for sale in primary:
+        sale["order_bump_count"] = 0
+    for bump in bumps:
+        if not bump["client.email"].strip():
             continue
-        paid_at = value("sale.paid_at")
+        try:
+            bump_created = datetime.fromisoformat(bump["sale.created_at"].replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        candidates = []
+        for sale in primary:
+            if sale["client.email"].strip().lower() != bump["client.email"].strip().lower():
+                continue
+            try:
+                created = datetime.fromisoformat(sale["sale.created_at"].replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            candidates.append((abs((created - bump_created).total_seconds()), sale))
+        if candidates:
+            seconds, sale = min(candidates, key=lambda item: item[0])
+            if seconds <= 5 * 60:
+                sale["order_bump_count"] += 1
+    data = defaultdict(lambda: {"purchases_voomp": 0, "value_voomp": 0.0, "order_bump_count": 0})
+    for sale in primary:
+        if product_name and sale["product.name"] != product_name:
+            continue
+        paid_at = sale["sale.paid_at"]
         date = paid_at[:10]
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
             continue
-        seen_sales.add(sale_id)
         data[date]["purchases_voomp"] += 1
-        data[date]["value_voomp"] += number(value("sale.seller_balance"))
-    return {date: {"purchases_voomp": values["purchases_voomp"], "value_voomp": round(values["value_voomp"], 2)}
+        data[date]["value_voomp"] += number(sale["sale.seller_balance"])
+        data[date]["order_bump_count"] += sale["order_bump_count"]
+    return {date: {"purchases_voomp": values["purchases_voomp"], "value_voomp": round(values["value_voomp"], 2),
+                   "order_bump_count": values["order_bump_count"]}
             for date, values in data.items()}
 
 
@@ -113,11 +142,11 @@ def attributed_voomp(rows: list[list[str]], product_name: str | None = None, pro
     if not rows:
         return {}
     header = {name: index for index, name in enumerate(rows[0])}
-    required = ("Produto", "Data/hora pagamento (BRT)", "Saldo Voomp", "ID do anúncio", "Confiança")
+    required = ("Produto", "Data/hora pagamento (BRT)", "Saldo Voomp", "ID do anúncio", "Confiança", "Order bump")
     missing = [name for name in required if name not in header]
     if missing:
         raise RuntimeError(f"Colunas da atribuição ausentes: {', '.join(missing)}")
-    data = defaultdict(lambda: {"purchases_voomp": 0, "value_voomp": 0.0})
+    data = defaultdict(lambda: {"purchases_voomp": 0, "value_voomp": 0.0, "order_bump_count": 0})
     for row in rows[1:]:
         def value(name: str) -> str:
             index = header[name]
@@ -137,7 +166,9 @@ def attributed_voomp(rows: list[list[str]], product_name: str | None = None, pro
             continue
         data[(date, ad_id)]["purchases_voomp"] += 1
         data[(date, ad_id)]["value_voomp"] += number(value("Saldo Voomp"))
-    return {key: {"purchases_voomp": values["purchases_voomp"], "value_voomp": round(values["value_voomp"], 2)}
+        data[(date, ad_id)]["order_bump_count"] += 1 if value("Order bump").strip().lower() == "sim" else 0
+    return {key: {"purchases_voomp": values["purchases_voomp"], "value_voomp": round(values["value_voomp"], 2),
+                  "order_bump_count": values["order_bump_count"]}
             for key, values in data.items()}
 
 
@@ -186,10 +217,10 @@ def main() -> None:
     sheets = {}
     sheet_modified = {}
     voomp_rows = {
-        "lt": values(VOOMP_SHEETS["lt"], "Vendas!A:CO"),
-        "primeiros-dentinhos": values(VOOMP_SHEETS["primeiros-dentinhos"], "Vendas!A:CO"),
+        "lt": values(VOOMP_SHEETS["lt"], "Vendas!A:ZZ"),
+        "primeiros-dentinhos": values(VOOMP_SHEETS["primeiros-dentinhos"], "Vendas!A:ZZ"),
     }
-    attribution_rows = values(ANALYSES_SHEET, "Atribuição de Vendas!A:S")
+    attribution_rows = values(ANALYSES_SHEET, "Atribuição de Vendas!A:U")
     voomp = {"primeiros-dentinhos": voomp_daily(voomp_rows["primeiros-dentinhos"])}
     for key, source in SOURCES.items():
         sheet_id = source["sheet_id"]
@@ -217,6 +248,7 @@ def main() -> None:
                 detail = {**template, "date": sales_key[0]}
                 for metric in ("spend", "impressions", "clicks", "link_clicks", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta"):
                     detail[metric] = 0
+                detail["order_bump_count"] = 0
                 details.append(detail)
                 detail_by_key[sales_key] = detail
             detail.update(sales)
@@ -224,7 +256,7 @@ def main() -> None:
         for date in all_dates:
             row = fresh.get(date, existing.get(date, {"date": date, "currency": "BRL"}) )
             existing[date] = {**existing.get(date, {}), **row}
-            existing[date].update(product_sales.get(date, {"purchases_voomp": 0, "value_voomp": 0}))
+            existing[date].update(product_sales.get(date, {"purchases_voomp": 0, "value_voomp": 0, "order_bump_count": 0}))
         projects.append({
             "key": key,
             "name": source["name"],
@@ -237,6 +269,7 @@ def main() -> None:
         })
         report[key] = {"days_updated": len(fresh), "last_date": max(fresh) if fresh else None,
                        "voomp_sales": sum(day["purchases_voomp"] for day in product_sales.values()),
+                       "order_bumps": sum(day["order_bump_count"] for day in product_sales.values()),
                        "attributed_voomp_sales": sum(day["purchases_voomp"] for day in attributed_sales.values())}
     payload["projects"] = projects
     payload["generatedAt"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
