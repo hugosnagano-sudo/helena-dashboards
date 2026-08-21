@@ -72,13 +72,13 @@
     </div>
     <div id="app"></div>
     <div class="table-wrap"><table class="benchmark-table" aria-label="Benchmarks e seleção de nível">
-      <thead><tr><th data-sort-key="base">Base <span class="sort-indicator">↕</span></th><th data-sort-key="campaign">Campanha <span class="sort-indicator">↕</span></th><th data-sort-key="adset">Conjunto de anúncios <span class="sort-indicator">↕</span></th><th data-sort-key="ad">Anúncio <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="spend">Gasto no período <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="connect-rate">Connect Rate <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-landing">Custo por View de Página de Destino <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-checkout">Custo por Finalização de Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="voomp-sales">Número de vendas (Voomp) <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-result">Custo por Resultado (Voomp) <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="page-checkout">Page → Checkout <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="checkout-purchase">Taxa Checkout vs Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="page-purchase">Taxa PageView vs Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-1">Taxa de Compra Order Bump <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-2">Taxa de Compra OrderBump 2 <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-3">Taxa de Compra OrderBump 3 <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="upsell">Taxa de Compra Upsell <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="downsell">Taxa de Compra Downsell <span class="sort-indicator">↕</span></th></tr></thead>
+      <thead><tr><th data-sort-key="base">Base <span class="sort-indicator">↕</span></th><th data-sort-key="campaign">Campanha <span class="sort-indicator">↕</span></th><th data-sort-key="adset">Conjunto de anúncios <span class="sort-indicator">↕</span></th><th data-sort-key="ad">Anúncio <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="spend">Gasto no período <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="value-voomp">Faturado Voomp <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="connect-rate">Connect Rate <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-landing">Custo por View de Página de Destino <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-checkout">Custo por Finalização de Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="voomp-sales">Número de vendas (Voomp) <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="cost-result">Custo por Resultado (Voomp) <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="page-checkout">Page → Checkout <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="checkout-purchase">Taxa Checkout vs Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="page-purchase">Taxa PageView vs Compra <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-1">Taxa de Compra Order Bump <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-2">Taxa de Compra OrderBump 2 <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="order-bump-3">Taxa de Compra OrderBump 3 <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="upsell">Taxa de Compra Upsell <span class="sort-indicator">↕</span></th><th class="benchmark-column" data-sort-key="downsell">Taxa de Compra Downsell <span class="sort-indicator">↕</span></th></tr></thead>
       <tbody><tr class="selection-row">
         <td><select id="baseSelect" aria-label="Base"></select></td>
         <td><select id="campaignSelect" aria-label="Campanha"></select></td>
         <td><select id="adsetSelect" aria-label="Conjunto de anúncios"></select></td>
         <td><select id="adSelect" aria-label="Anúncio"></select></td>
-        <td colspan="14" class="selection-note">Use as quatro primeiras colunas para filtrar em sequência: base → campanha → conjunto → anúncio.</td>
+        <td colspan="15" class="selection-note">Use as quatro primeiras colunas para filtrar em sequência: base → campanha → conjunto → anúncio.</td>
       </tr></tbody>
       <tbody id="benchmarkRows"></tbody>
     </table></div>
@@ -198,7 +198,7 @@ function sortValue(group, key) {
   const fields = { base:'base', campaign:'campaign', adset:'adset', ad:'ad' };
   if (fields[key]) return group[fields[key]] || '';
   const metrics = {
-    spend:'spend', 'connect-rate':'connect_rate', 'cost-landing':'cost_landing_pct', 'cost-checkout':'cost_checkout_pct', 'voomp-sales':'purchases_voomp',
+    spend:'spend', 'value-voomp':'value_voomp', 'connect-rate':'connect_rate', 'cost-landing':'cost_landing_pct', 'cost-checkout':'cost_checkout_pct', 'voomp-sales':'purchases_voomp',
     'cost-result':'cost_result_pct', 'page-checkout':'page_to_checkout', 'checkout-purchase':'checkout_purchase_rate_voomp',
     'page-purchase':'page_purchase_rate_voomp', 'order-bump-1':'order_bump_1', 'order-bump-2':'order_bump_2',
     'order-bump-3':'order_bump_3', upsell:'upsell', downsell:'downsell'
@@ -292,11 +292,12 @@ function benchmarkCells(s, voompAvailable=false) {
     return `<td><span class="benchmark-current ${tone}">${esc(available ? pct(current) : 'N/D')}</span><span class="benchmark-target">${esc(direction)} ${esc(pct(ideal))}</span></td>`;
   });
   cells.splice(3, 0, `<td><span class="benchmark-current">${esc(n(s.purchases_voomp))}</span></td>`);
+  cells.unshift(`<td><span class="benchmark-current">${esc(brl(s.value_voomp))}</span></td>`);
   cells.unshift(`<td><span class="benchmark-current">${esc(brl(s.spend))}</span></td>`);
   return cells.join('');
 }
 function benchmarkTable(groups) {
-  if (!groups.length) return '<tr><td colspan="18" class="selection-note">Nenhum anúncio com entrega no período selecionado.</td></tr>';
+  if (!groups.length) return '<tr><td colspan="19" class="selection-note">Nenhum anúncio com entrega no período selecionado.</td></tr>';
   return groups.map(group => `<tr><td>${esc(group.base)}</td><td>${esc(group.campaign)}</td><td>${esc(group.adset)}</td><td>${esc(group.ad)}</td>${benchmarkCells(group.summary, true)}</tr>`).join('');
 }
 function cards(s, ticketValue, ticketHint, voompAvailable=true) { return `
