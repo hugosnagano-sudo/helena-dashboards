@@ -128,8 +128,8 @@ def lead_followup_metrics() -> dict:
                 realized_at = short_date(value("Realizado em"), converted_at.year)
                 if realized_at:
                     attendances += 1
-                    if short_date(value("Aderiu Mentoria em"), converted_at.year):
-                        sales += 1
+        if short_date(value("Aderiu Mentoria em"), converted_at.year):
+            sales += 1
         replied_at = short_date(value("Respondido em"), converted_at.year)
         if replied_at:
             elapsed = (replied_at - converted_at).total_seconds() / 60
