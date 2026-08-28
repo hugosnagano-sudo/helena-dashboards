@@ -90,36 +90,53 @@ def lead_followup_metrics() -> dict:
     )
     rows = json.loads(raw)
     if not rows:
-        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0}
+        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0}
     headers = rows[0]
-    required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em", "Agendado") if name in headers}
-    if len(required) != 4:
-        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0}
+    required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em", "Agendado", "Realizado em") if name in headers}
+    if len(required) != 5:
+        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0}
     now = datetime.now(BRT)
     minutes: list[float] = []
     appointments = 0
+    past_appointments = 0
+    attendances = 0
+
+    def short_date(raw: str, year: int) -> datetime | None:
+        for pattern, needs_year in (("%d/%m %H:%M", True), ("%d/%m/%Y %H:%M", False), ("%d/%m/%y %H:%M", False), ("%d/%m", True), ("%d/%m/%Y", False), ("%d/%m/%y", False)):
+            try:
+                parsed = datetime.strptime(f"{raw} {year}" if needs_year else raw, f"{pattern} %Y" if needs_year else pattern)
+                return parsed.replace(tzinfo=BRT)
+            except ValueError:
+                continue
+        return None
     for values in rows[1:]:
         def value(name: str) -> str:
             index = required[name]
             return str(values[index]).strip() if index < len(values) else ""
-        if value("campaign_id").removeprefix("c:") != CAMPAIGN_ID or not value("Respondido em"):
-            if value("campaign_id").removeprefix("c:") == CAMPAIGN_ID and re.match(r"^\d{1,2}/\d{1,2}(?:/\d{2,4})?(?:\s+\d{1,2}:\d{2})?$", value("Agendado")):
-                appointments += 1
+        if value("campaign_id").removeprefix("c:") != CAMPAIGN_ID:
             continue
         try:
             converted_at = datetime.fromisoformat(value("created_time")).astimezone(BRT)
-            replied_at = datetime.strptime(f"{value('Respondido em')} {converted_at.year}", "%d/%m %H:%M %Y").replace(tzinfo=BRT)
         except ValueError:
             continue
-        elapsed = (replied_at - converted_at).total_seconds() / 60
-        if 0 <= elapsed and replied_at <= now:
-            minutes.append(elapsed)
-        if re.match(r"^\d{1,2}/\d{1,2}(?:/\d{2,4})?(?:\s+\d{1,2}:\d{2})?$", value("Agendado")):
+        scheduled_at = short_date(value("Agendado"), converted_at.year)
+        if scheduled_at:
             appointments += 1
+            if scheduled_at <= now:
+                past_appointments += 1
+                if short_date(value("Realizado em"), converted_at.year):
+                    attendances += 1
+        replied_at = short_date(value("Respondido em"), converted_at.year)
+        if replied_at:
+            elapsed = (replied_at - converted_at).total_seconds() / 60
+            if 0 <= elapsed and replied_at <= now:
+                minutes.append(elapsed)
     return {
         "averageResponseMinutes": round(sum(minutes) / len(minutes), 1) if minutes else None,
         "respondedLeads": len(minutes),
         "appointments": appointments,
+        "pastAppointments": past_appointments,
+        "attendances": attendances,
     }
 
 
