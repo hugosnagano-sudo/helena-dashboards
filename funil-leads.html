@@ -68,10 +68,11 @@
       const response=await fetch(`funil-se-data.json?t=${Date.now()}`,{cache:'no-store'});
       if (!response.ok) throw new Error('Dados ainda não publicados');
       const data=await response.json(), campaign=data.campaign||{};
-      load({...JSON.parse(localStorage.getItem(key)||'{}'), clicks:campaign.ctr ?? '', spend:campaign.cpl ?? '', linkClicks:campaign.linkClicks ?? '', leads:campaign.nativeLeads ?? '', hookRate:campaign.hookRate ?? '', frequency:campaign.weeklyFrequency ?? ''});
+      load({...JSON.parse(localStorage.getItem(key)||'{}'), clicks:campaign.ctr ?? '', spend:campaign.cpl ?? '', linkClicks:campaign.linkClicks ?? '', leads:campaign.nativeLeads ?? '', hookRate:campaign.hookRate ?? '', frequency:campaign.weeklyFrequency ?? '', responseMinutes:campaign.averageResponseMinutes ?? ''});
       const adsets=(data.adsets||[]).map(item=>`${item.name}: ${item.nativeLeads||0}`).join(' · ');
       sync.dataset.state='ok';
-      sync.innerHTML=`<strong>MAID sincronizada</strong> · ${campaign.name||'Sessão Estratégica'} · ${campaign.nativeLeads||0} leads nativos · Hook Rate ${campaign.hookRate ?? '—'}% · frequência semanal ${campaign.weeklyFrequency ?? '—'}x · atualizado em ${formatBRT(data.generatedAt)}${adsets?`<br><span>Por conjunto: ${adsets}</span>`:''}`;
+      const responseText=campaign.averageResponseMinutes==null?'sem respostas válidas':`${campaign.averageResponseMinutes} min (${campaign.respondedLeads||0} leads)`;
+      sync.innerHTML=`<strong>MAID sincronizada</strong> · ${campaign.name||'Sessão Estratégica'} · ${campaign.nativeLeads||0} leads nativos · Hook Rate ${campaign.hookRate ?? '—'}% · frequência semanal ${campaign.weeklyFrequency ?? '—'}x · resposta média ${responseText} · atualizado em ${formatBRT(data.generatedAt)}${adsets?`<br><span>Por conjunto: ${adsets}</span>`:''}`;
     } catch (error) {
       sync.dataset.state='error';
       sync.textContent='Não foi possível carregar a atualização automática agora. Os campos manuais continuam disponíveis.';

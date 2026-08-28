@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -15,6 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "funil-se-data.json"
 CAMPAIGN_ID = "120252209847160663"
 API_VERSION = "v22.0"
+SHEET_ID = "1-GcIIV5mq3nu2OVs0xNMN17m5093UtgV1wJqQ_Xzdss"
+GOG = "/data/.openclaw/bin/gog"
+GOG_HOME = "/data/.openclaw/gog"
+GOG_ACCOUNT = "agente.drahelen@gmail.com"
+BRT = ZoneInfo("America/Sao_Paulo")
 
 
 def graph(path: str, **params: str) -> dict:
@@ -73,11 +79,49 @@ def metric_values(metrics: dict) -> dict:
     }
 
 
+def response_metrics() -> dict:
+    """Média entre created_time e Respondido em na Página1, sem expor leads."""
+    environment = {**os.environ, "GOG_HOME": GOG_HOME}
+    raw = subprocess.check_output(
+        [GOG, "-a", GOG_ACCOUNT, "sheets", "get", SHEET_ID, "Página1!A:U", "--json", "--results-only"],
+        text=True,
+        env=environment,
+    )
+    rows = json.loads(raw)
+    if not rows:
+        return {"averageResponseMinutes": None, "respondedLeads": 0}
+    headers = rows[0]
+    required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em") if name in headers}
+    if len(required) != 3:
+        return {"averageResponseMinutes": None, "respondedLeads": 0}
+    now = datetime.now(BRT)
+    minutes: list[float] = []
+    for values in rows[1:]:
+        def value(name: str) -> str:
+            index = required[name]
+            return str(values[index]).strip() if index < len(values) else ""
+        if value("campaign_id").removeprefix("c:") != CAMPAIGN_ID or not value("Respondido em"):
+            continue
+        try:
+            converted_at = datetime.fromisoformat(value("created_time")).astimezone(BRT)
+            replied_at = datetime.strptime(f"{value('Respondido em')} {converted_at.year}", "%d/%m %H:%M %Y").replace(tzinfo=BRT)
+        except ValueError:
+            continue
+        elapsed = (replied_at - converted_at).total_seconds() / 60
+        if 0 <= elapsed and replied_at <= now:
+            minutes.append(elapsed)
+    return {
+        "averageResponseMinutes": round(sum(minutes) / len(minutes), 1) if minutes else None,
+        "respondedLeads": len(minutes),
+    }
+
+
 def main() -> None:
     campaign = graph(CAMPAIGN_ID, fields="name,status,daily_budget")
     campaign_metrics = metric_values(insights(CAMPAIGN_ID, lifetime=True))
     daily_campaign_metrics = metric_values(insights(CAMPAIGN_ID))
     weekly_frequency = round(number(insights(CAMPAIGN_ID, days=7).get("frequency")), 2)
+    response = response_metrics()
     payload = {
         "generatedAt": datetime.now(ZoneInfo("UTC")).isoformat().replace("+00:00", "Z"),
         "campaign": {
@@ -85,6 +129,7 @@ def main() -> None:
             "status": campaign.get("status", "UNKNOWN"),
             "dailyBudget": round(number(campaign.get("daily_budget")) / 100, 2),
             "weeklyFrequency": weekly_frequency,
+            **response,
             **campaign_metrics,
         },
         "adsets": [],
