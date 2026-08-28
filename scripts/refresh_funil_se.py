@@ -45,8 +45,13 @@ def date_range(days: int = 1) -> str:
     return json.dumps({"since": start, "until": day})
 
 
-def insights(object_id: str, days: int = 1) -> dict:
-    rows = graph(f"{object_id}/insights", fields="spend,impressions,reach,inline_link_clicks,ctr,cpm,cpc,frequency,actions,video_play_actions", time_range=date_range(days)).get("data", [])
+def insights(object_id: str, days: int | None = None, lifetime: bool = False) -> dict:
+    params = {"fields": "spend,impressions,reach,inline_link_clicks,ctr,cpm,cpc,frequency,actions,video_play_actions"}
+    if lifetime:
+        params["date_preset"] = "maximum"
+    else:
+        params["time_range"] = date_range(days or 1)
+    rows = graph(f"{object_id}/insights", **params).get("data", [])
     return rows[0] if rows else {}
 
 
@@ -70,7 +75,8 @@ def metric_values(metrics: dict) -> dict:
 
 def main() -> None:
     campaign = graph(CAMPAIGN_ID, fields="name,status,daily_budget")
-    campaign_metrics = metric_values(insights(CAMPAIGN_ID))
+    campaign_metrics = metric_values(insights(CAMPAIGN_ID, lifetime=True))
+    daily_campaign_metrics = metric_values(insights(CAMPAIGN_ID))
     weekly_frequency = round(number(insights(CAMPAIGN_ID, days=7).get("frequency")), 2)
     payload = {
         "generatedAt": datetime.now(ZoneInfo("UTC")).isoformat().replace("+00:00", "Z"),
@@ -82,9 +88,21 @@ def main() -> None:
             **campaign_metrics,
         },
         "adsets": [],
+        "daily": {
+            "dateBRT": datetime.now(ZoneInfo("America/Sao_Paulo")).date().isoformat(),
+            "campaign": {
+                "name": campaign.get("name", "Sessão Estratégica"),
+                "status": campaign.get("status", "UNKNOWN"),
+                "dailyBudget": round(number(campaign.get("daily_budget")) / 100, 2),
+                **daily_campaign_metrics,
+            },
+            "adsets": [],
+        },
     }
     for adset in graph(f"{CAMPAIGN_ID}/adsets", fields="name").get("data", []):
-        payload["adsets"].append({"name": adset.get("name", "Sem conjunto"), **metric_values(insights(adset["id"]))})
+        name = adset.get("name", "Sem conjunto")
+        payload["adsets"].append({"name": name, **metric_values(insights(adset["id"], lifetime=True))})
+        payload["daily"]["adsets"].append({"name": name, **metric_values(insights(adset["id"]))})
     previous = json.loads(OUTPUT.read_text(encoding="utf-8")) if OUTPUT.exists() else {}
     comparable = {key: value for key, value in payload.items() if key != "generatedAt"}
     old_comparable = {key: value for key, value in previous.items() if key != "generatedAt"}
