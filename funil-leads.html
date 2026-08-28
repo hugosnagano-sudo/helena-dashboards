@@ -20,7 +20,7 @@
     .head { min-height:160px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:0 20px 27px; border-bottom:1px solid #302c25; } h1 { font-size:49px; line-height:1; margin:0; letter-spacing:-1.4px; } .head::after { content:"High Ticket"; order:1; margin-top:16px; color:#ece6dd; font:700 24px/1 Georgia,"Times New Roman",serif; } .sub { order:2; margin:14px 0 0; color:var(--muted); font-size:16px; } .actions { display:none; }
     h2 { font-size:19px; margin:52px 0 22px; } .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; } .card { min-height:299px; padding:21px 19px; border:1px solid var(--line); border-radius:8px; background:var(--card); transition:border-color .2s,box-shadow .2s; } .card[data-rating="good"] { border-color:#3c7b4c; box-shadow:inset 0 0 0 1px #2f5e3a; } .card[data-rating="warn"] { border-color:#9d8036; box-shadow:inset 0 0 0 1px #765e27; } .card[data-rating="bad"] { border-color:#9b4f4b; box-shadow:inset 0 0 0 1px #713b38; } h3 { font-size:17px; margin:0 0 8px; } .description { min-height:48px; margin:0 0 13px; font-size:13px; line-height:1.52; color:var(--body); } label { display:none; } .input-row { display:flex; align-items:center; gap:8px; } input { width:100%; min-width:0; height:47px; padding:11px 13px; border:1px solid #38383a; border-radius:6px; background:var(--field); color:#eee; font-size:17px; outline:none; } input:focus { border-color:var(--gold); } input::placeholder { color:#a7a39d; opacity:1; } .unit { min-width:24px; color:var(--body); font-size:14px; font-weight:700; } .result { margin-top:8px; padding:10px 12px; border:1px solid #66552d; border-radius:6px; background:#29251e; color:var(--text); font-size:14px; font-weight:700; } .status { font-size:12px; font-weight:800; margin-left:6px; } .status.good { color:var(--good); } .status.warn { color:var(--warn); } .status.bad { color:var(--bad); }
     .meta,.notice { display:none; } .maid-sync { max-width:760px; margin:18px auto 0; padding:11px 14px; border:1px solid #66552d; border-radius:7px; background:#29251e; color:#ded9d2; font-size:13px; line-height:1.45; } .maid-sync strong { color:var(--text); } .maid-sync[data-state="error"] { border-color:#864b4b; color:#e8b9b5; } .analyze { display:block; margin:31px auto 39px; border:1px solid #9a7838; border-radius:6px; background:linear-gradient(180deg,#b49350,#83682f); box-shadow:0 7px 22px #0005; color:#201b13; padding:15px 32px; font:700 16px Georgia,"Times New Roman",serif; } .analyze:hover { border-color:#e0bd70; filter:brightness(1.08); }
-    .decision { margin-top:0; } .decision-title { display:flex; align-items:center; justify-content:space-between; min-height:62px; padding:16px 20px; border:1px solid var(--line); border-radius:8px; color:var(--text); background:var(--card); font:700 20px Georgia,"Times New Roman",serif; } .decision-title span { font-family:Inter,system-ui,sans-serif; font-size:18px; } .decision-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:13px; } .decision-card { min-height:210px; padding:21px 19px; border:1px solid var(--line); border-radius:8px; background:var(--card); } .decision-card h3 { margin:0 0 12px; font-size:17px; } .decision-card.pause h3 { color:#dc7772; } .decision-card.scale h3 { color:#71be83; } .decision-card ul { margin:0; padding-left:19px; color:#ded9d2; font-size:14px; font-weight:600; line-height:2; } .scale-rule { margin-top:16px; padding:22px 19px; border:1px solid #80662e; border-radius:7px; background:linear-gradient(180deg,#3e351e,#26231d); } .scale-rule h3 { margin:0 0 8px; font-size:18px; } .scale-rule p { margin:0; color:#dfdad2; font-size:14px; font-weight:600; }
+    .decision { margin-top:0; } .decision-title { display:flex; align-items:center; justify-content:space-between; min-height:62px; padding:16px 20px; border:1px solid var(--line); border-radius:8px; color:var(--text); background:var(--card); font:700 20px Georgia,"Times New Roman",serif; } .decision-title span { font-family:Inter,system-ui,sans-serif; font-size:18px; } .decision-status { color:var(--muted); font-size:13px !important; } .decision-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:13px; } .decision-card { min-height:210px; padding:21px 19px; border:1px solid var(--line); border-radius:8px; background:var(--card); transition:border-color .2s,box-shadow .2s; } .decision-card.recommended { border:2px solid var(--bad); box-shadow:0 0 0 3px #dc777228; } .decision-card h3 { margin:0 0 12px; font-size:17px; } .decision-card.pause h3 { color:#dc7772; } .decision-card.scale h3 { color:#71be83; } .decision-card ul { margin:0; padding-left:19px; color:#ded9d2; font-size:14px; font-weight:600; line-height:2; } .decision-reason { min-height:19px; margin:12px 0 0; color:var(--muted); font-size:12px; line-height:1.45; } .scale-rule { margin-top:16px; padding:22px 19px; border:1px solid #80662e; border-radius:7px; background:linear-gradient(180deg,#3e351e,#26231d); } .scale-rule h3 { margin:0 0 8px; font-size:18px; } .scale-rule p { margin:0; color:#dfdad2; font-size:14px; font-weight:600; }
     @media(max-width:850px){main{padding-left:20px;padding-right:20px}.grid{grid-template-columns:1fr 1fr}} @media(max-width:520px){main{padding:22px 14px}.head{min-height:145px}h1{font-size:35px}.grid,.decision-grid{grid-template-columns:1fr}.card{min-height:auto}.decision-title{font-size:17px}.decision-card{min-height:auto}}
   </style>
 </head>
@@ -41,17 +41,17 @@
   </section>
   <button class="analyze" type="button" id="analyze">Analisar Meu Funil</button>
   <section class="decision" aria-label="Critérios para pausar ou escalar">
-    <div class="decision-title"><span>📋</span> Quando Pausar vs Quando Escalar <span>⌃</span></div>
+    <div class="decision-title"><span>📋</span> Quando Pausar vs Quando Escalar <span id="decisionStatus" class="decision-status">Clique em “Analisar Meu Funil”</span></div>
     <div class="decision-grid">
-      <article class="decision-card pause"><h3>Pausar o criativo se</h3><ul><li>CTR &lt; 0,8% após 1.000 impressões</li><li>CPL &gt; 2x a meta após 10 leads</li><li>Hook rate &lt; 20% após 1.000 impressões</li><li>Frequência &gt; 3/semana após 7 dias</li><li>CTR caindo por 3 dias consecutivos</li></ul></article>
-      <article class="decision-card scale"><h3>Escalar se</h3><ul><li>CPL dentro da meta por 3–5 dias</li><li>CTR acima de 2%</li><li>Frequência &lt; 2</li><li>Taxa de formulário &gt; 15%</li></ul></article>
+      <article class="decision-card pause" id="pauseCard"><h3>Pausar o criativo se</h3><ul><li>CTR &lt; 0,8% após 1.000 impressões</li><li>CPL &gt; R$30 após 10 leads</li><li>Hook rate &lt; 20% após 1.000 impressões</li><li>Frequência &gt; 3/semana após 7 dias</li><li>CTR caindo por 3 dias consecutivos</li></ul><p class="decision-reason" id="pauseReason"></p></article>
+      <article class="decision-card scale" id="scaleCard"><h3>Escalar se</h3><ul><li>CPL ≤ R$15</li><li>CTR acima de 2%</li><li>Frequência &lt; 2</li><li>Taxa de formulário &gt; 15%</li></ul><p class="decision-reason" id="scaleReason"></p></article>
     </div>
     <article class="scale-rule"><h3>Regra de escala</h3><p>Aumento máximo de 20–30% do orçamento a cada 2–3 dias. Nunca duplique.</p></article>
   </section>
 </main>
 <script>
   const defaults = { impressions:0, clicks:'', linkClicks:'', spend:'', leads:'', hookRate:'', frequency:'', responseMinutes:'', appointments:'', attendance:'', sales:'' };
-  const key = 'helena.funil-leads.v2'; let attendanceBase=NaN;
+  const key = 'helena.funil-leads.v2'; let attendanceBase=NaN, campaignImpressions=0;
   const ids = Object.keys(defaults).filter(id => id !== 'impressions');
   const brl = value => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value || 0);
   const number = id => Number(document.getElementById(id).value || 0);
@@ -68,7 +68,7 @@
       const response=await fetch(`funil-se-data.json?t=${Date.now()}`,{cache:'no-store'});
       if (!response.ok) throw new Error('Dados ainda não publicados');
       const data=await response.json(), campaign=data.campaign||{};
-      attendanceBase=campaign.pastAppointments ?? NaN;
+      attendanceBase=campaign.pastAppointments ?? NaN; campaignImpressions=Number(campaign.impressions||0);
       load({...JSON.parse(localStorage.getItem(key)||'{}'), clicks:campaign.ctr ?? '', spend:campaign.cpl ?? '', linkClicks:campaign.linkClicks ?? '', leads:campaign.nativeLeads ?? '', hookRate:campaign.hookRate ?? '', frequency:campaign.weeklyFrequency ?? '', responseMinutes:campaign.averageResponseMinutes ?? '', appointments:campaign.appointments ?? '', attendance:campaign.attendances ?? '', sales:campaign.sales ?? ''});
       const adsets=(data.adsets||[]).map(item=>`${item.name}: ${item.nativeLeads||0}`).join(' · ');
       sync.dataset.state='ok';
@@ -79,8 +79,24 @@
       sync.textContent='Não foi possível carregar a atualização automática agora. Os campos manuais continuam disponíveis.';
     }
   }
+  function analyzeFunil() {
+    calculate();
+    const ctr=number('clicks'), cpl=number('spend'), hook=number('hookRate'), frequency=number('frequency'), leads=number('leads'), links=number('linkClicks'), form=links?leads/links*100:NaN;
+    const pauses=[];
+    if (campaignImpressions>=1000 && ctr<0.8) pauses.push('CTR abaixo de 0,8% após 1.000 impressões');
+    if (leads>=10 && cpl>30) pauses.push('CPL acima de R$30 após 10 leads');
+    if (campaignImpressions>=1000 && hook<20) pauses.push('Hook Rate abaixo de 20% após 1.000 impressões');
+    if (frequency>3) pauses.push('frequência acima de 3/semana');
+    const scaleReady=cpl<=15 && ctr>2 && frequency<2 && form>15;
+    const pauseCard=document.getElementById('pauseCard'), scaleCard=document.getElementById('scaleCard'), status=document.getElementById('decisionStatus');
+    pauseCard.classList.remove('recommended'); scaleCard.classList.remove('recommended');
+    document.getElementById('pauseReason').textContent=''; document.getElementById('scaleReason').textContent='';
+    if (pauses.length) { pauseCard.classList.add('recommended'); status.textContent='Recomendação: pausar'; document.getElementById('pauseReason').textContent=pauses.join(' · '); }
+    else if (scaleReady) { scaleCard.classList.add('recommended'); status.textContent='Recomendação: escalar'; document.getElementById('scaleReason').textContent='Todos os critérios de escala atendidos.'; }
+    else { status.textContent='Recomendação: aguardar mais dados'; document.getElementById('scaleReason').textContent='Ainda não atende todos os critérios de escala e não há critério de pausa ativo.'; }
+  }
   loadMAIDData();
-  document.getElementById('analyze').addEventListener('click', () => document.querySelector('.decision').scrollIntoView({behavior:'smooth', block:'start'}));
+  document.getElementById('analyze').addEventListener('click', () => { analyzeFunil(); document.querySelector('.decision').scrollIntoView({behavior:'smooth', block:'start'}); });
 </script>
 </body>
 </html>
