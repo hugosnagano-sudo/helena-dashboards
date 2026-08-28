@@ -90,16 +90,17 @@ def lead_followup_metrics() -> dict:
     )
     rows = json.loads(raw)
     if not rows:
-        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0}
+        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0, "sales": 0}
     headers = rows[0]
-    required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em", "Agendado", "Realizado em") if name in headers}
-    if len(required) != 5:
-        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0}
+    required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em", "Agendado", "Realizado em", "Aderiu Mentoria em") if name in headers}
+    if len(required) != 6:
+        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0, "sales": 0}
     now = datetime.now(BRT)
     minutes: list[float] = []
     appointments = 0
     past_appointments = 0
     attendances = 0
+    sales = 0
 
     def short_date(raw: str, year: int) -> datetime | None:
         for pattern, needs_year in (("%d/%m %H:%M", True), ("%d/%m/%Y %H:%M", False), ("%d/%m/%y %H:%M", False), ("%d/%m", True), ("%d/%m/%Y", False), ("%d/%m/%y", False)):
@@ -124,8 +125,11 @@ def lead_followup_metrics() -> dict:
             appointments += 1
             if scheduled_at <= now:
                 past_appointments += 1
-                if short_date(value("Realizado em"), converted_at.year):
+                realized_at = short_date(value("Realizado em"), converted_at.year)
+                if realized_at:
                     attendances += 1
+                    if short_date(value("Aderiu Mentoria em"), converted_at.year):
+                        sales += 1
         replied_at = short_date(value("Respondido em"), converted_at.year)
         if replied_at:
             elapsed = (replied_at - converted_at).total_seconds() / 60
@@ -137,6 +141,7 @@ def lead_followup_metrics() -> dict:
         "appointments": appointments,
         "pastAppointments": past_appointments,
         "attendances": attendances,
+        "sales": sales,
     }
 
 
