@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import urlopen
@@ -39,13 +39,14 @@ def leads(actions: list[dict]) -> int:
     return round(sum(number(item.get("value")) for item in source))
 
 
-def today_range() -> str:
+def date_range(days: int = 1) -> str:
     day = datetime.now(ZoneInfo("America/Sao_Paulo")).date().isoformat()
-    return json.dumps({"since": day, "until": day})
+    start = (datetime.now(ZoneInfo("America/Sao_Paulo")).date() - timedelta(days=days - 1)).isoformat()
+    return json.dumps({"since": start, "until": day})
 
 
-def insights(object_id: str) -> dict:
-    rows = graph(f"{object_id}/insights", fields="spend,impressions,reach,inline_link_clicks,ctr,cpm,cpc,frequency,actions", time_range=today_range()).get("data", [])
+def insights(object_id: str, days: int = 1) -> dict:
+    rows = graph(f"{object_id}/insights", fields="spend,impressions,reach,inline_link_clicks,ctr,cpm,cpc,frequency,actions,video_play_actions", time_range=date_range(days)).get("data", [])
     return rows[0] if rows else {}
 
 
@@ -63,18 +64,21 @@ def metric_values(metrics: dict) -> dict:
         "cpm": round(number(metrics.get("cpm")), 2),
         "cpc": round(number(metrics.get("cpc")), 2),
         "frequency": round(number(metrics.get("frequency")), 2),
+        "hookRate": round(100 * sum(number(item.get("value")) for item in metrics.get("video_play_actions", []) if item.get("action_type") == "video_view") / number(metrics.get("impressions")), 2) if number(metrics.get("impressions")) else 0,
     }
 
 
 def main() -> None:
     campaign = graph(CAMPAIGN_ID, fields="name,status,daily_budget")
     campaign_metrics = metric_values(insights(CAMPAIGN_ID))
+    weekly_frequency = round(number(insights(CAMPAIGN_ID, days=7).get("frequency")), 2)
     payload = {
         "generatedAt": datetime.now(ZoneInfo("UTC")).isoformat().replace("+00:00", "Z"),
         "campaign": {
             "name": campaign.get("name", "Sessão Estratégica"),
             "status": campaign.get("status", "UNKNOWN"),
             "dailyBudget": round(number(campaign.get("daily_budget")) / 100, 2),
+            "weeklyFrequency": weekly_frequency,
             **campaign_metrics,
         },
         "adsets": [],
