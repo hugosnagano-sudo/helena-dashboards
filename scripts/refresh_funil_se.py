@@ -18,9 +18,9 @@ API_VERSION = "v22.0"
 
 
 def graph(path: str, **params: str) -> dict:
-    token = os.environ.get("META_ACCESS_TOKEN")
+    token = os.environ.get("META_ADS_ACCESS_TOKEN") or os.environ.get("META_ACCESS_TOKEN")
     if not token:
-        raise RuntimeError("META_ACCESS_TOKEN não configurado")
+        raise RuntimeError("META_ADS_ACCESS_TOKEN não configurado")
     query = urlencode({**params, "access_token": token})
     with urlopen(f"https://graph.facebook.com/{API_VERSION}/{path}?{query}", timeout=30) as response:
         return json.load(response)
