@@ -45,34 +45,42 @@ def today_range() -> str:
 
 
 def insights(object_id: str) -> dict:
-    rows = graph(f"{object_id}/insights", fields="spend,impressions,reach,inline_link_clicks,ctr,actions", time_range=today_range()).get("data", [])
+    rows = graph(f"{object_id}/insights", fields="spend,impressions,reach,inline_link_clicks,ctr,cpm,cpc,frequency,actions", time_range=today_range()).get("data", [])
     return rows[0] if rows else {}
+
+
+def metric_values(metrics: dict) -> dict:
+    spend = round(number(metrics.get("spend")), 2)
+    native_leads = leads(metrics.get("actions", []))
+    return {
+        "spend": spend,
+        "impressions": round(number(metrics.get("impressions"))),
+        "reach": round(number(metrics.get("reach"))),
+        "linkClicks": round(number(metrics.get("inline_link_clicks"))),
+        "ctr": round(number(metrics.get("ctr")), 2),
+        "nativeLeads": native_leads,
+        "cpl": round(spend / native_leads, 2) if native_leads else 0,
+        "cpm": round(number(metrics.get("cpm")), 2),
+        "cpc": round(number(metrics.get("cpc")), 2),
+        "frequency": round(number(metrics.get("frequency")), 2),
+    }
 
 
 def main() -> None:
     campaign = graph(CAMPAIGN_ID, fields="name,status,daily_budget")
-    metrics = insights(CAMPAIGN_ID)
-    spend = round(number(metrics.get("spend")), 2)
-    native_leads = leads(metrics.get("actions", []))
+    campaign_metrics = metric_values(insights(CAMPAIGN_ID))
     payload = {
         "generatedAt": datetime.now(ZoneInfo("UTC")).isoformat().replace("+00:00", "Z"),
         "campaign": {
             "name": campaign.get("name", "Sessão Estratégica"),
             "status": campaign.get("status", "UNKNOWN"),
             "dailyBudget": round(number(campaign.get("daily_budget")) / 100, 2),
-            "spend": spend,
-            "impressions": round(number(metrics.get("impressions"))),
-            "reach": round(number(metrics.get("reach"))),
-            "linkClicks": round(number(metrics.get("inline_link_clicks"))),
-            "ctr": round(number(metrics.get("ctr")), 2),
-            "nativeLeads": native_leads,
-            "cpl": round(spend / native_leads, 2) if native_leads else 0,
+            **campaign_metrics,
         },
         "adsets": [],
     }
     for adset in graph(f"{CAMPAIGN_ID}/adsets", fields="name").get("data", []):
-        item = insights(adset["id"])
-        payload["adsets"].append({"name": adset.get("name", "Sem conjunto"), "nativeLeads": leads(item.get("actions", []))})
+        payload["adsets"].append({"name": adset.get("name", "Sem conjunto"), **metric_values(insights(adset["id"]))})
     previous = json.loads(OUTPUT.read_text(encoding="utf-8")) if OUTPUT.exists() else {}
     comparable = {key: value for key, value in payload.items() if key != "generatedAt"}
     old_comparable = {key: value for key, value in previous.items() if key != "generatedAt"}
