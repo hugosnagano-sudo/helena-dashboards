@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 import sys
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlencode
@@ -79,8 +80,8 @@ def metric_values(metrics: dict) -> dict:
     }
 
 
-def response_metrics() -> dict:
-    """Média entre created_time e Respondido em na Página1, sem expor leads."""
+def lead_followup_metrics() -> dict:
+    """Métricas de resposta/agendamento da Página1, sem expor leads."""
     environment = {**os.environ, "GOG_HOME": GOG_HOME}
     raw = subprocess.check_output(
         [GOG, "-a", GOG_ACCOUNT, "sheets", "get", SHEET_ID, "Página1!A:U", "--json", "--results-only"],
@@ -89,18 +90,21 @@ def response_metrics() -> dict:
     )
     rows = json.loads(raw)
     if not rows:
-        return {"averageResponseMinutes": None, "respondedLeads": 0}
+        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0}
     headers = rows[0]
-    required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em") if name in headers}
-    if len(required) != 3:
-        return {"averageResponseMinutes": None, "respondedLeads": 0}
+    required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em", "Agendado") if name in headers}
+    if len(required) != 4:
+        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0}
     now = datetime.now(BRT)
     minutes: list[float] = []
+    appointments = 0
     for values in rows[1:]:
         def value(name: str) -> str:
             index = required[name]
             return str(values[index]).strip() if index < len(values) else ""
         if value("campaign_id").removeprefix("c:") != CAMPAIGN_ID or not value("Respondido em"):
+            if value("campaign_id").removeprefix("c:") == CAMPAIGN_ID and re.match(r"^\d{1,2}/\d{1,2}(?:/\d{2,4})?(?:\s+\d{1,2}:\d{2})?$", value("Agendado")):
+                appointments += 1
             continue
         try:
             converted_at = datetime.fromisoformat(value("created_time")).astimezone(BRT)
@@ -110,9 +114,12 @@ def response_metrics() -> dict:
         elapsed = (replied_at - converted_at).total_seconds() / 60
         if 0 <= elapsed and replied_at <= now:
             minutes.append(elapsed)
+        if re.match(r"^\d{1,2}/\d{1,2}(?:/\d{2,4})?(?:\s+\d{1,2}:\d{2})?$", value("Agendado")):
+            appointments += 1
     return {
         "averageResponseMinutes": round(sum(minutes) / len(minutes), 1) if minutes else None,
         "respondedLeads": len(minutes),
+        "appointments": appointments,
     }
 
 
@@ -121,7 +128,7 @@ def main() -> None:
     campaign_metrics = metric_values(insights(CAMPAIGN_ID, lifetime=True))
     daily_campaign_metrics = metric_values(insights(CAMPAIGN_ID))
     weekly_frequency = round(number(insights(CAMPAIGN_ID, days=7).get("frequency")), 2)
-    response = response_metrics()
+    followup = lead_followup_metrics()
     payload = {
         "generatedAt": datetime.now(ZoneInfo("UTC")).isoformat().replace("+00:00", "Z"),
         "campaign": {
@@ -129,7 +136,7 @@ def main() -> None:
             "status": campaign.get("status", "UNKNOWN"),
             "dailyBudget": round(number(campaign.get("daily_budget")) / 100, 2),
             "weeklyFrequency": weekly_frequency,
-            **response,
+            **followup,
             **campaign_metrics,
         },
         "adsets": [],
