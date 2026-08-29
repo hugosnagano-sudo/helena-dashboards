@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29T04:31:54.782922Z",
+  "generatedAt": "2026-08-29T04:35:17.225504Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,32 +11,32 @@
     "pastAppointments": 0,
     "attendances": 0,
     "sales": 0,
-    "spend": 115.28,
-    "impressions": 2274,
+    "spend": 115.29,
+    "impressions": 2276,
     "reach": 1702,
     "linkClicks": 33,
-    "ctr": 2.95,
+    "ctr": 2.94,
     "nativeLeads": 6,
     "cpl": 19.21,
-    "cpm": 50.69,
+    "cpm": 50.65,
     "cpc": 1.72,
     "frequency": 1.34,
-    "hookRate": 93.4
+    "hookRate": 93.41
   },
   "adsets": [
     {
       "name": "CJ SE ADV 02 - Interesses",
       "spend": 50.2,
-      "impressions": 1046,
+      "impressions": 1047,
       "reach": 855,
       "linkClicks": 17,
       "ctr": 3.44,
       "nativeLeads": 1,
       "cpl": 50.2,
-      "cpm": 47.99,
+      "cpm": 47.95,
       "cpc": 1.39,
       "frequency": 1.22,
-      "hookRate": 93.79
+      "hookRate": 93.7
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 28.81,
-      "impressions": 537,
+      "spend": 28.82,
+      "impressions": 538,
       "reach": 475,
       "linkClicks": 9,
-      "ctr": 2.98,
+      "ctr": 2.97,
       "nativeLeads": 2,
-      "cpl": 14.4,
-      "cpm": 53.65,
+      "cpl": 14.41,
+      "cpm": 53.57,
       "cpc": 1.8,
       "frequency": 1.13,
-      "hookRate": 91.81
+      "hookRate": 91.64
     }
   ],
   "daily": {
@@ -116,17 +116,17 @@
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 3.44,
-        "impressions": 38,
+        "spend": 3.45,
+        "impressions": 39,
         "reach": 35,
         "linkClicks": 2,
-        "ctr": 7.89,
+        "ctr": 7.69,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 90.53,
+        "cpm": 88.46,
         "cpc": 1.15,
-        "frequency": 1.09,
-        "hookRate": 89.47
+        "frequency": 1.11,
+        "hookRate": 87.18
       }
     ]
   }
