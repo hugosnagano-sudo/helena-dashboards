@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T17:31:54.657653Z",
+  "generatedAt": "2026-08-30T17:33:45.269027Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -118,14 +118,14 @@
         "name": "CJ SE ADV 01 - Aberto",
         "spend": 1.64,
         "impressions": 25,
-        "reach": 21,
+        "reach": 22,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
         "cpm": 65.6,
         "cpc": 0.0,
-        "frequency": 1.19,
+        "frequency": 1.14,
         "hookRate": 88.0
       }
     ]
