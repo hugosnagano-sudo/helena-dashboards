@@ -1,42 +1,42 @@
 {
-  "generatedAt": "2026-08-31T12:02:05.071267Z",
+  "generatedAt": "2026-08-31T12:05:24.909225Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
     "dailyBudget": 50.0,
-    "weeklyFrequency": 1.44,
+    "weeklyFrequency": 1.43,
     "averageResponseMinutes": null,
     "respondedLeads": 0,
     "appointments": 0,
     "pastAppointments": 0,
     "attendances": 0,
     "sales": 0,
-    "spend": 218.26,
-    "impressions": 4256,
-    "reach": 2963,
+    "spend": 218.33,
+    "impressions": 4258,
+    "reach": 2968,
     "linkClicks": 53,
     "ctr": 2.63,
     "nativeLeads": 13,
     "cpl": 16.79,
     "cpm": 51.28,
     "cpc": 1.95,
-    "frequency": 1.44,
-    "hookRate": 93.07
+    "frequency": 1.43,
+    "hookRate": 93.31
   },
   "adsets": [
     {
       "name": "CJ SE ADV 02 - Interesses",
-      "spend": 81.83,
-      "impressions": 1750,
+      "spend": 81.86,
+      "impressions": 1751,
       "reach": 1406,
       "linkClicks": 21,
       "ctr": 2.63,
       "nativeLeads": 3,
-      "cpl": 27.28,
-      "cpm": 46.76,
+      "cpl": 27.29,
+      "cpm": 46.75,
       "cpc": 1.78,
-      "frequency": 1.24,
-      "hookRate": 93.49
+      "frequency": 1.25,
+      "hookRate": 93.66
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 39.8,
-      "impressions": 716,
+      "spend": 39.84,
+      "impressions": 717,
       "reach": 619,
       "linkClicks": 11,
       "ctr": 2.79,
       "nativeLeads": 3,
-      "cpl": 13.27,
-      "cpm": 55.59,
+      "cpl": 13.28,
+      "cpm": 55.56,
       "cpc": 1.99,
       "frequency": 1.16,
-      "hookRate": 92.46
+      "hookRate": 92.33
     }
   ],
   "daily": {
@@ -88,45 +88,45 @@
     "adsets": [
       {
         "name": "CJ SE ADV 02 - Interesses",
-        "spend": 7.3,
-        "impressions": 120,
+        "spend": 7.33,
+        "impressions": 121,
         "reach": 107,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 60.83,
+        "cpm": 60.58,
         "cpc": 0.0,
-        "frequency": 1.12,
-        "hookRate": 86.67
+        "frequency": 1.13,
+        "hookRate": 89.26
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
         "spend": 8.57,
         "impressions": 154,
-        "reach": 138,
+        "reach": 145,
         "linkClicks": 5,
         "ctr": 6.49,
         "nativeLeads": 2,
         "cpl": 4.29,
         "cpm": 55.65,
         "cpc": 0.86,
-        "frequency": 1.12,
+        "frequency": 1.06,
         "hookRate": 93.51
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 1.44,
-        "impressions": 16,
+        "spend": 1.48,
+        "impressions": 17,
         "reach": 16,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 90.0,
+        "cpm": 87.06,
         "cpc": 0.0,
-        "frequency": 1.0,
-        "hookRate": 87.5
+        "frequency": 1.06,
+        "hookRate": 82.35
       }
     ]
   }
