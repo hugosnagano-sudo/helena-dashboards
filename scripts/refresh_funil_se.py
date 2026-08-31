@@ -80,7 +80,18 @@ def metric_values(metrics: dict) -> dict:
     }
 
 
-def lead_followup_metrics() -> dict:
+def historical_metrics() -> dict[str, dict]:
+    """Métricas diárias públicas desde o início da campanha."""
+    rows = graph(
+        f"{CAMPAIGN_ID}/insights",
+        fields="spend,impressions,reach,inline_link_clicks,ctr,cpm,cpc,frequency,actions,video_play_actions",
+        date_preset="maximum",
+        time_increment="1",
+    ).get("data", [])
+    return {row["date_start"]: metric_values(row) for row in rows if row.get("date_start")}
+
+
+def lead_followup_metrics() -> tuple[dict, dict[str, dict]]:
     """Métricas de resposta/agendamento da Página1, sem expor leads."""
     environment = {**os.environ, "GOG_HOME": GOG_HOME}
     raw = subprocess.check_output(
@@ -91,18 +102,20 @@ def lead_followup_metrics() -> dict:
         env=environment,
     )
     rows = json.loads(raw)
+    empty = {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0, "sales": 0}
     if not rows:
-        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0, "sales": 0}
+        return empty, {}
     headers = rows[0]
     required = {name: headers.index(name) for name in ("created_time", "campaign_id", "Respondido em", "Agendado", "Realizado em", "Aderiu Mentoria em") if name in headers}
     if len(required) != 6:
-        return {"averageResponseMinutes": None, "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0, "sales": 0}
+        return empty, {}
     now = datetime.now(BRT)
     minutes: list[float] = []
     appointments = 0
     past_appointments = 0
     attendances = 0
     sales = 0
+    daily: dict[str, dict] = {}
 
     def short_date(raw: str, year: int) -> datetime | None:
         for pattern, needs_year in (("%d/%m %H:%M", True), ("%d/%m/%Y %H:%M", False), ("%d/%m/%y %H:%M", False), ("%d/%m", True), ("%d/%m/%Y", False), ("%d/%m/%y", False)):
@@ -122,22 +135,31 @@ def lead_followup_metrics() -> dict:
             converted_at = datetime.fromisoformat(value("created_time")).astimezone(BRT)
         except ValueError:
             continue
+        day = converted_at.date().isoformat()
+        daily.setdefault(day, {"responseMinutes": [], "respondedLeads": 0, "appointments": 0, "pastAppointments": 0, "attendances": 0, "sales": 0})
+        day_metrics = daily[day]
         scheduled_at = short_date(value("Agendado"), converted_at.year)
         if scheduled_at:
             appointments += 1
+            day_metrics["appointments"] += 1
             if scheduled_at <= now:
                 past_appointments += 1
+                day_metrics["pastAppointments"] += 1
                 realized_at = short_date(value("Realizado em"), converted_at.year)
                 if realized_at:
                     attendances += 1
+                    day_metrics["attendances"] += 1
         if short_date(value("Aderiu Mentoria em"), converted_at.year):
             sales += 1
+            day_metrics["sales"] += 1
         replied_at = short_date(value("Respondido em"), converted_at.year)
         if replied_at:
             elapsed = (replied_at - converted_at).total_seconds() / 60
             if 0 <= elapsed and replied_at <= now:
                 minutes.append(elapsed)
-    return {
+                day_metrics["responseMinutes"].append(elapsed)
+                day_metrics["respondedLeads"] += 1
+    summary = {
         "averageResponseMinutes": round(sum(minutes) / len(minutes), 1) if minutes else None,
         "respondedLeads": len(minutes),
         "appointments": appointments,
@@ -145,6 +167,18 @@ def lead_followup_metrics() -> dict:
         "attendances": attendances,
         "sales": sales,
     }
+    public_daily = {
+        day: {
+            "averageResponseMinutes": round(sum(values["responseMinutes"]) / len(values["responseMinutes"]), 1) if values["responseMinutes"] else None,
+            "respondedLeads": values["respondedLeads"],
+            "appointments": values["appointments"],
+            "pastAppointments": values["pastAppointments"],
+            "attendances": values["attendances"],
+            "sales": values["sales"],
+        }
+        for day, values in daily.items()
+    }
+    return summary, public_daily
 
 
 def main() -> None:
@@ -152,7 +186,18 @@ def main() -> None:
     campaign_metrics = metric_values(insights(CAMPAIGN_ID, lifetime=True))
     daily_campaign_metrics = metric_values(insights(CAMPAIGN_ID))
     weekly_frequency = round(number(insights(CAMPAIGN_ID, days=7).get("frequency")), 2)
-    followup = lead_followup_metrics()
+    followup, followup_daily = lead_followup_metrics()
+    history = historical_metrics()
+    for day, values in followup_daily.items():
+        history.setdefault(day, metric_values({}))
+        history[day].update(values)
+    for values in history.values():
+        values.setdefault("averageResponseMinutes", None)
+        values.setdefault("respondedLeads", 0)
+        values.setdefault("appointments", 0)
+        values.setdefault("pastAppointments", 0)
+        values.setdefault("attendances", 0)
+        values.setdefault("sales", 0)
     payload = {
         "generatedAt": datetime.now(ZoneInfo("UTC")).isoformat().replace("+00:00", "Z"),
         "campaign": {
@@ -164,6 +209,7 @@ def main() -> None:
             **campaign_metrics,
         },
         "adsets": [],
+        "history": [{"dateBRT": day, **values} for day, values in sorted(history.items())],
         "daily": {
             "dateBRT": datetime.now(ZoneInfo("America/Sao_Paulo")).date().isoformat(),
             "campaign": {
