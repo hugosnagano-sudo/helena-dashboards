@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 from collections import defaultdict
@@ -13,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML = ROOT / "index.html"
 DASHBOARD_HTMLS = (HTML, ROOT / "metaads-lista.html")
 GOG = "/data/.openclaw/bin/gog"
+GOG_HOME = "/data/.openclaw/gog"
 ACCOUNT = "agente.drahelen@gmail.com"
 SOURCES = {
     "laserterapia": {
@@ -64,12 +66,20 @@ FIELDS = ["date", "account", "account_id", "campaign_id", "campaign_name", "adse
 
 
 def values(sheet_id: str, range_name: str = "MetaAds!A:Z") -> list[list[str]]:
-    out = subprocess.check_output([GOG, "-a", ACCOUNT, "sheets", "get", sheet_id, range_name, "--json", "--results-only"], text=True)
+    out = subprocess.check_output(
+        [GOG, "-a", ACCOUNT, "sheets", "get", sheet_id, range_name, "--json", "--results-only"],
+        text=True,
+        env={**os.environ, "GOG_HOME": GOG_HOME},
+    )
     return json.loads(out)
 
 
 def sheet_modified_at(sheet_id: str) -> str | None:
-    out = subprocess.check_output([GOG, "-a", ACCOUNT, "drive", "get", sheet_id, "--json", "--results-only"], text=True)
+    out = subprocess.check_output(
+        [GOG, "-a", ACCOUNT, "drive", "get", sheet_id, "--json", "--results-only"],
+        text=True,
+        env={**os.environ, "GOG_HOME": GOG_HOME},
+    )
     return json.loads(out).get("modifiedTime")
 
 
