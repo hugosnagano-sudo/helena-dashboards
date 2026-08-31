@@ -84,7 +84,9 @@ def lead_followup_metrics() -> dict:
     """Métricas de resposta/agendamento da Página1, sem expor leads."""
     environment = {**os.environ, "GOG_HOME": GOG_HOME}
     raw = subprocess.check_output(
-        [GOG, "-a", GOG_ACCOUNT, "sheets", "get", SHEET_ID, "Página1!A:U", "--json", "--results-only"],
+        # O gog omite a última coluna de intervalos abertos; usar uma faixa com
+        # colunas de folga mantém "Aderiu Mentoria em" (coluna V) disponível.
+        [GOG, "-a", GOG_ACCOUNT, "sheets", "get", SHEET_ID, "Página1!A:Z", "--json", "--results-only"],
         text=True,
         env=environment,
     )
