@@ -326,7 +326,9 @@ function render() {
       if (drilldown) {
         const details = selectedBreakdownRows(p);
         const summary = aggregateProjects([{...p, rows: details}]);
-        html += section({...p, name: drilldown, note: `Detalhamento de ${p.name}; métricas de entrega da Meta Ads`, rows: summary}, drilldown, false);
+        // As linhas detalhadas recebem vendas Voomp por data + ID do anúncio.
+        // A soma delas permanece válida para campanha, conjunto e anúncio.
+        html += section({...p, name: drilldown, note: `Detalhamento de ${p.name}; métricas Meta Ads e vendas Voomp atribuídas por anúncio`, rows: summary}, drilldown);
       } else html += section(p);
     }
   }
