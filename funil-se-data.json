@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T03:33:28.345399Z",
+  "generatedAt": "2026-09-04T03:44:05.113987Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,17 +11,17 @@
     "pastAppointments": 3,
     "attendances": 2,
     "sales": 0,
-    "spend": 433.73,
-    "impressions": 10932,
+    "spend": 433.89,
+    "impressions": 10935,
     "reach": 6278,
     "linkClicks": 100,
     "ctr": 2.16,
     "nativeLeads": 25,
-    "cpl": 17.35,
+    "cpl": 17.36,
     "cpm": 39.68,
     "cpc": 1.84,
     "frequency": 1.74,
-    "hookRate": 92.22
+    "hookRate": 92.25
   },
   "adsets": [
     {
@@ -36,35 +36,35 @@
       "cpm": 43.3,
       "cpc": 1.85,
       "frequency": 1.3,
-      "hookRate": 93.13
+      "hookRate": 93.17
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 283.94,
-      "impressions": 7582,
+      "spend": 284.09,
+      "impressions": 7584,
       "reach": 4913,
       "linkClicks": 63,
       "ctr": 2.1,
       "nativeLeads": 19,
-      "cpl": 14.94,
-      "cpm": 37.45,
+      "cpl": 14.95,
+      "cpm": 37.46,
       "cpc": 1.79,
       "frequency": 1.54,
-      "hookRate": 91.99
+      "hookRate": 91.98
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 53.36,
-      "impressions": 1123,
+      "spend": 53.37,
+      "impressions": 1124,
       "reach": 939,
       "linkClicks": 13,
-      "ctr": 2.23,
+      "ctr": 2.22,
       "nativeLeads": 3,
       "cpl": 17.79,
-      "cpm": 47.52,
+      "cpm": 47.48,
       "cpc": 2.13,
       "frequency": 1.2,
-      "hookRate": 91.99
+      "hookRate": 92.17
     }
   ],
   "history": [
@@ -220,7 +220,7 @@
       "cpm": 29.8,
       "cpc": 2.36,
       "frequency": 1.18,
-      "hookRate": 92.7,
+      "hookRate": 92.75,
       "averageResponseMinutes": 12.2,
       "respondedLeads": 3,
       "appointments": 0,
@@ -230,17 +230,17 @@
     },
     {
       "dateBRT": "2026-09-04",
-      "spend": 0.64,
-      "impressions": 13,
-      "reach": 9,
+      "spend": 0.8,
+      "impressions": 16,
+      "reach": 12,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 49.23,
+      "cpm": 50.0,
       "cpc": 0.0,
-      "frequency": 1.44,
-      "hookRate": 69.23,
+      "frequency": 1.33,
+      "hookRate": 81.25,
       "averageResponseMinutes": null,
       "respondedLeads": 0,
       "appointments": 0,
@@ -255,17 +255,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 0.64,
-      "impressions": 13,
-      "reach": 9,
+      "spend": 0.8,
+      "impressions": 16,
+      "reach": 12,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 49.23,
+      "cpm": 50.0,
       "cpc": 0.0,
-      "frequency": 1.44,
-      "hookRate": 69.23
+      "frequency": 1.33,
+      "hookRate": 81.25
     },
     "adsets": [
       {
@@ -280,35 +280,35 @@
         "cpm": 80.0,
         "cpc": 0.0,
         "frequency": 1.0,
-        "hookRate": 66.67
+        "hookRate": 100.0
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 0.09,
-        "impressions": 6,
+        "spend": 0.24,
+        "impressions": 8,
         "reach": 6,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 15.0,
+        "cpm": 30.0,
         "cpc": 0.0,
-        "frequency": 1.0,
-        "hookRate": 100.0
+        "frequency": 1.33,
+        "hookRate": 75.0
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 0.31,
-        "impressions": 4,
-        "reach": 1,
+        "spend": 0.32,
+        "impressions": 5,
+        "reach": 4,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 77.5,
+        "cpm": 64.0,
         "cpc": 0.0,
-        "frequency": 4.0,
-        "hookRate": 25.0
+        "frequency": 1.25,
+        "hookRate": 80.0
       }
     ]
   }
