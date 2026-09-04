@@ -110,7 +110,7 @@ def lead_followup_metrics() -> tuple[dict, dict[str, dict]]:
     if len(required) != 6:
         return empty, {}
     now = datetime.now(BRT)
-    minutes: list[float] = []
+    replies: list[tuple[str, float]] = []
     appointments = 0
     past_appointments = 0
     attendances = 0
@@ -156,9 +156,17 @@ def lead_followup_metrics() -> tuple[dict, dict[str, dict]]:
         if replied_at:
             elapsed = (replied_at - converted_at).total_seconds() / 60
             if 0 <= elapsed and replied_at <= now:
-                minutes.append(elapsed)
-                day_metrics["responseMinutes"].append(elapsed)
-                day_metrics["respondedLeads"] += 1
+                replies.append((day, elapsed))
+    # Os dois maiores tempos de resposta distorcem a média operacional. Eles
+    # permanecem na planilha; são excluídos apenas do indicador público.
+    outlier_indexes = set(sorted(range(len(replies)), key=lambda index: replies[index][1], reverse=True)[:2])
+    minutes: list[float] = []
+    for index, (day, elapsed) in enumerate(replies):
+        if index in outlier_indexes:
+            continue
+        minutes.append(elapsed)
+        daily[day]["responseMinutes"].append(elapsed)
+        daily[day]["respondedLeads"] += 1
     summary = {
         "averageResponseMinutes": round(sum(minutes) / len(minutes), 1) if minutes else None,
         "respondedLeads": len(minutes),
