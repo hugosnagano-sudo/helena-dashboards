@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T08:06:00.956745Z",
+  "generatedAt": "2026-09-09T08:17:11.088330Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -21,7 +21,7 @@
     "cpm": 39.52,
     "cpc": 2.06,
     "frequency": 2.01,
-    "hookRate": 93.25
+    "hookRate": 93.26
   },
   "adsets": [
     {
@@ -64,7 +64,7 @@
       "cpm": 45.63,
       "cpc": 2.1,
       "frequency": 1.2,
-      "hookRate": 92.91
+      "hookRate": 92.97
     }
   ],
   "history": [
@@ -332,15 +332,15 @@
       "dateBRT": "2026-09-09",
       "spend": 1.7,
       "impressions": 60,
-      "reach": 57,
+      "reach": 58,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
       "cpm": 28.33,
       "cpc": 0.0,
-      "frequency": 1.05,
-      "hookRate": 88.33,
+      "frequency": 1.03,
+      "hookRate": 90.0,
       "averageResponseMinutes": null,
       "respondedLeads": 0,
       "appointments": 0,
@@ -357,15 +357,15 @@
       "dailyBudget": 60.0,
       "spend": 1.7,
       "impressions": 60,
-      "reach": 57,
+      "reach": 58,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
       "cpm": 28.33,
       "cpc": 0.0,
-      "frequency": 1.05,
-      "hookRate": 88.33
+      "frequency": 1.03,
+      "hookRate": 90.0
     },
     "adsets": [
       {
@@ -386,29 +386,29 @@
         "name": "CJ SE ADV 03 - Comportamentos",
         "spend": 1.69,
         "impressions": 59,
-        "reach": 56,
+        "reach": 57,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
         "cpm": 28.64,
         "cpc": 0.0,
-        "frequency": 1.05,
-        "hookRate": 88.14
+        "frequency": 1.04,
+        "hookRate": 89.83
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 0.0,
-        "impressions": 0,
-        "reach": 0,
+        "spend": 0.01,
+        "impressions": 1,
+        "reach": 1,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 0.0,
+        "cpm": 10.0,
         "cpc": 0.0,
-        "frequency": 0.0,
-        "hookRate": 0
+        "frequency": 1.0,
+        "hookRate": 100.0
       }
     ]
   }
