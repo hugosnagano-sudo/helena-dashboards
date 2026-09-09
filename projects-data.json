@@ -1,0 +1,50 @@
+{
+  "updatedAt": "2026-09-09T13:15:00Z",
+  "phases": ["Planejamento", "Em andamento", "Revisão", "Concluído"],
+  "projects": [
+    {
+      "id": "dashboard-metaads",
+      "name": "Dashboard MetaAds",
+      "area": "Dados",
+      "priority": "Alta",
+      "phase": "Revisão",
+      "owner": "Helena",
+      "due": "2026-09-10",
+      "nextAction": "Validar os dados após a correção do lucro acumulado.",
+      "description": "Painel de gastos, receita Voomp e ROAS das campanhas."
+    },
+    {
+      "id": "automacao-voomp",
+      "name": "Automação Voomp → Contatos",
+      "area": "Automação",
+      "priority": "Alta",
+      "phase": "Em andamento",
+      "owner": "Helena",
+      "due": "2026-09-12",
+      "nextAction": "Monitorar a cron diária e reconciliar Logs → Vendas antes dos dashboards.",
+      "description": "Sincroniza compradores das planilhas Voomp com Google Contacts e aplica os prefixos de curso."
+    },
+    {
+      "id": "landing-laser",
+      "name": "Landing page Laserterapia",
+      "area": "Conversão",
+      "priority": "Média",
+      "phase": "Em andamento",
+      "owner": "Hugo",
+      "due": "2026-09-16",
+      "nextAction": "Manter a versão atual e medir compras principais de Laser por sete dias.",
+      "description": "Otimização da LP de Laserterapia para o tráfego pago."
+    },
+    {
+      "id": "capi-meta",
+      "name": "Conversions API Meta",
+      "area": "Mensuração",
+      "priority": "Alta",
+      "phase": "Planejamento",
+      "owner": "Hugo",
+      "due": "",
+      "nextAction": "Criar token de acesso no Gerenciador de Eventos e definir a integração.",
+      "description": "Melhorar a atribuição de eventos e vendas entre Meta e Voomp."
+    }
+  ]
+}

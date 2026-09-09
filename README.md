@@ -4,6 +4,7 @@ Dashboards da Helena:
 
 - MetaAds ROI: `/`
 - Funil SE: `/funil-leads.html`
+- Projetos: `/projects.html`
 
 ## API do MetaAds ROI
 
