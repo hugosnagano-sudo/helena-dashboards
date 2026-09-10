@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T10:59:56.399768Z",
+  "generatedAt": "2026-09-10T11:20:53.183904Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,17 +11,17 @@
     "pastAppointments": 5,
     "attendances": 2,
     "sales": 1,
-    "spend": 813.51,
-    "impressions": 21006,
-    "reach": 10029,
+    "spend": 813.94,
+    "impressions": 21014,
+    "reach": 10038,
     "linkClicks": 163,
     "ctr": 1.85,
     "nativeLeads": 35,
-    "cpl": 23.24,
+    "cpl": 23.26,
     "cpm": 38.73,
     "cpc": 2.09,
     "frequency": 2.09,
-    "hookRate": 93.18
+    "hookRate": 93.22
   },
   "adsets": [
     {
@@ -40,31 +40,31 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 630.3,
-      "impressions": 16828,
-      "reach": 8561,
+      "spend": 630.72,
+      "impressions": 16835,
+      "reach": 8569,
       "linkClicks": 120,
       "ctr": 1.77,
       "nativeLeads": 28,
-      "cpl": 22.51,
+      "cpl": 22.53,
       "cpm": 37.46,
       "cpc": 2.12,
-      "frequency": 1.97,
-      "hookRate": 93.18
+      "frequency": 1.96,
+      "hookRate": 93.23
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 80.3,
-      "impressions": 1783,
-      "reach": 1480,
+      "spend": 80.31,
+      "impressions": 1784,
+      "reach": 1485,
       "linkClicks": 19,
-      "ctr": 2.08,
+      "ctr": 2.07,
       "nativeLeads": 4,
-      "cpl": 20.07,
-      "cpm": 45.04,
+      "cpl": 20.08,
+      "cpm": 45.02,
       "cpc": 2.17,
       "frequency": 1.2,
-      "hookRate": 92.99
+      "hookRate": 93.05
     }
   ],
   "history": [
@@ -350,17 +350,17 @@
     },
     {
       "dateBRT": "2026-09-10",
-      "spend": 6.97,
-      "impressions": 157,
-      "reach": 142,
+      "spend": 7.4,
+      "impressions": 165,
+      "reach": 160,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 44.39,
+      "cpm": 44.85,
       "cpc": 0.0,
-      "frequency": 1.11,
-      "hookRate": 88.54,
+      "frequency": 1.03,
+      "hookRate": 94.55,
       "averageResponseMinutes": null,
       "respondedLeads": 0,
       "appointments": 0,
@@ -375,17 +375,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 6.97,
-      "impressions": 157,
-      "reach": 142,
+      "spend": 7.4,
+      "impressions": 165,
+      "reach": 160,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 44.39,
+      "cpm": 44.85,
       "cpc": 0.0,
-      "frequency": 1.11,
-      "hookRate": 88.54
+      "frequency": 1.03,
+      "hookRate": 94.55
     },
     "adsets": [
       {
@@ -404,31 +404,31 @@
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 6.31,
-        "impressions": 137,
-        "reach": 126,
+        "spend": 6.73,
+        "impressions": 144,
+        "reach": 141,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 46.06,
+        "cpm": 46.74,
         "cpc": 0.0,
-        "frequency": 1.09,
-        "hookRate": 90.51
+        "frequency": 1.02,
+        "hookRate": 96.53
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 0.5,
-        "impressions": 15,
-        "reach": 11,
+        "spend": 0.51,
+        "impressions": 16,
+        "reach": 15,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 33.33,
+        "cpm": 31.88,
         "cpc": 0.0,
-        "frequency": 1.36,
-        "hookRate": 73.33
+        "frequency": 1.07,
+        "hookRate": 81.25
       }
     ]
   }
