@@ -18,13 +18,16 @@
 <script>
 const stages=['eBook','Material de apoio','Aulas gravadas','Landing Page','Checkout','Área do aluno','Campanhas'];
 const statuses=['Não iniciado','Em andamento','Em revisão','Concluído'];
-const client=window.supabase.createClient(window.PROJECTS_SUPABASE_URL,window.PROJECTS_SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'helena-project-tracker-auth'}});
+const sessionStorageKey='helena-project-tracker-auth',sessionCookie='helena_project_tracker_session',sessionAge=60*60*24*30;
+function readCookie(name){const prefix=`${name}=`;const item=document.cookie.split('; ').find(value=>value.startsWith(prefix));return item?item.slice(prefix.length):null;}
+const cookieStorage={getItem(){const value=readCookie(sessionCookie);return value?decodeURIComponent(value):null;},setItem(key,value){document.cookie=`${sessionCookie}=${encodeURIComponent(value)}; Max-Age=${sessionAge}; Path=/; SameSite=Strict; Secure`;},removeItem(){document.cookie=`${sessionCookie}=; Max-Age=0; Path=/; SameSite=Strict; Secure`;}};
+try{const legacySession=window.localStorage.getItem(sessionStorageKey);if(!cookieStorage.getItem(sessionStorageKey)&&legacySession)cookieStorage.setItem(sessionStorageKey,legacySession);}catch(error){}
+const client=window.supabase.createClient(window.PROJECTS_SUPABASE_URL,window.PROJECTS_SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:sessionStorageKey,storage:cookieStorage}});
 let dataClient=client,projects=[],selectedId=null,liveChannel;
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const formatDate=v=>v?new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeZone:'UTC'}).format(new Date(v+'T00:00:00Z')):'Sem prazo';
-const accessCookie='helena_project_tracker_access',accessCookieAge=60*60*24*30;
-const hasAccessCookie=()=>document.cookie.split('; ').some(item=>item.startsWith(`${accessCookie}=`));
-function rememberDevice(){document.cookie=`${accessCookie}=1; Max-Age=${accessCookieAge}; Path=/; SameSite=Lax; Secure`;}
+const hasAccessCookie=()=>Boolean(cookieStorage.getItem(sessionStorageKey));
+function rememberDevice(){}
 function normalizeStages(source={}){return Object.fromEntries(stages.map(s=>[s,statuses.includes(source[s])?source[s]:'Não iniciado']));}
 function render(){const items=projects.filter(p=>(!$('#area').value||p.area===$('#area').value)&&(!$('#priority').value||p.priority===$('#priority').value));$('#counter').textContent=`${items.length} projeto${items.length===1?'':'s'}`;$('#board').innerHTML=['Projeto',...stages].map(x=>`<div class="head">${esc(x)}</div>`).join('')+(items.length?items.map(p=>`<div class="project-name"><div class="project-title">${esc(p.name)}</div><div class="project-meta">${esc(p.area)} · ${esc(p.owner)} · ${formatDate(p.due)}</div></div>${stages.map(stage=>`<div class="stage-cell"><button class="stage-button" data-id="${esc(p.id)}" data-stage="${esc(stage)}" data-status="${esc(p.stages[stage])}"><span class="stage-status">${esc(p.stages[stage])}</span><span class="stage-hint">Editar etapa</span></button></div>`).join('')}`).join(''):'<div class="empty-state">Nenhum projeto com estes filtros.</div>');document.querySelectorAll('.stage-button').forEach(b=>b.addEventListener('click',()=>openProject(b.dataset.id,b.dataset.stage)));}
 function populateAreas(){const current=$('#area').value;$('#area').innerHTML='<option value="">Todas as áreas</option>'+[...new Set(projects.map(p=>p.area))].sort().map(a=>`<option${a===current?' selected':''}>${esc(a)}</option>`).join('');}
