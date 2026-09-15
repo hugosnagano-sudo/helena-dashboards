@@ -21,6 +21,7 @@
     .stage-select,.stage-owner{border-color:#ffffff40;background:#00000020;color:var(--text);color-scheme:normal}
     .stage-select option,.stage-owner option{background:initial;color:initial}
     .stage-select:focus,.stage-owner:focus{outline-color:#fff}
+    .stage-cell[data-status="Não Aplicável"] { background: #123d2a; }
   </style>
 </head>
 <body><main>
@@ -32,7 +33,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./projects-supabase-config.js"></script>
 <script>
 const stages=['eBook','Material de apoio','Aulas gravadas','Landing Page','Checkout','Área do aluno','Campanhas'];
-const statuses=['Não iniciado','Em andamento','Em revisão','Concluído'];
+const statuses=['Não iniciado','Em andamento','Em revisão','Concluído','Não Aplicável'];
 const sessionStorageKey='helena-project-tracker-auth',sessionCookie='helena_project_tracker_session',sessionAge=60*60*24*30;
 function readCookie(name){const prefix=`${name}=`;const item=document.cookie.split('; ').find(value=>value.startsWith(prefix));return item?item.slice(prefix.length):null;}
 const cookieStorage={getItem(){const value=readCookie(sessionCookie);return value?decodeURIComponent(value):null;},setItem(key,value){document.cookie=`${sessionCookie}=${encodeURIComponent(value)}; Max-Age=${sessionAge}; Path=/; SameSite=Strict; Secure`;},removeItem(){document.cookie=`${sessionCookie}=; Max-Age=0; Path=/; SameSite=Strict; Secure`;}};
