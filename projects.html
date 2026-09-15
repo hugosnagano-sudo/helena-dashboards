@@ -22,6 +22,9 @@
     .stage-select option,.stage-owner option{background:initial;color:initial}
     .stage-select:focus,.stage-owner:focus{outline-color:#fff}
     .stage-cell[data-status="Não Aplicável"] { background: #123d2a; }
+    .project-name[data-priority="Alta"] { background: #4b1b2a; }
+    .project-name[data-priority="Média"] { background: #4e3a0c; }
+    .project-name[data-priority="Baixa"] { background: #123d2a; }
   </style>
 </head>
 <body><main>
@@ -61,4 +64,6 @@ async function loadProjects(){const {data:rows,error}=await dataClient.from('pro
 async function authorize(session){if(!session)return;dataClient=window.supabase.createClient(window.PROJECTS_SUPABASE_URL,window.PROJECTS_SUPABASE_ANON_KEY,{global:{headers:{Authorization:`Bearer ${session.access_token}`}}});rememberDevice();try{await loadProjects();}catch(e){$('#loginMessage').textContent=`Acesso não concluído: ${e?.message||'erro desconhecido'}`;await client.auth.signOut();}}
 async function start(){dataClient=publicClient;await loadProjects();}
 $('#newProject').addEventListener('click',newProject);$('#saveProject').addEventListener('click',save);$('#deleteProject').addEventListener('click',remove);$('#closeDialog').addEventListener('click',()=>$('#projectDialog').close());$('#cancelEdit').addEventListener('click',()=>$('#projectDialog').close());$('#projectDialog').addEventListener('click',e=>{if(e.target===$('#projectDialog'))$('#projectDialog').close()});$('#area').addEventListener('change',render);$('#priority').addEventListener('change',render);start();
+const priorityObserver=new MutationObserver(()=>{const visible=projects.filter(p=>(!$('#area').value||p.area===$('#area').value)&&(!$('#priority').value||p.priority===$('#priority').value));document.querySelectorAll('.project-name').forEach((cell,index)=>cell.dataset.priority=visible[index]?.priority||'');});
+priorityObserver.observe($('#board'),{childList:true});
 </script></body></html>
