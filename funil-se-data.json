@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T14:32:02.974231Z",
+  "generatedAt": "2026-10-03T14:42:50.976868Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 0,
     "attendances": 0,
     "sales": 0,
-    "spend": 2188.26,
-    "impressions": 54866,
+    "spend": 2188.28,
+    "impressions": 54868,
     "reach": 18783,
     "linkClicks": 412,
     "ctr": 1.65,
@@ -40,8 +40,8 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 1134.65,
-      "impressions": 29061,
+      "spend": 1134.67,
+      "impressions": 29063,
       "reach": 14008,
       "linkClicks": 210,
       "ctr": 1.7,
@@ -64,7 +64,7 @@
       "cpm": 47.28,
       "cpc": 2.51,
       "frequency": 1.51,
-      "hookRate": 93.8
+      "hookRate": 93.82
     }
   ],
   "history": [
@@ -575,17 +575,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 21.98,
-      "impressions": 342,
-      "reach": 324,
+      "spend": 22.0,
+      "impressions": 344,
+      "reach": 326,
       "linkClicks": 1,
-      "ctr": 1.46,
+      "ctr": 1.45,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 64.27,
+      "cpm": 63.95,
       "cpc": 4.4,
       "frequency": 1.06,
-      "hookRate": 97.08
+      "hookRate": 96.8
     },
     "adsets": [
       {
@@ -604,31 +604,31 @@
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 20.84,
-        "impressions": 321,
-        "reach": 305,
+        "spend": 20.86,
+        "impressions": 323,
+        "reach": 306,
         "linkClicks": 1,
-        "ctr": 1.56,
+        "ctr": 1.55,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 64.92,
+        "cpm": 64.58,
         "cpc": 4.17,
-        "frequency": 1.05,
-        "hookRate": 96.57
+        "frequency": 1.06,
+        "hookRate": 96.9
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
         "spend": 1.1,
         "impressions": 19,
-        "reach": 18,
+        "reach": 19,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
         "cpm": 57.89,
         "cpc": 0.0,
-        "frequency": 1.06,
-        "hookRate": 89.47
+        "frequency": 1.0,
+        "hookRate": 94.74
       }
     ]
   }
