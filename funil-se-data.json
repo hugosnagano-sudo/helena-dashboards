@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-05T04:52:24.235043Z",
+  "generatedAt": "2026-10-05T05:03:30.231232Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 0,
     "attendances": 0,
     "sales": 0,
-    "spend": 2296.54,
-    "impressions": 57832,
+    "spend": 2296.61,
+    "impressions": 57834,
     "reach": 19782,
     "linkClicks": 441,
     "ctr": 1.65,
@@ -40,8 +40,8 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 1233.04,
-      "impressions": 31756,
+      "spend": 1233.11,
+      "impressions": 31758,
       "reach": 15108,
       "linkClicks": 237,
       "ctr": 1.7,
@@ -50,7 +50,7 @@
       "cpm": 38.83,
       "cpc": 2.29,
       "frequency": 2.1,
-      "hookRate": 94.48
+      "hookRate": 94.49
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
@@ -575,17 +575,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 1.4,
-      "impressions": 56,
-      "reach": 54,
+      "spend": 1.47,
+      "impressions": 58,
+      "reach": 55,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 25.0,
+      "cpm": 25.34,
       "cpc": 0.0,
-      "frequency": 1.04,
-      "hookRate": 92.86
+      "frequency": 1.05,
+      "hookRate": 94.83
     },
     "adsets": [
       {
@@ -604,17 +604,17 @@
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 1.28,
-        "impressions": 52,
-        "reach": 51,
+        "spend": 1.35,
+        "impressions": 54,
+        "reach": 52,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 24.62,
+        "cpm": 25.0,
         "cpc": 0.0,
-        "frequency": 1.02,
-        "hookRate": 92.31
+        "frequency": 1.04,
+        "hookRate": 94.44
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
