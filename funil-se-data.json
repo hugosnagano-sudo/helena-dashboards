@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-10-05T13:18:28.829680Z",
+  "generatedAt": "2026-10-05T13:29:35.334442Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
     "dailyBudget": 60.0,
     "weeklyFrequency": 1.31,
-    "averageResponseMinutes": 481.8,
-    "respondedLeads": 74,
+    "averageResponseMinutes": 476.2,
+    "respondedLeads": 75,
     "appointments": 28,
     "pastAppointments": 27,
     "attendances": 16,
@@ -801,8 +801,8 @@
       "cpc": 0.0,
       "frequency": 0.0,
       "hookRate": 0,
-      "averageResponseMinutes": null,
-      "respondedLeads": 0,
+      "averageResponseMinutes": 60.9,
+      "respondedLeads": 1,
       "appointments": 0,
       "pastAppointments": 0,
       "attendances": 0,
@@ -817,15 +817,15 @@
       "dailyBudget": 60.0,
       "spend": 20.72,
       "impressions": 503,
-      "reach": 465,
+      "reach": 468,
       "linkClicks": 3,
       "ctr": 0.99,
       "nativeLeads": 1,
       "cpl": 20.72,
       "cpm": 41.19,
       "cpc": 4.14,
-      "frequency": 1.08,
-      "hookRate": 97.02
+      "frequency": 1.07,
+      "hookRate": 97.42
     },
     "adsets": [
       {
