@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T07:19:25.000068Z",
+  "generatedAt": "2026-10-06T07:42:13.191898Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 27,
     "attendances": 16,
     "sales": 1,
-    "spend": 2358.04,
-    "impressions": 59797,
+    "spend": 2358.12,
+    "impressions": 59800,
     "reach": 20106,
     "linkClicks": 452,
     "ctr": 1.64,
@@ -40,16 +40,16 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 1286.59,
-      "impressions": 33439,
+      "spend": 1286.64,
+      "impressions": 33441,
       "reach": 15663,
       "linkClicks": 246,
       "ctr": 1.67,
       "nativeLeads": 51,
       "cpl": 25.23,
-      "cpm": 38.48,
+      "cpm": 38.47,
       "cpc": 2.3,
-      "frequency": 2.13,
+      "frequency": 2.14,
       "hookRate": 94.63
     },
     {
@@ -815,17 +815,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 1.67,
-      "impressions": 63,
-      "reach": 58,
+      "spend": 1.75,
+      "impressions": 66,
+      "reach": 60,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 26.51,
+      "cpm": 26.52,
       "cpc": 0.0,
-      "frequency": 1.09,
-      "hookRate": 95.24
+      "frequency": 1.1,
+      "hookRate": 95.45
     },
     "adsets": [
       {
@@ -844,17 +844,17 @@
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 1.36,
-        "impressions": 53,
-        "reach": 47,
+        "spend": 1.41,
+        "impressions": 55,
+        "reach": 49,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 25.66,
+        "cpm": 25.64,
         "cpc": 0.0,
-        "frequency": 1.13,
-        "hookRate": 94.34
+        "frequency": 1.12,
+        "hookRate": 96.36
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
