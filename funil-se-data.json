@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-08T08:43:23.565587Z",
+  "generatedAt": "2026-10-08T08:54:36.798183Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 2469.34,
-    "impressions": 62930,
+    "spend": 2469.35,
+    "impressions": 62931,
     "reach": 20609,
     "linkClicks": 479,
     "ctr": 1.63,
@@ -40,9 +40,9 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 1382.68,
-      "impressions": 36092,
-      "reach": 16240,
+      "spend": 1382.69,
+      "impressions": 36093,
+      "reach": 16251,
       "linkClicks": 270,
       "ctr": 1.66,
       "nativeLeads": 54,
@@ -50,7 +50,7 @@
       "cpm": 38.31,
       "cpc": 2.31,
       "frequency": 2.22,
-      "hookRate": 94.74
+      "hookRate": 94.75
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
@@ -855,17 +855,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 3.32,
-      "impressions": 70,
-      "reach": 67,
+      "spend": 3.33,
+      "impressions": 71,
+      "reach": 69,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 47.43,
+      "cpm": 46.9,
       "cpc": 0.0,
-      "frequency": 1.04,
-      "hookRate": 95.71
+      "frequency": 1.03,
+      "hookRate": 97.18
     },
     "adsets": [
       {
@@ -884,17 +884,17 @@
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 3.09,
-        "impressions": 60,
-        "reach": 56,
+        "spend": 3.1,
+        "impressions": 61,
+        "reach": 59,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 51.5,
+        "cpm": 50.82,
         "cpc": 0.0,
-        "frequency": 1.07,
-        "hookRate": 93.33
+        "frequency": 1.03,
+        "hookRate": 96.72
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
