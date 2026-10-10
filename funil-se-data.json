@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10T07:35:03.876200Z",
+  "generatedAt": "2026-10-10T07:45:57.748501Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 2588.22,
-    "impressions": 66406,
+    "spend": 2588.3,
+    "impressions": 66409,
     "reach": 21447,
     "linkClicks": 501,
     "ctr": 1.61,
@@ -40,8 +40,8 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 1478.3,
-      "impressions": 38850,
+      "spend": 1478.38,
+      "impressions": 38853,
       "reach": 17063,
       "linkClicks": 290,
       "ctr": 1.63,
@@ -50,7 +50,7 @@
       "cpm": 38.05,
       "cpc": 2.33,
       "frequency": 2.28,
-      "hookRate": 94.8
+      "hookRate": 94.79
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
@@ -875,17 +875,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 6.06,
-      "impressions": 127,
-      "reach": 122,
+      "spend": 6.14,
+      "impressions": 130,
+      "reach": 124,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 47.72,
+      "cpm": 47.23,
       "cpc": 0.0,
-      "frequency": 1.04,
-      "hookRate": 98.43
+      "frequency": 1.05,
+      "hookRate": 96.92
     },
     "adsets": [
       {
@@ -904,17 +904,17 @@
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 4.84,
-        "impressions": 103,
-        "reach": 99,
+        "spend": 4.92,
+        "impressions": 106,
+        "reach": 101,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 46.99,
+        "cpm": 46.42,
         "cpc": 0.0,
-        "frequency": 1.04,
-        "hookRate": 98.06
+        "frequency": 1.05,
+        "hookRate": 96.23
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
