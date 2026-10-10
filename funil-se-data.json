@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10T10:05:45.175089Z",
+  "generatedAt": "2026-10-10T10:16:45.011862Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 2591.61,
-    "impressions": 66446,
+    "spend": 2591.95,
+    "impressions": 66455,
     "reach": 21447,
     "linkClicks": 501,
     "ctr": 1.61,
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 389.48,
-      "impressions": 8763,
-      "reach": 5436,
+      "spend": 389.82,
+      "impressions": 8772,
+      "reach": 5442,
       "linkClicks": 82,
       "ctr": 1.78,
       "nativeLeads": 14,
-      "cpl": 27.82,
-      "cpm": 44.45,
+      "cpl": 27.84,
+      "cpm": 44.44,
       "cpc": 2.5,
       "frequency": 1.61,
-      "hookRate": 94.0
+      "hookRate": 93.96
     }
   ],
   "history": [
@@ -875,17 +875,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 9.45,
-      "impressions": 167,
-      "reach": 155,
+      "spend": 9.79,
+      "impressions": 176,
+      "reach": 167,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 56.59,
+      "cpm": 55.62,
       "cpc": 0.0,
-      "frequency": 1.08,
-      "hookRate": 94.01
+      "frequency": 1.05,
+      "hookRate": 95.45
     },
     "adsets": [
       {
@@ -918,17 +918,17 @@
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 3.56,
-        "impressions": 48,
-        "reach": 42,
+        "spend": 3.9,
+        "impressions": 57,
+        "reach": 54,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 74.17,
+        "cpm": 68.42,
         "cpc": 0.0,
-        "frequency": 1.14,
-        "hookRate": 85.42
+        "frequency": 1.06,
+        "hookRate": 80.7
       }
     ]
   }
