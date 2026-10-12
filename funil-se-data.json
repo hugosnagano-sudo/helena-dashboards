@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-12T07:00:11.695111Z",
+  "generatedAt": "2026-10-12T07:31:54.012142Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 2722.85,
-    "impressions": 69294,
+    "spend": 2722.87,
+    "impressions": 69296,
     "reach": 22081,
     "linkClicks": 523,
     "ctr": 1.59,
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 430.51,
-      "impressions": 9671,
+      "spend": 430.53,
+      "impressions": 9673,
       "reach": 5771,
       "linkClicks": 91,
       "ctr": 1.75,
       "nativeLeads": 15,
       "cpl": 28.7,
-      "cpm": 44.52,
+      "cpm": 44.51,
       "cpc": 2.55,
       "frequency": 1.68,
-      "hookRate": 94.22
+      "hookRate": 94.21
     }
   ],
   "history": [
@@ -915,32 +915,32 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 4.12,
-      "impressions": 91,
-      "reach": 89,
+      "spend": 4.14,
+      "impressions": 93,
+      "reach": 91,
       "linkClicks": 3,
-      "ctr": 4.4,
+      "ctr": 4.3,
       "nativeLeads": 1,
-      "cpl": 4.12,
-      "cpm": 45.27,
+      "cpl": 4.14,
+      "cpm": 44.52,
       "cpc": 1.03,
       "frequency": 1.02,
-      "hookRate": 98.9
+      "hookRate": 97.85
     },
     "adsets": [
       {
         "name": "CJ SE ADV 02 - Interesses",
         "spend": 0.09,
         "impressions": 4,
-        "reach": 3,
+        "reach": 4,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
         "cpm": 22.5,
         "cpc": 0.0,
-        "frequency": 1.33,
-        "hookRate": 75.0
+        "frequency": 1.0,
+        "hookRate": 100.0
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
@@ -958,17 +958,17 @@
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 3.34,
-        "impressions": 76,
-        "reach": 75,
+        "spend": 3.36,
+        "impressions": 78,
+        "reach": 77,
         "linkClicks": 3,
-        "ctr": 5.26,
+        "ctr": 5.13,
         "nativeLeads": 1,
-        "cpl": 3.34,
-        "cpm": 43.95,
-        "cpc": 0.83,
+        "cpl": 3.36,
+        "cpm": 43.08,
+        "cpc": 0.84,
         "frequency": 1.01,
-        "hookRate": 101.32
+        "hookRate": 100.0
       }
     ]
   }
