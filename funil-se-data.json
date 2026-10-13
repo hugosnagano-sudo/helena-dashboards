@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-13T04:03:01.090016Z",
+  "generatedAt": "2026-10-13T04:13:58.003864Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 2777.04,
-    "impressions": 70680,
+    "spend": 2777.08,
+    "impressions": 70682,
     "reach": 22313,
     "linkClicks": 534,
     "ctr": 1.59,
@@ -40,8 +40,8 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 1607.43,
-      "impressions": 41730,
+      "spend": 1607.44,
+      "impressions": 41731,
       "reach": 18014,
       "linkClicks": 311,
       "ctr": 1.6,
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 443.93,
-      "impressions": 10056,
+      "spend": 443.96,
+      "impressions": 10057,
       "reach": 5888,
       "linkClicks": 94,
       "ctr": 1.74,
       "nativeLeads": 16,
       "cpl": 27.75,
-      "cpm": 44.15,
+      "cpm": 44.14,
       "cpc": 2.54,
       "frequency": 1.71,
-      "hookRate": 94.1
+      "hookRate": 94.11
     }
   ],
   "history": [
@@ -915,17 +915,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 2.38,
-      "impressions": 53,
-      "reach": 48,
+      "spend": 2.42,
+      "impressions": 55,
+      "reach": 50,
       "linkClicks": 0,
-      "ctr": 1.89,
+      "ctr": 1.82,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 44.91,
-      "cpc": 2.38,
+      "cpm": 44.0,
+      "cpc": 2.42,
       "frequency": 1.1,
-      "hookRate": 92.45
+      "hookRate": 89.09
     },
     "adsets": [
       {
@@ -944,31 +944,31 @@
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 1.18,
-        "impressions": 31,
-        "reach": 30,
+        "spend": 1.19,
+        "impressions": 32,
+        "reach": 31,
         "linkClicks": 0,
-        "ctr": 3.23,
+        "ctr": 3.12,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 38.06,
-        "cpc": 1.18,
+        "cpm": 37.19,
+        "cpc": 1.19,
         "frequency": 1.03,
-        "hookRate": 100.0
+        "hookRate": 96.88
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 1.2,
-        "impressions": 22,
-        "reach": 18,
+        "spend": 1.23,
+        "impressions": 23,
+        "reach": 19,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 54.55,
+        "cpm": 53.48,
         "cpc": 0.0,
-        "frequency": 1.22,
-        "hookRate": 77.27
+        "frequency": 1.21,
+        "hookRate": 82.61
       }
     ]
   }
