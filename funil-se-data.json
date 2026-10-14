@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-10-14T03:58:42.989006Z",
+  "generatedAt": "2026-10-14T04:09:36.231703Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
     "dailyBudget": 60.0,
-    "weeklyFrequency": 1.58,
+    "weeklyFrequency": 1.57,
     "averageResponseMinutes": 470.2,
     "respondedLeads": 76,
     "appointments": 28,
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 2838.87,
-    "impressions": 72847,
+    "spend": 2838.9,
+    "impressions": 72850,
     "reach": 22695,
     "linkClicks": 548,
     "ctr": 1.58,
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 472.13,
-      "impressions": 11104,
+      "spend": 472.16,
+      "impressions": 11107,
       "reach": 6375,
       "linkClicks": 101,
       "ctr": 1.73,
       "nativeLeads": 18,
       "cpl": 26.23,
-      "cpm": 42.52,
+      "cpm": 42.51,
       "cpc": 2.46,
       "frequency": 1.74,
-      "hookRate": 94.07
+      "hookRate": 94.08
     }
   ],
   "history": [
@@ -935,17 +935,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 3.02,
-      "impressions": 26,
-      "reach": 21,
+      "spend": 3.05,
+      "impressions": 29,
+      "reach": 24,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 116.15,
+      "cpm": 105.17,
       "cpc": 0.0,
-      "frequency": 1.24,
-      "hookRate": 92.31
+      "frequency": 1.21,
+      "hookRate": 89.66
     },
     "adsets": [
       {
@@ -978,17 +978,17 @@
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 0.24,
-        "impressions": 17,
-        "reach": 14,
+        "spend": 0.27,
+        "impressions": 20,
+        "reach": 17,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 14.12,
+        "cpm": 13.5,
         "cpc": 0.0,
-        "frequency": 1.21,
-        "hookRate": 82.35
+        "frequency": 1.18,
+        "hookRate": 85.0
       }
     ]
   }
