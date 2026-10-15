@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T05:33:48.968997Z",
+  "generatedAt": "2026-10-15T06:05:23.117880Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,9 +11,9 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 2899.04,
-    "impressions": 74505,
-    "reach": 23049,
+    "spend": 2899.05,
+    "impressions": 74507,
+    "reach": 23058,
     "linkClicks": 558,
     "ctr": 1.58,
     "nativeLeads": 96,
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 501.35,
-      "impressions": 11957,
-      "reach": 6816,
+      "spend": 501.36,
+      "impressions": 11959,
+      "reach": 6822,
       "linkClicks": 106,
       "ctr": 1.7,
       "nativeLeads": 18,
       "cpl": 27.85,
-      "cpm": 41.93,
+      "cpm": 41.92,
       "cpc": 2.47,
       "frequency": 1.75,
-      "hookRate": 94.14
+      "hookRate": 94.16
     }
   ],
   "history": [
@@ -935,17 +935,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 3.39,
-      "impressions": 48,
-      "reach": 44,
+      "spend": 3.4,
+      "impressions": 50,
+      "reach": 47,
       "linkClicks": 0,
-      "ctr": 4.17,
+      "ctr": 4.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 70.62,
+      "cpm": 68.0,
       "cpc": 1.7,
-      "frequency": 1.09,
-      "hookRate": 91.67
+      "frequency": 1.06,
+      "hookRate": 96.0
     },
     "adsets": [
       {
@@ -978,17 +978,17 @@
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 1.44,
-        "impressions": 23,
-        "reach": 20,
+        "spend": 1.45,
+        "impressions": 25,
+        "reach": 24,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 62.61,
+        "cpm": 58.0,
         "cpc": 0.0,
-        "frequency": 1.15,
-        "hookRate": 91.3
+        "frequency": 1.04,
+        "hookRate": 100.0
       }
     ]
   }
