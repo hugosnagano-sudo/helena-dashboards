@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T09:01:02.996152Z",
+  "generatedAt": "2026-10-17T09:32:22.325863Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 3007.96,
-    "impressions": 77379,
+    "spend": 3008.17,
+    "impressions": 77383,
     "reach": 23402,
     "linkClicks": 575,
     "ctr": 1.56,
@@ -26,16 +26,16 @@
   "adsets": [
     {
       "name": "CJ SE ADV 02 - Interesses",
-      "spend": 735.24,
-      "impressions": 19125,
-      "reach": 8954,
+      "spend": 735.45,
+      "impressions": 19129,
+      "reach": 8961,
       "linkClicks": 130,
       "ctr": 1.48,
       "nativeLeads": 19,
-      "cpl": 38.7,
-      "cpm": 38.44,
+      "cpl": 38.71,
+      "cpm": 38.45,
       "cpc": 2.6,
-      "frequency": 2.14,
+      "frequency": 2.13,
       "hookRate": 93.53
     },
     {
@@ -975,32 +975,32 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 2.81,
-      "impressions": 85,
-      "reach": 77,
+      "spend": 3.02,
+      "impressions": 89,
+      "reach": 82,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 33.06,
+      "cpm": 33.93,
       "cpc": 0.0,
-      "frequency": 1.1,
-      "hookRate": 91.76
+      "frequency": 1.09,
+      "hookRate": 93.26
     },
     "adsets": [
       {
         "name": "CJ SE ADV 02 - Interesses",
-        "spend": 0.48,
-        "impressions": 18,
-        "reach": 14,
+        "spend": 0.69,
+        "impressions": 22,
+        "reach": 19,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 26.67,
+        "cpm": 31.36,
         "cpc": 0.0,
-        "frequency": 1.29,
-        "hookRate": 77.78
+        "frequency": 1.16,
+        "hookRate": 86.36
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
