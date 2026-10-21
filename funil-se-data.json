@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-21T01:01:21.003565Z",
+  "generatedAt": "2026-10-21T01:33:00.745935Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 28,
     "attendances": 16,
     "sales": 1,
-    "spend": 3246.26,
-    "impressions": 83687,
+    "spend": 3246.32,
+    "impressions": 83688,
     "reach": 24351,
     "linkClicks": 617,
     "ctr": 1.56,
@@ -26,8 +26,8 @@
   "adsets": [
     {
       "name": "CJ SE ADV 02 - Interesses",
-      "spend": 799.87,
-      "impressions": 20654,
+      "spend": 799.93,
+      "impressions": 20655,
       "reach": 9592,
       "linkClicks": 136,
       "ctr": 1.48,
@@ -36,7 +36,7 @@
       "cpm": 38.73,
       "cpc": 2.62,
       "frequency": 2.15,
-      "hookRate": 93.73
+      "hookRate": 93.72
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
@@ -1015,38 +1015,38 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 51.36,
-      "impressions": 1356,
-      "reach": 1096,
+      "spend": 51.42,
+      "impressions": 1357,
+      "reach": 1098,
       "linkClicks": 10,
       "ctr": 1.4,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 37.88,
-      "cpc": 2.7,
+      "cpm": 37.89,
+      "cpc": 2.71,
       "frequency": 1.24,
       "hookRate": 95.21
     },
     "adsets": [
       {
         "name": "CJ SE ADV 02 - Interesses",
-        "spend": 17.03,
-        "impressions": 452,
+        "spend": 17.09,
+        "impressions": 453,
         "reach": 377,
         "linkClicks": 2,
-        "ctr": 1.33,
+        "ctr": 1.32,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 37.68,
-        "cpc": 2.84,
+        "cpm": 37.73,
+        "cpc": 2.85,
         "frequency": 1.2,
-        "hookRate": 95.8
+        "hookRate": 95.58
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
         "spend": 10.3,
         "impressions": 291,
-        "reach": 259,
+        "reach": 260,
         "linkClicks": 2,
         "ctr": 1.37,
         "nativeLeads": 0,
