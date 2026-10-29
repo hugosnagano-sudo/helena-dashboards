@@ -26,6 +26,7 @@ SOURCES = {
         "has_header": True,
         "category": "laser",
         "voomp_product": "Laserterapia na Odontopediatria",
+        "voomp_sheet": "lt",
     },
     "terapeutica": {
         "name": "Terapêutica",
@@ -36,6 +37,7 @@ SOURCES = {
         "has_header": True,
         "category": "terap",
         "voomp_product": "Terapêutica Medicamentosa em Odontopediatria",
+        "voomp_sheet": "lt",
     },
     "planilha": {
         "name": "Planilha",
@@ -46,6 +48,7 @@ SOURCES = {
         "has_header": True,
         "category": "planilha",
         "voomp_product": "Planilha de controle financeiro e cálculo de hora clínica",
+        "voomp_sheet": "lt",
     },
     "primeiros-dentinhos": {
         "name": "Primeiros Dentinhos",
@@ -55,11 +58,25 @@ SOURCES = {
         "sheet_id": "1fDbt8wRKLoVWQg2514pOYTuryAVgZETd_sW3nkIke-s",
         "has_header": False,
         "voomp_product": None,
+        "voomp_sheet": "primeiros-dentinhos",
+        "attribution_fragment": "dentinhos",
+    },
+    "dedo-e-chupeta": {
+        "name": "Dedo e Chupeta",
+        "short": "Dedo",
+        "color": "#14b8a6",
+        "note": "Conta act_1552127232446226; campanhas com [Dedo]",
+        "sheet_id": "1Fzp8-bqjSZmsjMiUiuUKtBPJ1Qa47aICU1TXOUvfDss",
+        "has_header": True,
+        "category": "dedo",
+        "voomp_product": "Dedo e Chupeta",
+        "voomp_sheet": "dedo-e-chupeta",
     },
 }
 VOOMP_SHEETS = {
     "lt": "1JQPLF1diqFFvDENstwsa6NUdVoJOC5phSSrbYe1qZiI",
     "primeiros-dentinhos": "1pUaUDlMpkki6_ribAaif2f6h3QRBZNq9fbymMBalKu8",
+    "dedo-e-chupeta": "1jPxcpOchVT9QqXNNim805yWrE8t79zKoSJexR9XHSwo",
 }
 ANALYSES_SHEET = "1racOzPJf2JqfvA4etRDFmxKRdl6fcGtG23KiElW7x3Q"
 FIELDS = ["date", "account", "account_id", "campaign_id", "campaign_name", "adset_id", "adset_name", "ad_id", "ad_name", "spend", "currency", "impressions", "clicks", "ctr", "cpc", "cpm", "leads_meta", "landing_views", "content_views", "checkouts_meta", "add_payment_info_meta", "purchases_meta", "value_meta", "source", "notes", "link_clicks"]
@@ -229,9 +246,9 @@ def main() -> None:
     voomp_rows = {
         "lt": values(VOOMP_SHEETS["lt"], "Vendas!A:ZZ"),
         "primeiros-dentinhos": values(VOOMP_SHEETS["primeiros-dentinhos"], "Vendas!A:ZZ"),
+        "dedo-e-chupeta": values(VOOMP_SHEETS["dedo-e-chupeta"], "Vendas!A:ZZ"),
     }
     attribution_rows = values(ANALYSES_SHEET, "Atribuição de Vendas!A:U")
-    voomp = {"primeiros-dentinhos": voomp_daily(voomp_rows["primeiros-dentinhos"])}
     for key, source in SOURCES.items():
         sheet_id = source["sheet_id"]
         if sheet_id not in sheets:
@@ -240,12 +257,11 @@ def main() -> None:
         fresh, details = daily(sheets[sheet_id], source["has_header"], source.get("category"))
         previous = existing_projects.get(key, {})
         existing = {row["date"]: row for row in previous.get("rows", [])}
-        product_sales = (voomp["primeiros-dentinhos"] if key == "primeiros-dentinhos"
-                         else voomp_daily(voomp_rows["lt"], source.get("voomp_product")))
+        product_sales = voomp_daily(voomp_rows[source["voomp_sheet"]], source.get("voomp_product"))
         attributed_sales = attributed_voomp(
             attribution_rows,
-            None if key == "primeiros-dentinhos" else source.get("voomp_product"),
-            "dentinhos" if key == "primeiros-dentinhos" else None,
+            source.get("voomp_product"),
+            source.get("attribution_fragment"),
         )
         detail_by_key = {(detail["date"], detail["ad_id"]): detail for detail in details}
         for sales_key, sales in attributed_sales.items():
