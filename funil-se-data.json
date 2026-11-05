@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T08:01:12.411944Z",
+  "generatedAt": "2026-11-05T08:13:14.789125Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -1277,15 +1277,15 @@
       "dailyBudget": 60.0,
       "spend": 1.74,
       "impressions": 60,
-      "reach": 57,
+      "reach": 58,
       "linkClicks": 1,
       "ctr": 3.33,
       "nativeLeads": 0,
       "cpl": 0,
       "cpm": 29.0,
       "cpc": 0.87,
-      "frequency": 1.05,
-      "hookRate": 90.0
+      "frequency": 1.03,
+      "hookRate": 91.67
     },
     "adsets": [
       {
@@ -1306,14 +1306,14 @@
         "name": "CJ SE ADV 03 - Comportamentos",
         "spend": 0.21,
         "impressions": 10,
-        "reach": 9,
+        "reach": 10,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
         "cpm": 21.0,
         "cpc": 0.0,
-        "frequency": 1.11,
+        "frequency": 1.0,
         "hookRate": 100.0
       },
       {
