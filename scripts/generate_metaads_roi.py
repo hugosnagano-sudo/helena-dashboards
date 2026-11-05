@@ -57,6 +57,7 @@ SOURCES = {
         "note": "Conta act_1552127232446226; campanhas com [LT] + [1osDent]",
         "sheet_id": "1fDbt8wRKLoVWQg2514pOYTuryAVgZETd_sW3nkIke-s",
         "has_header": False,
+        "campaign_ids": {"120262094153850586"},
         "voomp_product": None,
         "voomp_sheet": "primeiros-dentinhos",
         "attribution_fragment": "dentinhos",
@@ -68,7 +69,7 @@ SOURCES = {
         "note": "Conta act_1552127232446226; campanhas com [Dedo]",
         "sheet_id": "1Fzp8-bqjSZmsjMiUiuUKtBPJ1Qa47aICU1TXOUvfDss",
         "has_header": True,
-        "category": "dedo",
+        "campaign_ids": {"120261970170080586"},
         "voomp_product": "Dedo e Chupeta",
         "voomp_sheet": "dedo-e-chupeta",
     },
@@ -199,7 +200,8 @@ def attributed_voomp(rows: list[list[str]], product_name: str | None = None, pro
             for key, values in data.items()}
 
 
-def daily(rows: list[list[str]], has_header: bool, category: str | None = None) -> tuple[dict[str, dict], list[dict]]:
+def daily(rows: list[list[str]], has_header: bool, category: str | None = None,
+          campaign_ids: set[str] | None = None) -> tuple[dict[str, dict], list[dict]]:
     data = defaultdict(lambda: defaultdict(float))
     details = []
     for row in rows[1 if has_header else 0:]:
@@ -207,6 +209,8 @@ def daily(rows: list[list[str]], has_header: bool, category: str | None = None) 
             continue
         record = dict(zip(FIELDS, row))
         if category and f"[{category}]" not in record.get("campaign_name", "").lower():
+            continue
+        if campaign_ids and record.get("campaign_id", "") not in campaign_ids:
             continue
         detail = {
             "date": record["date"], "currency": record.get("currency") or "BRL",
@@ -254,9 +258,7 @@ def main() -> None:
         if sheet_id not in sheets:
             sheets[sheet_id] = values(sheet_id)
             sheet_modified[sheet_id] = sheet_modified_at(sheet_id)
-        fresh, details = daily(sheets[sheet_id], source["has_header"], source.get("category"))
-        previous = existing_projects.get(key, {})
-        existing = {row["date"]: row for row in previous.get("rows", [])}
+        fresh, details = daily(sheets[sheet_id], source["has_header"], source.get("category"), source.get("campaign_ids"))
         product_sales = voomp_daily(voomp_rows[source["voomp_sheet"]], source.get("voomp_product"))
         attributed_sales = attributed_voomp(
             attribution_rows,
@@ -278,10 +280,14 @@ def main() -> None:
                 details.append(detail)
                 detail_by_key[sales_key] = detail
             detail.update(sales)
-        all_dates = sorted(set(existing) | set(fresh) | set(product_sales))
+        # A planilha MetaAds é a fonte de verdade para investimento. Não carregue
+        # gastos de snapshots anteriores: eles podem pertencer a uma campanha que
+        # foi movida para outra base.
+        existing = {}
+        all_dates = sorted(set(fresh) | set(product_sales))
         for date in all_dates:
-            row = fresh.get(date, existing.get(date, {"date": date, "currency": "BRL"}) )
-            existing[date] = {**existing.get(date, {}), **row}
+            row = fresh.get(date, {"date": date, "currency": "BRL"})
+            existing[date] = dict(row)
             existing[date].update(product_sales.get(date, {"purchases_voomp": 0, "value_voomp": 0, "order_bump_count": 0}))
         projects.append({
             "key": key,
