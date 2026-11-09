@@ -54,13 +54,14 @@
   function formatBRT(iso) { return new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short',timeZone:'America/Sao_Paulo'}).format(new Date(iso)); }
   let maidData=null;
   const isoDate=value=>{ const date=value instanceof Date?value:new Date(`${value}T12:00:00`); return date.toISOString().slice(0,10); };
+  const brtToday=()=>{ const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).filter(part=>part.type!=='literal').map(part=>[part.type,part.value])); return `${parts.year}-${parts.month}-${parts.day}`; };
   function selectedHistory() {
     const history=maidData?.history||[];
     if (!history.length) return [];
     const selector=document.getElementById('periodSelect'), custom=selector.value==='custom';
-    const end=document.getElementById('endDate').value||history.at(-1).dateBRT;
+    const end=custom ? (document.getElementById('endDate').value||history.at(-1).dateBRT) : brtToday();
     const start=custom ? document.getElementById('startDate').value : isoDate(new Date(new Date(`${end}T12:00:00`).getTime()-(Number(selector.value)-1)*86400000));
-    if (!custom) document.getElementById('startDate').value=start;
+    if (!custom) { document.getElementById('startDate').value=start; document.getElementById('endDate').value=end; }
     return history.filter(item=>item.dateBRT>=start && item.dateBRT<=end);
   }
   function aggregateHistory(rows) {

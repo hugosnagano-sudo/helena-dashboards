@@ -350,8 +350,8 @@ function setup() {
   } catch(e) {}
   const applyPeriod = () => {
     if (periodSelect.value === 'max') { startDate.value = ''; endDate.value = ''; render(); return; }
-    // Períodos rápidos sempre encerram em ontem, no fuso operacional (São Paulo).
-    const lastClosed = new Date(`${saoPauloDate(-1)}T00:00:00Z`);
+    // Períodos rápidos incluem o dia corrente, no fuso operacional (São Paulo).
+    const lastClosed = new Date(`${saoPauloDate()}T00:00:00Z`);
     const first = new Date(lastClosed); first.setUTCDate(first.getUTCDate() - (Number(periodSelect.value) - 1));
     startDate.value = first.toISOString().slice(0,10);
     endDate.value = lastClosed.toISOString().slice(0,10);
