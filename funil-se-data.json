@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T04:22:25.242588Z",
+  "generatedAt": "2026-11-11T04:33:32.791679Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
@@ -11,8 +11,8 @@
     "pastAppointments": 34,
     "attendances": 18,
     "sales": 1,
-    "spend": 4498.58,
-    "impressions": 117511,
+    "spend": 4498.59,
+    "impressions": 117513,
     "reach": 29794,
     "linkClicks": 808,
     "ctr": 1.43,
@@ -54,17 +54,17 @@
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 1135.3,
-      "impressions": 29762,
+      "spend": 1135.31,
+      "impressions": 29764,
       "reach": 13218,
       "linkClicks": 210,
       "ctr": 1.4,
       "nativeLeads": 32,
       "cpl": 35.48,
-      "cpm": 38.15,
+      "cpm": 38.14,
       "cpc": 2.72,
       "frequency": 2.25,
-      "hookRate": 94.44
+      "hookRate": 94.43
     }
   ],
   "history": [
@@ -1335,17 +1335,17 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 2.24,
-      "impressions": 45,
-      "reach": 40,
+      "spend": 2.25,
+      "impressions": 47,
+      "reach": 43,
       "linkClicks": 0,
       "ctr": 0.0,
       "nativeLeads": 0,
       "cpl": 0,
-      "cpm": 49.78,
+      "cpm": 47.87,
       "cpc": 0.0,
-      "frequency": 1.12,
-      "hookRate": 93.33
+      "frequency": 1.09,
+      "hookRate": 93.62
     },
     "adsets": [
       {
@@ -1366,29 +1366,29 @@
         "name": "CJ SE ADV 03 - Comportamentos",
         "spend": 0.46,
         "impressions": 15,
-        "reach": 13,
+        "reach": 15,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
         "cpm": 30.67,
         "cpc": 0.0,
-        "frequency": 1.15,
-        "hookRate": 86.67
+        "frequency": 1.0,
+        "hookRate": 93.33
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 0.36,
-        "impressions": 6,
-        "reach": 5,
+        "spend": 0.37,
+        "impressions": 8,
+        "reach": 6,
         "linkClicks": 0,
         "ctr": 0.0,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 60.0,
+        "cpm": 46.25,
         "cpc": 0.0,
-        "frequency": 1.2,
-        "hookRate": 83.33
+        "frequency": 1.33,
+        "hookRate": 75.0
       }
     ]
   }
