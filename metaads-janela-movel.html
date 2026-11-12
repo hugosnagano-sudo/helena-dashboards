@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MetaAds · Janela móvel</title>
+  <script>
+    (function () {
+      const expected = '#0707', key = 'helena.dashboard.auth.v1';
+      if (sessionStorage.getItem(key) === 'ok') return;
+      const typed = window.prompt('Senha para acessar os dashboards:');
+      if (typed === expected) { sessionStorage.setItem(key, 'ok'); return; }
+      document.open(); document.write('<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Acesso restrito</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#020617;color:#e5e7eb;font-family:system-ui}.box{padding:28px;border:1px solid #334155;border-radius:16px;background:#0f172a;text-align:center}button{padding:10px 14px;border:0;border-radius:8px;background:#2563eb;color:white;font-weight:800}</style><div class="box"><h1>Acesso restrito</h1><p>Senha incorreta ou acesso cancelado.</p><button onclick="location.reload()">Tentar novamente</button></div>'); document.close(); throw new Error('Acesso bloqueado');
+    })();
+  </script>
+  <style>
+    :root{color-scheme:dark;--bg:#020617;--panel:#111827;--field:#0b1220;--line:#334155;--text:#e5e7eb;--muted:#94a3b8;--blue:#38bdf8;--green:#34d399}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(150deg,#020617,#0f172a);color:var(--text);font:14px Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    main{max-width:1440px;margin:auto;padding:20px 14px 40px}.panel{background:rgba(17,24,39,.9);border:1px solid rgba(148,163,184,.2);border-radius:16px;padding:17px;box-shadow:0 14px 36px rgba(0,0,0,.24)}
+    h1{font-size:26px;margin:0 0 5px}.muted,.note{color:var(--muted)}.note{margin:0;font-size:13px}.top{display:flex;gap:14px;justify-content:space-between;align-items:flex-start;margin-bottom:16px}.tag{font-size:12px;font-weight:800;color:#bae6fd;background:#0c4a6e;border:1px solid #0369a1;border-radius:999px;padding:5px 9px;white-space:nowrap}
+    .filters{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:10px;margin-bottom:14px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#cbd5e1}select,input{width:100%;background:var(--field);color:var(--text);border:1px solid rgba(148,163,184,.35);border-radius:8px;padding:8px;font:inherit}.wide{grid-column:span 2}.actions{display:flex;align-items:end;gap:7px}button{cursor:pointer;border:0;border-radius:8px;padding:9px 11px;font-weight:800;background:#2563eb;color:#fff}button.secondary{background:#334155}
+    .summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}.metric{background:var(--field);border:1px solid rgba(148,163,184,.15);border-radius:12px;padding:13px}.metric .label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}.metric .value{font-size:22px;font-weight:800;margin-top:6px}.metric .hint{font-size:12px;color:var(--muted);margin-top:3px}
+    .chart-panel{padding:0;overflow:hidden}.chart-head{padding:17px 17px 0;display:flex;justify-content:space-between;gap:12px;align-items:baseline}.chart-head h2{font-size:17px;margin:0}.chart-wrap{padding:10px 12px 4px;overflow-x:auto}.chart{width:100%;min-width:680px;height:380px;display:block}.axis{stroke:#334155;stroke-width:1}.gridline{stroke:#233047;stroke-width:1;stroke-dasharray:3 4}.line{fill:none;stroke:var(--blue);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.area{fill:url(#fill);opacity:.55}.point{fill:#e0f2fe;stroke:var(--blue);stroke-width:2}.label-svg{fill:#94a3b8;font-size:11px}.tooltip{position:fixed;display:none;pointer-events:none;background:#020617;border:1px solid #475569;border-radius:8px;padding:8px 10px;color:#e5e7eb;font-size:12px;box-shadow:0 8px 18px rgba(0,0,0,.35);z-index:10}
+    .table-wrap{overflow:auto;margin-top:14px}.table{width:100%;border-collapse:collapse;min-width:730px}.table th,.table td{padding:9px 10px;border-bottom:1px solid rgba(148,163,184,.16);text-align:left;font-size:13px}.table th{color:#cbd5e1;font-size:11px;text-transform:uppercase;letter-spacing:.05em}.table td:not(:first-child),.table th:not(:first-child){text-align:right}.empty{padding:56px 18px;text-align:center;color:var(--muted)}
+    @media(max-width:920px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-column:span 1}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{grid-column:span 2}.top{flex-direction:column}.chart{height:340px}}
+  </style>
+</head>
+<body><main>
+  <section class="panel top"><div><h1>MetaAds · Janela móvel</h1><p class="note">Média ou total dos últimos N dias, recalculado para cada data do período.</p></div><span class="tag">RASCUNHO</span></section>
+  <section class="panel" style="margin:14px 0"><div class="filters">
+    <div class="field"><label for="base">Base</label><select id="base"></select></div>
+    <div class="field wide"><label for="campaign">Campanha</label><select id="campaign"></select></div>
+    <div class="field wide"><label for="adset">Conjunto de anúncios</label><select id="adset"></select></div>
+    <div class="field wide"><label for="ad">Anúncio</label><select id="ad"></select></div>
+    <div class="field"><label for="metric">Indicador</label><select id="metric"><option value="spend">Gasto</option><option value="value_voomp">Faturado Voomp</option><option value="purchases_voomp">Vendas Voomp</option><option value="cpa">CPA Voomp</option><option value="roas">ROAS Voomp</option><option value="ctr">CTR</option><option value="cpc">CPC</option></select></div>
+    <div class="field"><label for="window">Janela móvel</label><select id="window"><option value="7">7 dias</option><option value="14" selected>14 dias</option><option value="30">30 dias</option><option value="60">60 dias</option></select></div>
+    <div class="field"><label for="preset">Período analisado</label><select id="preset"><option value="14">Últimos 14 dias</option><option value="30" selected>Últimos 30 dias</option><option value="60">Últimos 60 dias</option><option value="max">Máximo</option></select></div>
+    <div class="field"><label for="start">Data inicial</label><input id="start" type="date" /></div>
+    <div class="field"><label for="end">Data final</label><input id="end" type="date" /></div>
+    <div class="actions"><button id="apply" type="button">Atualizar</button><button id="clear" class="secondary" type="button">Limpar</button></div>
+  </div></section>
+  <section id="result"><div class="panel empty">Carregando dados do MetaAds Lista…</div></section>
+  <div class="tooltip" id="tooltip"></div>
+</main>
+<script>
+  const $ = id => document.getElementById(id);
+  const els = Object.fromEntries(['base','campaign','adset','ad','metric','window','preset','start','end','apply','clear','result','tooltip'].map(id => [id,$(id)]));
+  const money = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}), num = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2});
+  let DATA, rows = [];
+  const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const ymd = date => date.toISOString().slice(0,10);
+  const addDays = (date, amount) => { const d=new Date(date+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()+amount); return ymd(d); };
+  const sum = (list, field) => list.reduce((total,row) => total + Number(row[field]||0),0);
+  const minDate = () => rows.map(r=>r.date).filter(Boolean).sort()[0] || '';
+  const maxDate = () => rows.map(r=>r.date).filter(Boolean).sort().at(-1) || '';
+  function option(select, values, label, previous='') { select.innerHTML=`<option value="">${esc(label)}</option>`+values.map(v=>`<option value="${esc(v.id)}">${esc(v.label)}</option>`).join(''); if(values.some(v=>v.id===previous))select.value=previous; }
+  function scoped(forOptions=false) { return rows.filter(r => (!els.base.value||r.base_key===els.base.value) && (!forOptions||!els.campaign.value||r.campaign_name===els.campaign.value) && (!forOptions||!els.adset.value||r.adset_name===els.adset.value) && (!forOptions||!els.ad.value||r.ad_name===els.ad.value)); }
+  function refreshOptions() {
+    const keep={campaign:els.campaign.value,adset:els.adset.value,ad:els.ad.value};
+    const baseValues=[...new Map(rows.map(r=>[r.base_key,r.base_name])).entries()].sort((a,b)=>a[1].localeCompare(b[1])).map(([id,label])=>({id,label})); option(els.base,baseValues,'Todas as bases',els.base.value);
+    let pool=rows.filter(r=>!els.base.value||r.base_key===els.base.value);
+    option(els.campaign,[...new Set(pool.map(r=>r.campaign_name).filter(Boolean))].sort().map(label=>({id:label,label})),'Todas as campanhas',keep.campaign);
+    pool=pool.filter(r=>!els.campaign.value||r.campaign_name===els.campaign.value);
+    option(els.adset,[...new Set(pool.map(r=>r.adset_name).filter(Boolean))].sort().map(label=>({id:label,label})),'Todos os conjuntos',keep.adset);
+    pool=pool.filter(r=>!els.adset.value||r.adset_name===els.adset.value);
+    option(els.ad,[...new Set(pool.map(r=>r.ad_name).filter(Boolean))].sort().map(label=>({id:label,label})),'Todos os anúncios',keep.ad);
+  }
+  function metricValue(list, key) { const spend=sum(list,'spend'), sales=sum(list,'purchases_voomp'), revenue=sum(list,'value_voomp'), clicks=sum(list,'clicks'), impressions=sum(list,'impressions'); if(key==='cpa')return sales?spend/sales:null; if(key==='roas')return spend?revenue/spend:null; if(key==='ctr')return impressions?clicks/impressions*100:null; if(key==='cpc')return clicks?spend/clicks:null; return sum(list,key); }
+  function metricFormat(value,key){if(value===null)return '—';if(['spend','value_voomp','cpa','cpc'].includes(key))return money.format(value);if(key==='roas')return `${num.format(value)}x`;if(key==='ctr')return `${num.format(value)}%`;return num.format(value);}
+  function draw(points,key) {
+    if(!points.length)return '<div class="empty">Não há dados para os filtros e período selecionados.</div>';
+    const values=points.map(p=>p.value).filter(v=>v!==null), lo=Math.min(...values,0), hi=Math.max(...values,1), pad=(hi-lo)*.12||1, min=lo-pad,max=hi+pad,W=Math.max(680,points.length*27),H=380,L=62,R=22,T=22,B=42, sx=i=>L+i*(W-L-R)/Math.max(points.length-1,1), sy=v=>T+(max-v)*(H-T-B)/(max-min), path=points.filter(p=>p.value!==null).map((p,i)=>`${i?'L':'M'}${sx(i).toFixed(1)},${sy(p.value).toFixed(1)}`).join(' '), area=path?`${path} L ${sx(points.length-1)},${H-B} L ${sx(0)},${H-B} Z`:'';
+    const ticks=4, grid=Array.from({length:ticks+1},(_,i)=>{const v=min+(max-min)*i/ticks,y=sy(v);return `<line class="gridline" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text class="label-svg" x="${L-8}" y="${y+4}" text-anchor="end">${esc(metricFormat(v,key))}</text>`}).join('');
+    const labels=points.map((p,i)=>i===0||i===points.length-1||i%Math.ceil(points.length/6)===0?`<text class="label-svg" x="${sx(i)}" y="${H-14}" text-anchor="middle">${p.date.slice(5).split('-').reverse().join('/')}</text>`:'').join('');
+    const dots=points.map((p,i)=>p.value===null?'':`<circle class="point" cx="${sx(i)}" cy="${sy(p.value)}" r="3.8" data-date="${p.date}" data-value="${esc(metricFormat(p.value,key))}"/>`).join('');
+    return `<div class="chart-wrap"><svg class="chart" viewBox="0 0 ${W} ${H}" aria-label="Gráfico de janela móvel"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#38bdf8" stop-opacity=".52"/><stop offset="1" stop-color="#38bdf8" stop-opacity="0"/></linearGradient></defs>${grid}<line class="axis" x1="${L}" x2="${W-R}" y1="${H-B}" y2="${H-B}"/><path class="area" d="${area}"/><path class="line" d="${path}"/>${dots}${labels}</svg></div>`;
+  }
+  function render() {
+    const filtered=scoped(true), dates=[...new Set(filtered.map(r=>r.date).filter(Boolean))].sort(), start=els.start.value||dates[0], end=els.end.value||dates.at(-1), range=filtered.filter(r=>r.date>=start&&r.date<=end), windowDays=Number(els.window.value), points=[];
+    for(const date of [...new Set(range.map(r=>r.date))].sort()) { const from=addDays(date,-windowDays+1), sample=filtered.filter(r=>r.date>=from&&r.date<=date); points.push({date,value:metricValue(sample,els.metric.value),from}); }
+    const latest=points.at(-1), total=metricValue(range,els.metric.value), prior=points.length>1?points.at(-2):null, change=latest&&prior&&latest.value!==null&&prior.value!==null&&prior.value!==0?(latest.value-prior.value)/Math.abs(prior.value)*100:null;
+    const metricLabel=els.metric.options[els.metric.selectedIndex].text, rangeLabel=start&&end?`${start.split('-').reverse().join('/')} a ${end.split('-').reverse().join('/')}`:'—';
+    els.result.innerHTML=`<section class="summary"><div class="metric"><div class="label">Última janela (${windowDays} dias)</div><div class="value">${metricFormat(latest?.value,els.metric.value)}</div><div class="hint">Encerrada em ${latest?.date?.split('-').reverse().join('/')||'—'}</div></div><div class="metric"><div class="label">Variação diária</div><div class="value">${change===null?'—':`${change>=0?'+':''}${num.format(change)}%`}</div><div class="hint">Contra a janela anterior</div></div><div class="metric"><div class="label">Total do período</div><div class="value">${metricFormat(total,els.metric.value)}</div><div class="hint">${rangeLabel}</div></div><div class="metric"><div class="label">Pontos no gráfico</div><div class="value">${num.format(points.length)}</div><div class="hint">Um ponto por dia</div></div></section><section class="panel chart-panel"><div class="chart-head"><div><h2>${esc(metricLabel)} · janela de ${windowDays} dias</h2><p class="note">Cada ponto inclui o dia exibido e os ${windowDays-1} dias anteriores.</p></div><span class="note">${rangeLabel}</span></div>${draw(points,els.metric.value)}</section><section class="panel table-wrap"><table class="table"><thead><tr><th>Data final</th><th>Início da janela</th><th>${esc(metricLabel)}</th></tr></thead><tbody>${points.slice().reverse().map(p=>`<tr><td>${p.date.split('-').reverse().join('/')}</td><td>${p.from.split('-').reverse().join('/')}</td><td>${metricFormat(p.value,els.metric.value)}</td></tr>`).join('')}</tbody></table></section>`;
+    document.querySelectorAll('.point').forEach(dot=>dot.addEventListener('mouseenter',e=>{els.tooltip.innerHTML=`<strong>${e.target.dataset.date.split('-').reverse().join('/')}</strong><br>${e.target.dataset.value}`;els.tooltip.style.display='block';}).addEventListener('mousemove',e=>{els.tooltip.style.left=`${e.clientX+13}px`;els.tooltip.style.top=`${e.clientY+13}px`;}).addEventListener('mouseleave',()=>els.tooltip.style.display='none'));
+  }
+  function applyPreset() { const latest=maxDate(); if(!latest)return; if(els.preset.value==='max'){els.start.value=minDate();els.end.value=latest;}else{els.end.value=latest;els.start.value=addDays(latest,-Number(els.preset.value)+1);} }
+  async function load() { try { const text=await fetch('metaads-lista.html',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.text()}), doc=new DOMParser().parseFromString(text,'text/html'), payload=doc.querySelector('#dashboard-data')?.textContent; if(!payload)throw new Error('snapshot ausente'); DATA=JSON.parse(payload); rows=DATA.projects.flatMap(p=>(p.detailRows||[]).map(r=>({...r,base_key:p.key,base_name:p.name}))); if(!rows.length)throw new Error('sem detalhes'); refreshOptions(); applyPreset(); render(); } catch(err) { els.result.innerHTML=`<div class="panel empty">Não foi possível carregar a base do MetaAds Lista. ${esc(err.message)}</div>`; } }
+  ['base','campaign','adset','ad'].forEach(id=>els[id].addEventListener('change',()=>{refreshOptions();render();})); els.preset.addEventListener('change',()=>{applyPreset();render();}); [els.start,els.end,els.metric,els.window].forEach(el=>el.addEventListener('change',render)); els.apply.addEventListener('click',render); els.clear.addEventListener('click',()=>{els.base.value=els.campaign.value=els.adset.value=els.ad.value='';refreshOptions();applyPreset();render();}); load();
+</script>
+</body></html>
