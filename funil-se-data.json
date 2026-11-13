@@ -1,56 +1,56 @@
 {
-  "generatedAt": "2026-11-13T00:53:31.580439Z",
+  "generatedAt": "2026-11-13T01:05:10.154045Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
     "dailyBudget": 60.0,
-    "weeklyFrequency": 1.72,
+    "weeklyFrequency": 1.71,
     "averageResponseMinutes": 665.8,
     "respondedLeads": 109,
     "appointments": 34,
     "pastAppointments": 34,
     "attendances": 18,
     "sales": 1,
-    "spend": 4612.16,
-    "impressions": 120375,
-    "reach": 30127,
+    "spend": 4612.93,
+    "impressions": 120398,
+    "reach": 30146,
     "linkClicks": 820,
     "ctr": 1.41,
     "nativeLeads": 130,
     "cpl": 35.48,
     "cpm": 38.31,
     "cpc": 2.71,
-    "frequency": 4.0,
-    "hookRate": 94.42
+    "frequency": 3.99,
+    "hookRate": 94.43
   },
   "adsets": [
     {
       "name": "CJ SE ADV 02 - Interesses",
-      "spend": 1326.11,
-      "impressions": 35194,
-      "reach": 13721,
+      "spend": 1326.65,
+      "impressions": 35208,
+      "reach": 13756,
       "linkClicks": 211,
       "ctr": 1.28,
       "nativeLeads": 27,
-      "cpl": 49.12,
+      "cpl": 49.14,
       "cpm": 37.68,
       "cpc": 2.95,
       "frequency": 2.56,
-      "hookRate": 93.91
+      "hookRate": 93.92
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 2111.81,
-      "impressions": 54322,
+      "spend": 2112.04,
+      "impressions": 54331,
       "reach": 21304,
       "linkClicks": 392,
       "ctr": 1.51,
       "nativeLeads": 68,
       "cpl": 31.06,
-      "cpm": 38.88,
+      "cpm": 38.87,
       "cpc": 2.58,
       "frequency": 2.55,
-      "hookRate": 94.82
+      "hookRate": 94.83
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
@@ -64,7 +64,7 @@
       "cpm": 38.05,
       "cpc": 2.72,
       "frequency": 2.3,
-      "hookRate": 94.29
+      "hookRate": 94.31
     }
   ],
   "history": [
@@ -1375,60 +1375,60 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 62.47,
-      "impressions": 1606,
-      "reach": 1301,
+      "spend": 63.24,
+      "impressions": 1629,
+      "reach": 1347,
       "linkClicks": 6,
-      "ctr": 0.75,
+      "ctr": 0.74,
       "nativeLeads": 3,
-      "cpl": 20.82,
-      "cpm": 38.9,
-      "cpc": 5.21,
-      "frequency": 1.23,
-      "hookRate": 88.61
+      "cpl": 21.08,
+      "cpm": 38.82,
+      "cpc": 5.27,
+      "frequency": 1.21,
+      "hookRate": 89.56
     },
     "adsets": [
       {
         "name": "CJ SE ADV 02 - Interesses",
-        "spend": 12.33,
-        "impressions": 330,
-        "reach": 291,
+        "spend": 12.87,
+        "impressions": 344,
+        "reach": 307,
         "linkClicks": 1,
-        "ctr": 0.3,
+        "ctr": 0.29,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 37.36,
-        "cpc": 12.33,
-        "frequency": 1.13,
-        "hookRate": 86.67
+        "cpm": 37.41,
+        "cpc": 12.87,
+        "frequency": 1.12,
+        "hookRate": 87.79
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 25.34,
-        "impressions": 623,
-        "reach": 535,
+        "spend": 25.57,
+        "impressions": 632,
+        "reach": 555,
         "linkClicks": 2,
-        "ctr": 0.8,
+        "ctr": 0.79,
         "nativeLeads": 1,
-        "cpl": 25.34,
-        "cpm": 40.67,
-        "cpc": 5.07,
-        "frequency": 1.16,
-        "hookRate": 88.76
+        "cpl": 25.57,
+        "cpm": 40.46,
+        "cpc": 5.11,
+        "frequency": 1.14,
+        "hookRate": 89.72
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
         "spend": 24.8,
         "impressions": 653,
-        "reach": 567,
+        "reach": 573,
         "linkClicks": 3,
         "ctr": 0.92,
         "nativeLeads": 2,
         "cpl": 12.4,
         "cpm": 37.98,
         "cpc": 4.13,
-        "frequency": 1.15,
-        "hookRate": 89.43
+        "frequency": 1.14,
+        "hookRate": 90.35
       }
     ]
   }
