@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-13T23:37:40.387355Z",
+  "generatedAt": "2026-11-13T23:48:58.873197Z",
   "campaign": {
     "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
     "status": "ACTIVE",
     "dailyBudget": 60.0,
-    "weeklyFrequency": 1.69,
+    "weeklyFrequency": 1.68,
     "averageResponseMinutes": 665.8,
     "respondedLeads": 109,
     "appointments": 34,
     "pastAppointments": 34,
     "attendances": 18,
     "sales": 1,
-    "spend": 4661.95,
-    "impressions": 121671,
+    "spend": 4662.77,
+    "impressions": 121682,
     "reach": 30286,
     "linkClicks": 827,
     "ctr": 1.41,
@@ -21,13 +21,13 @@
     "cpm": 38.32,
     "cpc": 2.72,
     "frequency": 4.02,
-    "hookRate": 94.4
+    "hookRate": 94.41
   },
   "adsets": [
     {
       "name": "CJ SE ADV 02 - Interesses",
-      "spend": 1340.26,
-      "impressions": 35578,
+      "spend": 1340.39,
+      "impressions": 35581,
       "reach": 14016,
       "linkClicks": 213,
       "ctr": 1.27,
@@ -40,8 +40,8 @@
     },
     {
       "name": "CJ SE ADV 03 - Comportamentos",
-      "spend": 2128.3,
-      "impressions": 54799,
+      "spend": 2128.37,
+      "impressions": 54801,
       "reach": 21349,
       "linkClicks": 395,
       "ctr": 1.5,
@@ -50,21 +50,21 @@
       "cpm": 38.84,
       "cpc": 2.58,
       "frequency": 2.57,
-      "hookRate": 94.8
+      "hookRate": 94.81
     },
     {
       "name": "CJ SE ADV 01 - Aberto",
-      "spend": 1193.39,
-      "impressions": 31294,
-      "reach": 13575,
+      "spend": 1194.01,
+      "impressions": 31300,
+      "reach": 13598,
       "linkClicks": 219,
       "ctr": 1.39,
       "nativeLeads": 37,
-      "cpl": 32.25,
-      "cpm": 38.13,
+      "cpl": 32.27,
+      "cpm": 38.15,
       "cpc": 2.74,
-      "frequency": 2.31,
-      "hookRate": 94.24
+      "frequency": 2.3,
+      "hookRate": 94.23
     }
   ],
   "history": [
@@ -1395,60 +1395,60 @@
       "name": "[SESSAO ESTRATEGICA][FORM NATIVO][FRIO][CBO] Videos 01",
       "status": "ACTIVE",
       "dailyBudget": 60.0,
-      "spend": 44.23,
-      "impressions": 1116,
-      "reach": 974,
+      "spend": 45.05,
+      "impressions": 1127,
+      "reach": 992,
       "linkClicks": 6,
-      "ctr": 0.99,
+      "ctr": 0.98,
       "nativeLeads": 2,
-      "cpl": 22.11,
-      "cpm": 39.63,
-      "cpc": 4.02,
-      "frequency": 1.15,
-      "hookRate": 90.95
+      "cpl": 22.52,
+      "cpm": 39.97,
+      "cpc": 4.1,
+      "frequency": 1.14,
+      "hookRate": 91.48
     },
     "adsets": [
       {
         "name": "CJ SE ADV 02 - Interesses",
-        "spend": 11.19,
-        "impressions": 296,
-        "reach": 272,
+        "spend": 11.32,
+        "impressions": 299,
+        "reach": 275,
         "linkClicks": 1,
-        "ctr": 0.68,
+        "ctr": 0.67,
         "nativeLeads": 0,
         "cpl": 0,
-        "cpm": 37.8,
-        "cpc": 5.59,
+        "cpm": 37.86,
+        "cpc": 5.66,
         "frequency": 1.09,
-        "hookRate": 91.89
+        "hookRate": 91.97
       },
       {
         "name": "CJ SE ADV 03 - Comportamentos",
-        "spend": 13.99,
-        "impressions": 389,
-        "reach": 366,
+        "spend": 14.06,
+        "impressions": 391,
+        "reach": 368,
         "linkClicks": 3,
-        "ctr": 1.03,
+        "ctr": 1.02,
         "nativeLeads": 0,
         "cpl": 0,
         "cpm": 35.96,
-        "cpc": 3.5,
+        "cpc": 3.52,
         "frequency": 1.06,
-        "hookRate": 92.29
+        "hookRate": 92.58
       },
       {
         "name": "CJ SE ADV 01 - Aberto",
-        "spend": 19.05,
-        "impressions": 431,
-        "reach": 389,
+        "spend": 19.67,
+        "impressions": 437,
+        "reach": 402,
         "linkClicks": 2,
-        "ctr": 1.16,
+        "ctr": 1.14,
         "nativeLeads": 2,
-        "cpl": 9.53,
-        "cpm": 44.2,
-        "cpc": 3.81,
-        "frequency": 1.11,
-        "hookRate": 89.1
+        "cpl": 9.84,
+        "cpm": 45.01,
+        "cpc": 3.93,
+        "frequency": 1.09,
+        "hookRate": 88.79
       }
     ]
   }
