@@ -325,15 +325,24 @@ def main() -> None:
                 details.append(detail)
                 detail_by_key[sales_key] = detail
             detail.update(sales)
+        attributed_by_date = defaultdict(lambda: {"purchases_voomp": 0, "value_voomp": 0.0, "order_bump_count": 0})
+        for (sale_date, _), sales in attributed_sales.items():
+            daily_attribution = attributed_by_date[sale_date]
+            for metric in ("purchases_voomp", "value_voomp", "order_bump_count"):
+                daily_attribution[metric] += sales.get(metric, 0)
+        for daily_attribution in attributed_by_date.values():
+            daily_attribution["value_voomp"] = round(daily_attribution["value_voomp"], 2)
         # A planilha MetaAds é a fonte de verdade para investimento. Não carregue
         # gastos de snapshots anteriores: eles podem pertencer a uma campanha que
         # foi movida para outra base.
         existing = {}
-        all_dates = sorted(set(fresh) | set(product_sales))
+        # Os indicadores do dashboard devem refletir a mesma atribuição por
+        # anúncio exibida na tabela, e não o total bruto da Voomp.
+        all_dates = sorted(set(fresh) | set(attributed_by_date))
         for date in all_dates:
             row = fresh.get(date, {"date": date, "currency": "BRL"})
             existing[date] = dict(row)
-            existing[date].update(product_sales.get(date, {"purchases_voomp": 0, "value_voomp": 0, "order_bump_count": 0}))
+            existing[date].update(attributed_by_date.get(date, {"purchases_voomp": 0, "value_voomp": 0, "order_bump_count": 0}))
         projects.append({
             "key": key,
             "name": source["name"],
