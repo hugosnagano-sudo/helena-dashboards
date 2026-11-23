@@ -61,6 +61,11 @@ SOURCES = {
         "voomp_product": None,
         "voomp_sheet": "primeiros-dentinhos",
         "attribution_fragment": "dentinhos",
+        "additional_sources": [{
+            "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
+            "has_header": True,
+            "campaign_ids": {"120250795523780331", "120250799370160331"},
+        }],
     },
     "dedo-e-chupeta": {
         "name": "Dedo e Chupeta",
@@ -72,6 +77,11 @@ SOURCES = {
         "campaign_ids": {"120261970170080586", "120262094153850586"},
         "voomp_product": "Dedo e Chupeta",
         "voomp_sheet": "dedo-e-chupeta",
+        "additional_sources": [{
+            "sheet_id": "1AxPKOdZEDm16o3_QB-oOIod-G38iLNI5RFnXp4TLFN0",
+            "has_header": True,
+            "campaign_ids": {"120250795117540331", "120250799398690331"},
+        }],
     },
 }
 VOOMP_SHEETS = {
@@ -236,6 +246,29 @@ def daily(rows: list[list[str]], has_header: bool, category: str | None = None,
     return data, details
 
 
+def merge_daily(*datasets: dict[str, dict]) -> dict[str, dict]:
+    """Combina totais diários vindos de mais de uma conta/planilha."""
+    metrics = ("spend", "impressions", "clicks", "link_clicks", "leads_meta",
+               "landing_views", "content_views", "checkouts_meta",
+               "add_payment_info_meta", "purchases_meta", "value_meta")
+    merged = defaultdict(lambda: defaultdict(float))
+    for dataset in datasets:
+        for date, row in dataset.items():
+            target = merged[date]
+            target["date"] = date
+            target["currency"] = row.get("currency") or "BRL"
+            for metric in metrics:
+                target[metric] += float(row.get(metric, 0) or 0)
+    for row in merged.values():
+        row["ctr"] = row["clicks"] / row["impressions"] * 100 if row["impressions"] else 0
+        row["cpc"] = row["spend"] / row["clicks"] if row["clicks"] else 0
+        row["cpm"] = row["spend"] / row["impressions"] * 1000 if row["impressions"] else 0
+        for key, value in list(row.items()):
+            if isinstance(value, float):
+                row[key] = round(value, 2)
+    return dict(merged)
+
+
 def main() -> None:
     text = HTML.read_text(encoding="utf-8")
     match = re.search(r'<script id="dashboard-data" type="application/json">(.*?)</script>', text, re.S)
@@ -259,6 +292,18 @@ def main() -> None:
             sheets[sheet_id] = values(sheet_id)
             sheet_modified[sheet_id] = sheet_modified_at(sheet_id)
         fresh, details = daily(sheets[sheet_id], source["has_header"], source.get("category"), source.get("campaign_ids"))
+        extra_daily = []
+        for extra in source.get("additional_sources", []):
+            extra_sheet_id = extra["sheet_id"]
+            if extra_sheet_id not in sheets:
+                sheets[extra_sheet_id] = values(extra_sheet_id)
+                sheet_modified[extra_sheet_id] = sheet_modified_at(extra_sheet_id)
+            extra_fresh, extra_details = daily(
+                sheets[extra_sheet_id], extra["has_header"], extra.get("category"), extra.get("campaign_ids"),
+            )
+            extra_daily.append(extra_fresh)
+            details.extend(extra_details)
+        fresh = merge_daily(fresh, *extra_daily)
         product_sales = voomp_daily(voomp_rows[source["voomp_sheet"]], source.get("voomp_product"))
         attributed_sales = attributed_voomp(
             attribution_rows,
@@ -295,7 +340,7 @@ def main() -> None:
             "short": source["short"],
             "color": source["color"],
             "note": source["note"],
-            "sourceModifiedAt": sheet_modified[sheet_id],
+            "sourceModifiedAt": max(sheet_modified[source_id] for source_id in {sheet_id, *(item["sheet_id"] for item in source.get("additional_sources", []))}),
             "rows": [existing[d] for d in sorted(existing)],
             "detailRows": details,
         })
